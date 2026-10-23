@@ -52,7 +52,7 @@ Yêu cầu: Docker Desktop (≥ 4 GB RAM cho Docker vì SQL Server cần khoản
 
 ```bash
 git clone <địa chỉ repo này>
-cd smart-warehouse
+cd hust_smart-warehouse
 docker compose up --build     # .env không bắt buộc: compose đã có mật khẩu mặc định
 ```
 
