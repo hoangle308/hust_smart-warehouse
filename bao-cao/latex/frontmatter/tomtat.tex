@@ -1,0 +1,9 @@
+\chapter*{Tóm tắt}
+\addcontentsline{toc}{chapter}{Tóm tắt}
+
+Báo cáo trình bày quá trình phân tích, thiết kế và cài đặt một hệ thống quản lý kho thông minh ứng dụng RFID và IoT cho một kho phân phối linh kiện điện tử, theo đúng sáu giai đoạn của phương pháp phân tích và thiết kế hệ thống thông tin có cấu trúc trong giáo trình của học phần: khảo sát hiện trạng và xác lập dự án, phân tích hệ thống, thiết kế tổng thể, thiết kế chi tiết, cài đặt và khai thác, bảo trì.
+
+Giai đoạn khảo sát xác định yếu kém cốt lõi của hiện trạng là kho không biết vị trí từng kiện hàng và mọi đối chiếu đều làm thủ công, từ đó chọn giải pháp đọc thẻ RFID tại cổng nhập, xuất kết hợp quản lý vị trí và điều phối vận chuyển nội bộ. Giai đoạn phân tích xây dựng biểu đồ phân cấp chức năng gồm 6 chức năng nhóm và 23 chức năng lá, biểu đồ luồng dữ liệu ở ba mức với 9 kho dữ liệu, và mô hình dữ liệu 20 kiểu thực thể chuẩn hóa tới dạng chuẩn 3, được kiểm chứng chéo bằng ma trận chức năng -- dữ liệu. Giai đoạn thiết kế lựa chọn kiến trúc ba tầng Device -- Server -- Web app giao tiếp qua MQTT và REST, trong đó cơ chế khóa bản tin duy nhất bảo đảm bản tin thiết bị gửi lại khi mất kết nối không gây ghi trùng nghiệp vụ. Hệ thống được cài đặt bằng Python và Microsoft SQL Server, đóng gói bằng Docker Compose, và được kiểm chứng bằng 6 kịch bản kiểm thử xuyên ba tầng cùng 10 mẫu thử module. Kết quả cài đặt gồm khoảng 3\,200 dòng mã Python, 23 bảng dữ liệu và 41 điểm cuối REST; toàn bộ 45 ca kiểm thử tự động ở mức module, tích hợp MQTT và giao diện đều đạt.
+
+\medskip
+\noindent\textbf{Từ khóa:} phân tích thiết kế hệ thống có cấu trúc, biểu đồ luồng dữ liệu, mô hình thực thể liên kết, quản lý kho, RFID, MQTT, IoT.

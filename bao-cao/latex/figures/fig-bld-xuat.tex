@@ -1,0 +1,28 @@
+% Hinh: BLD duoi dinh cua chuc nang 3 -- Xuat kho
+\begin{tikzpicture}
+\node[ent] (kd)  at (0,4.6) {Phòng Kinh doanh};
+\node[ent] (tb)  at (0,0.6) {Thiết bị kho};
+\node[ent] (kdB) at (10.0,-1.9) {Phòng Kinh doanh};
+\node[proc] (p31) at (3.4,4.6) {\textbf{3.1} Tiếp nhận yêu cầu xuất};
+\node[proc] (p32) at (7.0,4.6) {\textbf{3.2} Chọn kiện và vị trí lấy};
+\node[proc] (p33) at (10.6,4.6) {\textbf{3.3} Lập phiếu xuất};
+\node[proc] (p34) at (10.0,0.6) {\textbf{3.4} Xác nhận đọc thẻ xuất};
+\pic at (4.4,7.0)  {store={D8/Nhiệm vụ}};
+\pic at (8.6,7.0)  {storehot={D4/Kiện, thẻ RFID}};
+\pic at (12.8,7.0) {store={D3/Vị trí}};
+\pic at (8.6,2.5)  {store={D7/Yêu cầu, phiếu xuất}};
+\pic at (14.6,-0.6) {storehot={D4/Kiện, thẻ RFID}};
+\draw[flow] (kd.east) -- node[fl, above] {Yêu cầu xuất} (p31);
+\draw[flow] (p31) -- (5.8,2.82);
+\draw[flow] (p31) -- node[fl, above] {Yêu cầu hợp lệ} (p32);
+\draw[flow] (7.0,6.68) -- node[fl, right] {Kiện trong kho} (p32);
+\draw[flow] (10.2,6.68) -- (p32);
+\draw[flow] (p32) -- node[fl, below, sloped] {Yêu cầu lấy} (3.6,6.68);
+\draw[flow] (p32) -- node[fl, above] {Kiện đã chọn} (p33);
+\draw[flow] (p33) -- (8.6,2.5);
+\draw[flow] (p33) -- node[fl, right] {Phiếu xuất} (p34);
+\draw[flow] (tb.east) -- node[fl, above, pos=0.25] {Sự kiện đọc thẻ} (p34);
+\draw[flow, <->] (p34) -- node[fl, below, sloped, pos=0.6] {Giải phóng thẻ} (11.6,-0.6);
+\draw[flow] (p34) -- (8.0,2.18);
+\draw[flow] (p34) -- node[fl, right] {Xác nhận xuất kho} (kdB.north);
+\end{tikzpicture}

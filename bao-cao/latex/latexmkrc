@@ -1,0 +1,5 @@
+# Overleaf ban mien phi: moi lan bam Recompile chi chay XeLaTeX MOT luot, dung san main.aux/.toc/.bbl
+# cua lan truoc (da kem san trong project). Muc luc, so trang tham chieu cap nhat o lan Recompile ke tiep.
+# Them/sua tai lieu tham khao: xoa 2 dong duoi, bien dich tren may (latexmk -xelatex main) roi tai main.bbl len.
+$max_repeat = 1;
+$bibtex_use = 0;

@@ -1,0 +1,21 @@
+% Hinh: LCT he con Xuat kho (HT3) -- phan tich theo giao tac
+\setlength{\lctw}{16mm}
+\begin{forest} lct,
+[Điều khiển xuất kho, goc, name=goc
+  [Nhận giao tác]
+  [Xử lý yêu cầu xuất\\(3.1)
+    [Kiểm tra tồn khả dụng, name=a]]
+  [Chọn kiện và vị trí\\(3.2)
+    [Chọn kiện theo FIFO, name=b]
+    [Tạo yêu cầu lấy, name=c]]
+  [Lập phiếu xuất\\(3.3), name=px]
+  [Xác nhận lượt đọc cổng xuất (3.4)
+    [Kiểm tra bản tin trùng]
+    [Đối chiếu kiện với phiếu, name=d]
+    [Giải phóng thẻ, name=e]]
+  [Trả kết quả]]
+\node[draw, diamond, fill=white, inner sep=1.4pt] at ($(goc.south)+(0,-2.2mm)$) {};
+\node[modlib, below=12mm of px.south, anchor=north, yshift=-14mm] (db) {Truy cập CSDL};
+\foreach \n in {a,b,c,d,e} \draw (\n.south) -- (db.north);
+\draw (px.south) -- (db.north);
+\end{forest}

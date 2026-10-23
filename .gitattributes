@@ -1,0 +1,2 @@
+# Giu dong LF cho script chay trong container Linux (Windows tu doi sang CRLF se lam hong)
+*.sh text eol=lf

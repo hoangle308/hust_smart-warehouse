@@ -1,0 +1,54 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Chuc nang 2.3 \PYZhy{} Doi chieu don dat hang.}
+
+\PY{l+s+sd}{Cai dat P\PYZhy{}Spec 2.3 va bang quyet dinh Q1\PYZhy{}Q4 (Bang 4.3). Ham thuan, khong truy}
+\PY{l+s+sd}{cap CSDL: nhan danh sach kien da doc va so luong con phai nhan, tra ket qua.}
+\PY{l+s+sd}{Mau thu: MT\PYZhy{}01..MT\PYZhy{}04.}
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{dataclasses}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{dataclass}
+
+\PY{n}{CHAP\PYZus{}NHAN} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CHAP\PYZus{}NHAN}\PY{l+s+s2}{\PYZdq{}}                \PY{c+c1}{\PYZsh{} Q4}
+\PY{n}{THE\PYZus{}CHUA\PYZus{}DANG\PYZus{}KY} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{THE\PYZus{}CHUA\PYZus{}DANG\PYZus{}KY}\PY{l+s+s2}{\PYZdq{}}  \PY{c+c1}{\PYZsh{} Q1}
+\PY{n}{NGOAI\PYZus{}DON} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{NGOAI\PYZus{}DON}\PY{l+s+s2}{\PYZdq{}}                \PY{c+c1}{\PYZsh{} Q2}
+\PY{n}{VUOT\PYZus{}SO\PYZus{}LUONG} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{VUOT\PYZus{}SO\PYZus{}LUONG}\PY{l+s+s2}{\PYZdq{}}        \PY{c+c1}{\PYZsh{} Q3}
+
+
+\PY{n+nd}{@dataclass}\PY{p}{(}\PY{n}{frozen}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{KienDaDoc}\PY{p}{:}
+    \PY{n}{ma\PYZus{}kien}\PY{p}{:} \PY{n+nb}{str}
+    \PY{n}{ma\PYZus{}mh}\PY{p}{:} \PY{n+nb}{str}
+    \PY{n}{so\PYZus{}luong}\PY{p}{:} \PY{n+nb}{int}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{doi\PYZus{}chieu\PYZus{}kien}\PY{p}{(}\PY{n}{kien}\PY{p}{:} \PY{n}{KienDaDoc} \PY{o}{|} \PY{k+kc}{None}\PY{p}{,} \PY{n}{con\PYZus{}lai}\PY{p}{:} \PY{n+nb}{dict}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{int}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{str}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Ap bang quyet dinh cho mot kien.}
+
+\PY{l+s+sd}{    C1: the da khai bao kien?   C2: mat hang co trong don?}
+\PY{l+s+sd}{    C3: so luong kien \PYZlt{}= so luong con phai nhan?}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{if} \PY{n}{kien} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}                            \PY{c+c1}{\PYZsh{} C1 = K}
+        \PY{k}{return} \PY{n}{THE\PYZus{}CHUA\PYZus{}DANG\PYZus{}KY}
+    \PY{k}{if} \PY{n}{kien}\PY{o}{.}\PY{n}{ma\PYZus{}mh} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{con\PYZus{}lai}\PY{p}{:}               \PY{c+c1}{\PYZsh{} C2 = K}
+        \PY{k}{return} \PY{n}{NGOAI\PYZus{}DON}
+    \PY{k}{if} \PY{n}{kien}\PY{o}{.}\PY{n}{so\PYZus{}luong} \PY{o}{\PYZgt{}} \PY{n}{con\PYZus{}lai}\PY{p}{[}\PY{n}{kien}\PY{o}{.}\PY{n}{ma\PYZus{}mh}\PY{p}{]}\PY{p}{:}     \PY{c+c1}{\PYZsh{} C3 = K}
+        \PY{k}{return} \PY{n}{VUOT\PYZus{}SO\PYZus{}LUONG}
+    \PY{k}{return} \PY{n}{CHAP\PYZus{}NHAN}                            \PY{c+c1}{\PYZsh{} C1, C2, C3 = C}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{doi\PYZus{}chieu\PYZus{}luot}\PY{p}{(}\PY{n}{luot}\PY{p}{:} \PY{n+nb}{list}\PY{p}{[}\PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n}{KienDaDoc} \PY{o}{|} \PY{k+kc}{None}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{con\PYZus{}lai}\PY{p}{:} \PY{n+nb}{dict}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{int}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Vong lap DO WHILE cua P\PYZhy{}Spec 2.3 cho mot luot doc cong.}
+
+\PY{l+s+sd}{    Tra ve (kien\PYZus{}hop\PYZus{}le, sai\PYZus{}lech, con\PYZus{}lai\PYZus{}moi); con\PYZus{}lai dau vao khong bi sua.}
+\PY{l+s+sd}{    kien\PYZus{}hop\PYZus{}le: list[(ma\PYZus{}epc, KienDaDoc)];  sai\PYZus{}lech: list[(ma\PYZus{}epc, ket\PYZus{}qua)].}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{con\PYZus{}lai} \PY{o}{=} \PY{n+nb}{dict}\PY{p}{(}\PY{n}{con\PYZus{}lai}\PY{p}{)}
+    \PY{n}{hop\PYZus{}le}\PY{p}{,} \PY{n}{sai\PYZus{}lech} \PY{o}{=} \PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{ma\PYZus{}epc}\PY{p}{,} \PY{n}{kien} \PY{o+ow}{in} \PY{n}{luot}\PY{p}{:}
+        \PY{n}{kq} \PY{o}{=} \PY{n}{doi\PYZus{}chieu\PYZus{}kien}\PY{p}{(}\PY{n}{kien}\PY{p}{,} \PY{n}{con\PYZus{}lai}\PY{p}{)}
+        \PY{k}{if} \PY{n}{kq} \PY{o}{==} \PY{n}{CHAP\PYZus{}NHAN}\PY{p}{:}
+            \PY{n}{hop\PYZus{}le}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{ma\PYZus{}epc}\PY{p}{,} \PY{n}{kien}\PY{p}{)}\PY{p}{)}
+            \PY{n}{con\PYZus{}lai}\PY{p}{[}\PY{n}{kien}\PY{o}{.}\PY{n}{ma\PYZus{}mh}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{kien}\PY{o}{.}\PY{n}{so\PYZus{}luong}
+        \PY{k}{else}\PY{p}{:}
+            \PY{n}{sai\PYZus{}lech}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{ma\PYZus{}epc}\PY{p}{,} \PY{n}{kq}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{hop\PYZus{}le}\PY{p}{,} \PY{n}{sai\PYZus{}lech}\PY{p}{,} \PY{n}{con\PYZus{}lai}
+\end{Verbatim}

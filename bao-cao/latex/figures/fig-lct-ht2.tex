@@ -1,0 +1,29 @@
+% Hinh: LCT he con Nhap kho (HT2) -- phan tich theo giao tac
+\setlength{\lctw}{18mm}
+\begin{forest} lct,
+[Điều khiển nhập kho, goc, name=goc
+  [Nhận giao tác, name=nhan]
+  [Xử lý phiếu giao\\(2.1)]
+  [Khai báo kiện\\(2.2)]
+  [Xử lý lượt đọc cổng\\(2.3 -- 2.5), name=cong
+    [Kiểm tra bản tin trùng, name=a]
+    [Đối chiếu kiện\\(2.3), name=b]
+    [Phân bổ vị trí\\(2.4), name=c]
+    [Lập phiếu nhập\\(2.5), name=d]
+    [Gửi thông báo sai lệch]]
+  [Trả kết quả]]
+\node[draw, diamond, fill=white, inner sep=1.4pt] at ($(goc.south)+(0,-2.2mm)$) {};
+\node[modlib, below=11mm of c.south west, anchor=north] (db) {Truy cập CSDL};
+\foreach \n in {a,b,c,d} \draw (\n.south) -- (db.north);
+% Thong tin chuyen giao
+\draw[->] ($(nhan.north)+(-0.35,0.05)$) -- ++(0,0.5);
+\draw ($(nhan.north)+(-0.35,0.05)$) circle (0.06);
+\node[font=\tiny, anchor=east] at ($(nhan.north)+(-0.45,0.3)$) {giao tác};
+\draw[->] ($(b.north)+(-0.35,0.55)$) -- ++(0,-0.45);
+\draw ($(b.north)+(-0.35,0.57)$) circle (0.06);
+\node[font=\tiny, anchor=east] at ($(b.north)+(-0.42,0.33)$) {kiện đã đọc};
+\draw[->] ($(b.north)+(0.35,0.08)$) -- ++(0,0.45);
+\fill ($(b.north)+(0.35,0.06)$) circle (0.06);
+\node[font=\tiny, anchor=west] at ($(b.north)+(0.42,0.33)$) {kết quả};
+\draw[->] ($(b.north)+(0.05,0.62)$) arc (0:300:0.12);
+\end{forest}

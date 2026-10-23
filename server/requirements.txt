@@ -1,0 +1,6 @@
+fastapi==0.115.*
+uvicorn[standard]==0.32.*
+pydantic==2.*
+pyodbc==5.*
+paho-mqtt==2.*
+PyJWT==2.*

@@ -1,0 +1,31 @@
+% Hinh: BLD vat ly muc dinh cua he thong cu
+\begin{tikzpicture}[ten/.style={font=\tiny\color{black!60}}]
+\node[ent] (ncc) at (0,8.3) {Nhà cung cấp};
+\node[ent] (mua) at (0,6.9) {Phòng Mua hàng};
+\node[ent] (kd)  at (0,4.0) {Phòng Kinh doanh};
+\node[ent] (bgd) at (0,1.3) {Ban giám đốc};
+\node[ent] (kt)  at (12.0,-0.9) {Kế toán};
+\node[proc] (p1) at (3.7,7.6) {\textbf{1.} Nhận, đếm hàng\\[1pt]{\tiny\color{black!60}NV nhận hàng}};
+\node[proc] (p2) at (6.9,7.6) {\textbf{2.} Lập phiếu nhập, ghi thẻ kho\\[1pt]{\tiny\color{black!60}Thủ kho}};
+\node[proc] (p3) at (3.7,4.0) {\textbf{3.} Lập phiếu xuất\\[1pt]{\tiny\color{black!60}Thủ kho}};
+\node[procold] (p4) at (6.9,4.0) {\textbf{4.} Tìm, soạn hàng\\[1pt]{\tiny\color{black!60}NV soạn hàng}};
+\node[procold] (p5) at (10.4,5.9) {\textbf{5.} Nhập Excel cuối ngày\\[1pt]{\tiny\color{black!60}Kế toán kho}};
+\node[proc] (p7) at (8.6,1.3) {\textbf{7.} Lập báo cáo tháng\\[1pt]{\tiny\color{black!60}Kế toán kho}};
+\node[proc] (p6) at (12.0,1.3) {\textbf{6.} Kiểm kê đếm tay\\[1pt]{\tiny\color{black!60}Thủ kho, NV}};
+\pic at (8.4,5.9) {store={D1/Thẻ kho, phiếu giấy}};
+\pic at (14.3,3.7) {store={D2/File Excel NXT}};
+\draw[flow] (ncc.east) -- node[fl, above, sloped] {Phiếu giao hàng} (p1);
+\draw[flow] (mua.east) -- node[fl, below, sloped] {Đơn đặt hàng (bản in)} (p1);
+\draw[flow] (p1) -- node[fl, above] {Hàng đã đếm} (p2);
+\draw[flow] (p2) -- (6.9,6.22);
+\draw[flow] (kd.east) -- node[fl, above] {Yêu cầu xuất} (p3);
+\draw[flow] (p3) -- node[fl, above] {Phiếu xuất} (p4);
+\draw[flow] (p3) -- (5.6,5.58);
+\draw[flow] (p4) -- (7.4,5.58);
+\draw[flow] (8.4,5.9) -- (p5);
+\draw[flow] (p5) -- (11.8,4.02);
+\draw[flow] (11.6,3.38) -- (p7);
+\draw[flow] (13.0,3.38) -- (p6);
+\draw[flow] (p7) -- node[fl, above] {Báo cáo tháng} (bgd.east);
+\draw[flow] (p6) -- node[fl, right] {Biên bản kiểm kê} (kt.north);
+\end{tikzpicture}

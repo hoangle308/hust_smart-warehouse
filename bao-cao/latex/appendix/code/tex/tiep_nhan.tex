@@ -1,0 +1,94 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}HT4 \PYZhy{} Module \PYZdq{}Tiep nhan ban tin\PYZdq{} (nhanh luong vao cua LCT Hinh 6.3).}
+
+\PY{l+s+sd}{Lay ban tin hop le (doc MQTT \PYZhy{}\PYZgt{} kiem tra hop dong \PYZhy{}\PYZgt{} kiem tra trung), roi phan}
+\PY{l+s+sd}{phoi sang bo xu ly nghiep vu theo loai thiet bi. Kho luu ban tin duoc truyen}
+\PY{l+s+sd}{vao (KhoBanTin) nen module khong phu thuoc CSDL \PYZhy{}\PYZhy{} mau thu MT\PYZhy{}07, MT\PYZhy{}08.}
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{json}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{logging}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{typing}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{Callable}\PY{p}{,} \PY{n}{Protocol}
+
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{pydantic}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{ValidationError}
+
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{ht4\PYZus{}thiet\PYZus{}bi}\PY{n+nn}{.}\PY{n+nn}{hop\PYZus{}dong}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{BanTinDocThe}\PY{p}{,} \PY{n}{BanTinNhiemVu}\PY{p}{,} \PY{n}{TrangThaiThietBi}\PY{p}{,} \PY{n}{phan\PYZus{}tich\PYZus{}chu\PYZus{}de}
+
+\PY{n}{log} \PY{o}{=} \PY{n}{logging}\PY{o}{.}\PY{n}{getLogger}\PY{p}{(}\PY{n+nv+vm}{\PYZus{}\PYZus{}name\PYZus{}\PYZus{}}\PY{p}{)}
+
+\PY{n}{XONG}\PY{p}{,} \PY{n}{TRUNG}\PY{p}{,} \PY{n}{TU\PYZus{}CHOI}\PY{p}{,} \PY{n}{LOI} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{XONG}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{TRUNG}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{TU\PYZus{}CHOI}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{LOI}\PY{l+s+s2}{\PYZdq{}}
+
+
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{KhoBanTin}\PY{p}{(}\PY{n}{Protocol}\PY{p}{)}\PY{p}{:}
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{ghi\PYZus{}moi}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{ma\PYZus{}ban\PYZus{}tin}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{noi\PYZus{}dung}\PY{p}{:} \PY{n+nb}{str}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{bool}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Ghi ban tin trang thai CHO; tra False neu ma ban tin da ton tai.\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{danh\PYZus{}dau}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{ma\PYZus{}ban\PYZus{}tin}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{trang\PYZus{}thai}\PY{p}{:} \PY{n+nb}{str}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{k+kc}{None}\PY{p}{:} \PY{o}{.}\PY{o}{.}\PY{o}{.}
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{loai\PYZus{}thiet\PYZus{}bi}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{:} \PY{n+nb}{str}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{str} \PY{o}{|} \PY{k+kc}{None}\PY{p}{:} \PY{o}{.}\PY{o}{.}\PY{o}{.}
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{cap\PYZus{}nhat\PYZus{}trang\PYZus{}thai\PYZus{}tb}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{trang\PYZus{}thai}\PY{p}{:} \PY{n+nb}{str}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{k+kc}{None}\PY{p}{:} \PY{o}{.}\PY{o}{.}\PY{o}{.}
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{ban\PYZus{}tin\PYZus{}cho}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{list}\PY{p}{[}\PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{str}\PY{p}{]}\PY{p}{]}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Cac ban tin con CHO: (chu\PYZus{}de, noi\PYZus{}dung) \PYZhy{}\PYZhy{} dung khi phuc hoi.\PYZdq{}\PYZdq{}\PYZdq{}}
+
+
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{BoTiepNhan}\PY{p}{:}
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf+fm}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{kho}\PY{p}{:} \PY{n}{KhoBanTin}\PY{p}{,} \PY{n}{xu\PYZus{}ly}\PY{p}{:} \PY{n+nb}{dict}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n}{Callable}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}xu\PYZus{}ly: loai thiet bi (CONG\PYZus{}NHAP, CONG\PYZus{}XUAT, CAM\PYZus{}TAY, AGV) \PYZhy{}\PYZgt{} ham nghiep vu.\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho} \PY{o}{=} \PY{n}{kho}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{xu\PYZus{}ly} \PY{o}{=} \PY{n}{xu\PYZus{}ly}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{\PYZus{}kiem\PYZus{}tra}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{du\PYZus{}lieu}\PY{p}{:} \PY{n+nb}{bytes}\PY{p}{)}\PY{p}{:}
+        \PY{n}{kenh}\PY{p}{,} \PY{n}{ma\PYZus{}tb} \PY{o}{=} \PY{n}{phan\PYZus{}tich\PYZus{}chu\PYZus{}de}\PY{p}{(}\PY{n}{chu\PYZus{}de}\PY{p}{)}
+        \PY{n}{obj} \PY{o}{=} \PY{n}{json}\PY{o}{.}\PY{n}{loads}\PY{p}{(}\PY{n}{du\PYZus{}lieu}\PY{p}{)}
+        \PY{n}{model} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{doc\PYZhy{}the}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{BanTinDocThe}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nhiem\PYZhy{}vu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{BanTinNhiemVu}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{trang\PYZhy{}thai}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{TrangThaiThietBi}\PY{p}{\PYZcb{}}\PY{p}{[}\PY{n}{kenh}\PY{p}{]}
+        \PY{n}{bt} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{model\PYZus{}validate}\PY{p}{(}\PY{n}{obj}\PY{p}{)}
+        \PY{k}{if} \PY{n}{bt}\PY{o}{.}\PY{n}{maTB} \PY{o}{!=} \PY{n}{ma\PYZus{}tb}\PY{p}{:}
+            \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{maTB }\PY{l+s+si}{\PYZob{}}\PY{n}{bt}\PY{o}{.}\PY{n}{maTB}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ không khớp chủ đề }\PY{l+s+si}{\PYZob{}}\PY{n}{chu\PYZus{}de}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{return} \PY{n}{kenh}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{bt}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{tiep\PYZus{}nhan}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{du\PYZus{}lieu}\PY{p}{:} \PY{n+nb}{bytes}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{str}\PY{p}{:}
+        \PY{k}{try}\PY{p}{:}
+            \PY{n}{kenh}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{bt} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}kiem\PYZus{}tra}\PY{p}{(}\PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{du\PYZus{}lieu}\PY{p}{)}
+        \PY{k}{except} \PY{p}{(}\PY{n+ne}{ValueError}\PY{p}{,} \PY{n}{ValidationError}\PY{p}{)} \PY{k}{as} \PY{n}{e}\PY{p}{:}   \PY{c+c1}{\PYZsh{} JSONDecodeError cung la ValueError}
+            \PY{n}{log}\PY{o}{.}\PY{n}{warning}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Từ chối bản tin }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{: }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{e}\PY{p}{)}
+            \PY{k}{return} \PY{n}{TU\PYZus{}CHOI}
+
+        \PY{n}{loai} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho}\PY{o}{.}\PY{n}{loai\PYZus{}thiet\PYZus{}bi}\PY{p}{(}\PY{n}{ma\PYZus{}tb}\PY{p}{)}
+        \PY{n}{kenh\PYZus{}sai\PYZus{}loai} \PY{o}{=} \PY{p}{(}\PY{n}{kenh} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nhiem\PYZhy{}vu}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{and} \PY{n}{loai} \PY{o}{!=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{AGV}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o+ow}{or} \PY{p}{(}\PY{n}{kenh} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{doc\PYZhy{}the}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{and} \PY{n}{loai} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{AGV}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{if} \PY{n}{loai} \PY{o+ow}{is} \PY{k+kc}{None} \PY{o+ow}{or} \PY{n}{kenh\PYZus{}sai\PYZus{}loai}\PY{p}{:}
+            \PY{n}{log}\PY{o}{.}\PY{n}{warning}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Từ chối bản tin }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{: thiết bị }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{) không hợp lệ cho kênh}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{loai}\PY{p}{)}
+            \PY{k}{return} \PY{n}{TU\PYZus{}CHOI}
+
+        \PY{k}{if} \PY{n}{kenh} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{trang\PYZhy{}thai}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+            \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho}\PY{o}{.}\PY{n}{cap\PYZus{}nhat\PYZus{}trang\PYZus{}thai\PYZus{}tb}\PY{p}{(}\PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{bt}\PY{o}{.}\PY{n}{trangThai}\PY{p}{)}
+            \PY{k}{return} \PY{n}{XONG}
+
+        \PY{n}{ma} \PY{o}{=} \PY{n+nb}{str}\PY{p}{(}\PY{n}{bt}\PY{o}{.}\PY{n}{maBanTin}\PY{p}{)}
+        \PY{k}{if} \PY{o+ow}{not} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho}\PY{o}{.}\PY{n}{ghi\PYZus{}moi}\PY{p}{(}\PY{n}{ma}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{du\PYZus{}lieu}\PY{o}{.}\PY{n}{decode}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{utf\PYZhy{}8}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+            \PY{n}{log}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Bỏ qua bản tin trùng }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ma}\PY{p}{)}
+            \PY{k}{return} \PY{n}{TRUNG}
+        \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}xu\PYZus{}ly}\PY{p}{(}\PY{n}{loai}\PY{p}{,} \PY{n}{bt}\PY{p}{)}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{\PYZus{}xu\PYZus{}ly}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{loai}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{bt}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{str}\PY{p}{:}
+        \PY{n}{ma} \PY{o}{=} \PY{n+nb}{str}\PY{p}{(}\PY{n}{bt}\PY{o}{.}\PY{n}{maBanTin}\PY{p}{)}
+        \PY{k}{try}\PY{p}{:}
+            \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{xu\PYZus{}ly}\PY{p}{[}\PY{n}{loai}\PY{p}{]}\PY{p}{(}\PY{n}{bt}\PY{p}{)}
+        \PY{k}{except} \PY{n+ne}{Exception}\PY{p}{:}
+            \PY{n}{log}\PY{o}{.}\PY{n}{exception}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Lỗi xử lý bản tin }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ma}\PY{p}{)}
+            \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho}\PY{o}{.}\PY{n}{danh\PYZus{}dau}\PY{p}{(}\PY{n}{ma}\PY{p}{,} \PY{n}{LOI}\PY{p}{)}
+            \PY{k}{return} \PY{n}{LOI}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho}\PY{o}{.}\PY{n}{danh\PYZus{}dau}\PY{p}{(}\PY{n}{ma}\PY{p}{,} \PY{n}{XONG}\PY{p}{)}
+        \PY{k}{return} \PY{n}{XONG}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{phuc\PYZus{}hoi}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{int}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Xu ly tiep cac ban tin con CHO sau su co (nguyen tac bien moc, Muc 6.3).\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n}{n} \PY{o}{=} \PY{l+m+mi}{0}
+        \PY{k}{for} \PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{noi\PYZus{}dung} \PY{o+ow}{in} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho}\PY{o}{.}\PY{n}{ban\PYZus{}tin\PYZus{}cho}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{try}\PY{p}{:}
+                \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{bt} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}kiem\PYZus{}tra}\PY{p}{(}\PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{noi\PYZus{}dung}\PY{o}{.}\PY{n}{encode}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{utf\PYZhy{}8}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+            \PY{k}{except} \PY{p}{(}\PY{n+ne}{ValueError}\PY{p}{,} \PY{n}{ValidationError}\PY{p}{)}\PY{p}{:}
+                \PY{k}{continue}
+            \PY{n}{loai} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{kho}\PY{o}{.}\PY{n}{loai\PYZus{}thiet\PYZus{}bi}\PY{p}{(}\PY{n}{ma\PYZus{}tb}\PY{p}{)}
+            \PY{k}{if} \PY{n}{loai} \PY{o+ow}{in} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{xu\PYZus{}ly}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}xu\PYZus{}ly}\PY{p}{(}\PY{n}{loai}\PY{p}{,} \PY{n}{bt}\PY{p}{)}
+                \PY{n}{n} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+        \PY{k}{return} \PY{n}{n}
+\end{Verbatim}

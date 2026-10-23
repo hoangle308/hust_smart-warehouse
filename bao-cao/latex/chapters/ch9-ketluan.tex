@@ -1,0 +1,15 @@
+% ============================================================
+% Chuong 9 -- Ket luan
+% ============================================================
+\chapter{Kết luận}
+\label{ch:ketluan}
+
+Báo cáo đã áp dụng trọn vẹn sáu giai đoạn phân tích, thiết kế và cài đặt hệ thống thông tin có cấu trúc cho bài toán quản lý kho thông minh ứng dụng RFID và IoT. Các kết quả chính:
+\begin{enumerate}
+  \item Xác định yếu kém cốt lõi của hiện trạng là không biết vị trí từng kiện hàng và đối chiếu thủ công, từ đó chọn giải pháp đọc thẻ tại cổng kết hợp quản lý vị trí, đáp ứng toàn bộ mục tiêu nghiệm thu ở Bảng~\ref{tab:muctieu}.
+  \item Xây dựng BPC gồm 23 chức năng lá, BLD ba mức với 9 kho dữ liệu, mô hình 20 thực thể chuẩn hóa tới 3NF; hai phương pháp lập biểu đồ cấu trúc dữ liệu cho kết quả nhất quán, và ma trận chức năng -- dữ liệu phát hiện được hai sai sót thiết kế trước khi lập trình.
+  \item Thiết kế kiến trúc ba tầng giao tiếp qua MQTT và REST, trong đó khóa bản tin duy nhất bảo đảm bản tin gửi lại không gây ghi trùng.
+  \item Cài đặt hoàn chỉnh ba tầng bằng Python và SQL Server, đóng gói bằng Docker Compose, khởi chạy bằng một lệnh; 45 ca kiểm thử tự động gồm 10 mẫu thử module MT-01 -- MT-10, kiểm thử tích hợp với broker MQTT thật và kiểm thử giao diện đều đạt. Quá trình cài đặt phát hiện bảy điểm thiết kế cần điều chỉnh, đã được phản hồi về tài liệu thiết kế.
+\end{enumerate}
+
+Hướng phát triển gồm: thay tầng Device giả lập bằng thiết bị ESP32 và đầu đọc RFID thật, giữ nguyên hợp đồng MQTT; bổ sung TLS cho kênh thiết bị; và xây dựng mô hình dữ liệu phân tích dạng bảng sự kiện -- bảng chiều cho các chỉ số hiệu suất kho và chất lượng vận hành theo thời gian.

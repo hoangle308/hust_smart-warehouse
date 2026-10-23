@@ -1,0 +1,51 @@
+% ============================================================
+% BAO CAO BAI TAP LON -- KY THUAT PHAN MEM UNG DUNG
+% Phan tich, thiet ke he thong quan ly kho thong minh ung dung RFID va IoT
+% Bien dich: latexmk -xelatex main
+%   (hoac: xelatex main ; bibtex main ; xelatex main ; xelatex main)
+% ============================================================
+\documentclass[a4paper,12pt,oneside]{extreport}
+\input{preamble}
+\input{frontmatter/thongtin}
+\hypersetup{pdftitle={Báo cáo bài tập lớn -- \DeTaiDongMot{} \DeTaiDongHai}, pdfauthor={Nhóm sinh viên thực hiện}}
+
+\begin{document}
+\DatTenGoi
+
+% ---------- Phan mo dau (danh so trang tu Tom tat, theo mau) ----------
+\input{frontmatter/bia}
+\setcounter{page}{1}
+\input{frontmatter/tomtat}
+\tableofcontents
+\phantomsection\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+\phantomsection\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+\input{frontmatter/viettat}
+\input{frontmatter/kyhieu}
+
+% ---------- Noi dung: Chuong 3--8 ung voi Giai doan 1--6 cua giao trinh ----------
+\input{chapters/ch1-gioithieu}
+\input{chapters/ch2-cosolythuyet}
+\input{chapters/ch3-khaosat}
+\input{chapters/ch4-phantich}
+\input{chapters/ch5-tongthe}
+\input{chapters/ch6-chitiet}
+\input{chapters/ch7-caidat}
+\input{chapters/ch8-khaithac}
+\input{chapters/ch9-ketluan}
+
+% ---------- Tai lieu tham khao ----------
+\phantomsection
+\addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+% ---------- Phu luc ----------
+\appendix
+\input{appendix/phuluc-cauhoi}
+\input{appendix/phuluc-csdl}
+\input{appendix/phuluc-maguon}
+\input{appendix/phuluc-caidat}
+
+\end{document}

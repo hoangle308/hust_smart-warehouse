@@ -1,0 +1,493 @@
+% ============================================================
+% Chuong 4 -- Giai doan 2: Phan tich he thong
+% Phan A: phan tich ve xu ly [Ch. 5]; Phan B: phan tich ve du lieu [Ch. 6]
+% ============================================================
+\chapter{Phân tích hệ thống}
+\label{ch:phantich}
+
+Hệ thống mới gồm 6 chức năng nhóm, 23 chức năng lá, 6 tác nhân ngoài, 9 kho dữ liệu và 20 kiểu thực thể, được kiểm chứng chéo bằng ma trận chức năng -- dữ liệu. Quyết định trung tâm của giai đoạn phân tích là quản lý mọi nghiệp vụ theo \emph{kiện hàng gắn một thẻ RFID}; tồn kho không được lưu trực tiếp mà tính từ trạng thái các kiện. Chương gồm hai phần theo \cite{tung_qlhttt}: phân tích về xử lý (Mục~\ref{sec:bpc} -- \ref{sec:pspec}, theo Ch.~5 và công cụ Ch.~2) và phân tích về dữ liệu (Mục~\ref{sec:mahoa} -- \ref{sec:crud}, theo Ch.~6 và công cụ Ch.~3).
+
+% ============================================================
+% PHAN A -- PHAN TICH VE XU LY
+% ============================================================
+\section{Biểu đồ phân cấp chức năng}
+\label{sec:bpc}
+
+Hệ thống mới được phân rã từ trên xuống thành 6 chức năng nhóm và 23 chức năng lá (Hình~\ref{fig:bpc}). Đây là chức năng của hệ thống thông tin, không phải thao tác của hệ tác nghiệp \cite[Ch.~5]{tung_qlhttt}: chẳng hạn “xếp kiện lên kệ” là thao tác vật lý, còn “phân bổ vị trí cất” là chức năng thông tin. Đánh số phân cấp trên BPC được dùng lại cho chức năng trên mọi BLD, module trên LCT và tên file mã nguồn để truy vết.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bpc}
+\caption{Biểu đồ phân cấp chức năng của hệ thống mới}
+\label{fig:bpc}
+\end{figure}
+
+\section{Biểu đồ luồng dữ liệu mức ngữ cảnh}
+\label{sec:ngucanh}
+
+Toàn bộ hệ thống là một chức năng duy nhất trao đổi 11 luồng dữ liệu với 6 tác nhân ngoài (Hình~\ref{fig:ngucanh}). Thiết bị kho (đầu đọc RFID, cổng, AGV) được đặt làm tác nhân ngoài: chúng nằm ngoài ranh giới hệ thống thông tin và chỉ trao đổi dữ liệu qua luồng “Dữ liệu thiết bị” và “Lệnh nhiệm vụ”. Định nghĩa từng luồng ở Mục~\ref{sec:tudien}.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bld-ngucanh}
+\caption{BLD mức ngữ cảnh}
+\label{fig:ngucanh}
+\end{figure}
+
+\section{Biểu đồ luồng dữ liệu vật lý của hệ thống cũ}
+\label{sec:bldcu}
+
+Hệ thống cũ có 7 chức năng do người thực hiện trên giấy và Excel (Hình~\ref{fig:bldcu}); mỗi chức năng ghi kèm người làm, đúng đặc trưng mức vật lý “ai làm, bằng phương tiện gì” \cite[Ch.~5]{tung_qlhttt}. Dữ liệu nhập kho được ghi ba lần (phiếu, thẻ kho, Excel), là nguồn gốc của sai lệch sổ sách nêu ở Bảng~\ref{tab:yeukem}.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bld-cu}
+\caption{BLD vật lý mức đỉnh của hệ thống cũ; nét đứt là chức năng bị loại khi chuyển sang mức logic}
+\label{fig:bldcu}
+\end{figure}
+
+\section{Chuyển BLD vật lý sang logic và hệ thống cũ sang mới}
+\label{sec:chuyendoi}
+
+Theo tiêu chí loại bỏ của \cite[Ch.~5]{tung_qlhttt}, hai trong bảy chức năng cũ bị loại vì thuần vật lý hoặc chỉ tồn tại do cách xử lý trên giấy; bốn nhóm chức năng mới được bổ sung để khắc phục yếu kém “thiếu” (Bảng~\ref{tab:chuyendoi}). Vùng thay đổi khi chuyển cũ sang mới là toàn bộ khối nhập và kiểm kê; luồng vào/ra với tác nhân ngoài (phiếu giao hàng, yêu cầu xuất, báo cáo) được bảo toàn.
+
+\begin{table}[H]
+\centering
+\caption{Chuyển đổi chức năng từ hệ thống cũ sang hệ thống mới}
+\label{tab:chuyendoi}
+\small
+\begin{tabularx}{\textwidth}{L{3.8cm} Y L{4.2cm}}
+\toprule
+\textbf{Chức năng cũ (vật lý)} & \textbf{Xử lý khi chuyển sang logic} & \textbf{Trong hệ thống mới} \\
+\midrule
+1. Nhận, đếm hàng & Giữ bản chất “đối chiếu hàng giao với đơn”; bỏ thao tác đếm tay & 2.1, 2.2, 2.3; đọc thẻ thay cho đếm \\
+2. Lập phiếu nhập, ghi thẻ kho & Gộp: phiếu nhập và thẻ kho là cùng thông tin ghi hai lần & 2.5; tồn tính từ D4 \\
+3. Lập phiếu xuất & Giữ & 3.1, 3.3 \\
+4. Tìm, soạn hàng theo trí nhớ & Loại phần thao tác vật lý (hệ tác nghiệp); giữ phần thông tin “chọn vị trí lấy” & 3.2; nhóm 4 \\
+5. Nhập Excel cuối ngày & Loại: chỉ tồn tại vì dữ liệu nằm trên giấy, gắn với biện pháp xử lý & Không còn; dữ liệu ghi một lần khi nghiệp vụ xảy ra \\
+6. Kiểm kê đếm tay & Giữ bản chất đối chiếu thực tế với sổ sách; bỏ đếm tay & 5.1 -- 5.4, theo khu \\
+7. Lập báo cáo tháng & Giữ & 6.1 \\
+(không có) & Bổ sung do thiếu chức năng & 1.3, 2.4, nhóm 4, 6.2 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Biểu đồ luồng dữ liệu logic mức đỉnh của hệ thống mới}
+\label{sec:blddinh}
+
+Sáu chức năng nhóm trao đổi dữ liệu qua 9 kho dữ liệu (Hình~\ref{fig:blddinh}); các chức năng không truyền trực tiếp cho nhau mà qua kho, ví dụ Nhập kho ghi “Yêu cầu cất” vào D8 để Điều phối vận chuyển đọc. Sơ đồ vẽ theo dải, mỗi dải một chức năng; tác nhân ngoài và kho dữ liệu được vẽ lặp lại ở nhiều dải cho dễ đọc, đúng quy ước của \cite[Ch.~2]{tung_qlhttt}. Mũi tên hai đầu là vừa đọc vừa cập nhật. Các luồng với tác nhân ngoài khớp với BLD ngữ cảnh: “Đơn đặt hàng; hàng, NCC” tách thành hai luồng vào chức năng 1 và 2; “Dữ liệu thiết bị” tách thành sự kiện đọc thẻ và trạng thái nhiệm vụ.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bld-dinh}
+\caption{BLD logic mức đỉnh của hệ thống mới; kho D4 được nhấn mạnh vì mọi nghiệp vụ đều đọc hoặc ghi kho này}
+\label{fig:blddinh}
+\end{figure}
+
+\section{Biểu đồ luồng dữ liệu mức dưới đỉnh}
+\label{sec:blddd}
+
+Bốn chức năng nhóm có nghiệp vụ phức tạp được phân rã tới các chức năng lá khớp với BPC; luồng vào/ra với tác nhân ngoài được bảo toàn từ mức đỉnh, chỉ bổ sung luồng nội bộ \cite[Ch.~5]{tung_qlhttt}. Chức năng 1 và 6 gồm các thao tác cập nhật và truy vấn đơn giản trên một kho nên không cần phân rã thêm.
+
+\subsection{Chức năng 2 -- Nhập kho}
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bld-nhap}
+\caption{BLD dưới đỉnh của chức năng 2 -- Nhập kho}
+\label{fig:bldnhap}
+\end{figure}
+
+\subsection{Chức năng 3 -- Xuất kho}
+
+Yêu cầu xuất được lưu vào D7 rồi chuyển sang chọn kiện theo nguyên tắc nhập trước -- xuất trước; khi kiện qua cổng xuất, chức năng 3.4 đối chiếu với phiếu xuất, giải phóng thẻ trong D4 và gửi xác nhận cho Phòng Kinh doanh (Hình~\ref{fig:bldxuat}).
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bld-xuat}
+\caption{BLD dưới đỉnh của chức năng 3 -- Xuất kho}
+\label{fig:bldxuat}
+\end{figure}
+
+\subsection{Chức năng 4 -- Điều phối vận chuyển}
+
+Nhiệm vụ do Nhập kho và Xuất kho tạo trong D8 được giao cho AGV sẵn sàng, theo dõi qua trạng thái thiết bị gửi về, và khi hoàn thành thì cập nhật vị trí kiện trong D4 và giải phóng ô đặt trước trong D3 (Hình~\ref{fig:blddieuphoi}).
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bld-dieuphoi}
+\caption{BLD dưới đỉnh của chức năng 4 -- Điều phối vận chuyển}
+\label{fig:blddieuphoi}
+\end{figure}
+
+\subsection{Chức năng 5 -- Kiểm kê}
+
+Phiên kiểm kê được lập theo khu; sự kiện đọc thẻ từ đầu đọc cầm tay được ghi vào phiên, đối chiếu với tồn sổ sách trong D4, và bảng chênh lệch chỉ được áp dụng khi Ban giám đốc phê duyệt (Hình~\ref{fig:bldkiemke}).
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-bld-kiemke}
+\caption{BLD dưới đỉnh của chức năng 5 -- Kiểm kê}
+\label{fig:bldkiemke}
+\end{figure}
+
+\section{Đặc tả chức năng}
+\label{sec:pspec}
+
+Hai chức năng lá có quy tắc phức tạp nhất được đặc tả bằng ngôn ngữ giả trình và bảng quyết định theo \cite[Ch.~2]{tung_qlhttt}; các chức năng lá còn lại đủ rõ qua tên và từ điển dữ liệu.
+
+\subsection{P-Spec 2.3 -- Đối chiếu đơn đặt hàng}
+
+\noindent Dữ liệu vào: Phiếu giao đã tiếp nhận, Kiện đã đọc, D5 Đơn đặt hàng.\\
+Dữ liệu ra: Kiện hợp lệ, Thông báo sai lệch.
+
+\begin{lstlisting}[language=gia-trinh]
+READ Phieu giao da tiep nhan P, danh sach Kien da doc L
+READ-FILE D5: cac dong don cua P.SoDDH vao bang CON_LAI (MaMH -> SL con phai nhan)
+DO WHILE con kien k trong L
+    ap dung Bang quyet dinh 4.x cho k
+    CASE
+      WHEN Chap nhan        : them k vao Kien hop le
+                              CON_LAI[k.MaMH] := CON_LAI[k.MaMH] - k.SoLuong
+      WHEN Ngoai don        : ghi sai lech (k.MaEPC, "Ngoai don")
+      WHEN Vuot so luong    : ghi sai lech (k.MaEPC, "Vuot so luong")
+      WHEN The chua dang ky : ghi sai lech (k.MaEPC, "The chua dang ky")
+REPEAT
+IF danh sach sai lech khac rong THEN
+    gui Thong bao sai lech (P.SoPhieuGiao, danh sach sai lech)
+\end{lstlisting}
+
+\subsection{P-Spec 2.4 -- Phân bổ vị trí cất}
+
+\noindent Dữ liệu vào: Kiện hợp lệ, D3 Vị trí.\\
+Dữ liệu ra: Kiện đã phân vị trí, Yêu cầu cất (ghi D8).
+
+\begin{lstlisting}[language=gia-trinh]
+DO WHILE con kien k trong Kien hop le
+    khu := KHU co NhomHangUuTien = nhom hang cua k.MaMH
+    o := o co TrangThai = "San sang", khong chua kien, ma nho nhat trong khu
+    IF khong co o THEN o := o san sang dau tien cua khu du phong
+    IF van khong co THEN
+        o := khu cho W ; ghi canh bao "Het vi tri"
+    ELSE
+        dat o.TrangThai := "Dat truoc"
+    ghi Yeu cau cat (k.MaKien, tu cua nhap N den o) vao D8
+    them (k, o) vao Kien da phan vi tri
+REPEAT
+\end{lstlisting}
+
+\noindent Giả trình viết không dấu để giữ đúng khuôn dạng mã; thuật ngữ trùng với từ điển dữ liệu ở Mục~\ref{sec:tudien}.
+
+\subsection{Bảng quyết định đối chiếu kiện tại cổng nhập}
+
+Bốn quy tắc ở Bảng~\ref{tab:bqd} phủ hết các trường hợp và loại trừ nhau, đúng yêu cầu “rành rẽ, không bỏ sót” của bảng quyết định \cite[Ch.~2]{tung_qlhttt}. Trong giả trình P-Spec 2.3, “Bảng quyết định 4.x” là Bảng~\ref{tab:bqd}.
+
+\begin{table}[H]
+\centering
+\caption{Bảng quyết định: kết quả đối chiếu một kiện tại cổng nhập}
+\label{tab:bqd}
+\small
+\begin{tabular}{l c c c c}
+\toprule
+\textbf{Điều kiện / Hành động} & \textbf{Q1} & \textbf{Q2} & \textbf{Q3} & \textbf{Q4} \\
+\midrule
+C1. Thẻ đã khai báo kiện? & K & C & C & C \\
+C2. Mặt hàng có trong đơn? & -- & K & C & C \\
+C3. Số lượng kiện $\le$ số lượng còn phải nhận? & -- & -- & K & C \\
+\midrule
+A1. Chấp nhận nhập & & & & \ding{51} \\
+A2. Ghi “Thẻ chưa đăng ký” & \ding{51} & & & \\
+A3. Ghi “Ngoài đơn” & & \ding{51} & & \\
+A4. Ghi “Vượt số lượng” & & & \ding{51} & \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize C: có; K: không; --: không xét.}
+\end{tabular}
+\end{table}
+
+% ============================================================
+% PHAN B -- PHAN TICH VE DU LIEU
+% ============================================================
+\section{Quy tắc mã hóa}
+\label{sec:mahoa}
+
+Mã vị trí dùng kiểu phân cấp để mã tự chỉ ra chỗ đứng trên sơ đồ kho; các chứng từ dùng mã phân đoạn có ngày để không nhập nhằng và dễ tra cứu (Bảng~\ref{tab:mahoa}). Kiểu mã và tiêu chí đánh giá theo \cite[Ch.~3]{tung_qlhttt}.
+
+\begin{table}[H]
+\centering
+\caption{Quy tắc mã hóa}
+\label{tab:mahoa}
+\small
+\begin{tabularx}{\textwidth}{L{2.7cm} L{2.1cm} Y L{2.8cm}}
+\toprule
+\textbf{Đối tượng} & \textbf{Kiểu mã} & \textbf{Cấu trúc} & \textbf{Ví dụ} \\
+\midrule
+Khu & Diễn nghĩa & 1 chữ cái; khu đặc biệt: N cửa nhập, X cửa xuất, W khu chờ & A \\
+Vị trí (ô kệ) & Phân cấp & Khu -- Dãy (2 số) -- Kệ (2 số) -- Ô (2 số) & A-03-02-05 \\
+Mặt hàng & Phân đoạn & Nhóm hàng (3 chữ) + số liên tiếp (5 số) & CAP-00125 \\
+Kiện hàng & Phân đoạn & KI + năm tháng (yymm) + số liên tiếp (5 số) & KI-2610-00342 \\
+Thẻ RFID & Theo chuẩn & Mã EPC 96 bit, 24 ký tự hexa \cite{epcgen2} & (24 ký tự hexa) \\
+Chứng từ & Phân đoạn & Loại (PN, PX, YC, KK, NV) + ngày (yymmdd) + số thứ tự (3 số) & PN-261006-001 \\
+Thiết bị & Phân đoạn & Loại (RD, GT, HH, AGV) + số thứ tự (2 số) & AGV-01 \\
+Đối tác, nhân viên & Liên tiếp có tiền tố & NCC / KH / NV + 4 số & NCC-0012 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Đánh giá theo các tiêu chí chất lượng mã: (i) không nhập nhằng, vì mọi mã là khóa duy nhất và mã EPC do chuẩn bảo đảm duy nhất; (ii) mở rộng được, vì mã vị trí thêm được dãy, kệ mới mà không đổi mã cũ; (iii) có tính gợi ý, vì mã vị trí và mã chứng từ đọc được bằng mắt; (iv) ngắn gọn, dài nhất 13 ký tự trừ mã EPC. Đánh đổi đã chấp nhận: mã mặt hàng gắn nhóm hàng sẽ phải đổi nếu hàng chuyển nhóm, trường hợp hiếm và được xử lý bằng tạo mã mới.
+
+\section{Từ điển dữ liệu}
+\label{sec:tudien}
+
+Các luồng dữ liệu trên BLD được định nghĩa theo ký pháp của \cite[Ch.~3]{tung_qlhttt}.
+
+\begin{lstlisting}
+Phieu giao hang       = So phieu giao + Ngay giao + Ma NCC + So don dat hang
+                        + {Ma mat hang + So luong giao}n
+Don dat hang          = So don dat hang + Ngay dat + Ma NCC
+                        + {Ma mat hang + So luong dat}n
+Du lieu thiet bi      = [Su kien doc the | Trang thai nhiem vu]
+Su kien doc the       = Ma thiet bi + Ma EPC + Thoi diem doc + (Cuong do tin hieu)
+Trang thai nhiem vu   = Ma nhiem vu + [Da nhan | Dang thuc hien | Hoan thanh | Loi]
+                        + Thoi diem
+Lenh nhiem vu         = Ma nhiem vu + Ma thiet bi + Ma kien + Vi tri di + Vi tri den
+Kien da doc           = {Ma kien + Ma EPC + Ma mat hang + So luong}n
+Ket qua doi chieu     = [Chap nhan | Ngoai don | Vuot so luong | The chua dang ky]
+Thong bao sai lech    = So phieu giao + {Ma EPC + Ket qua doi chieu}n
+Bien ban giao nhan    = So phieu giao + So phieu nhap + {Ma mat hang + So luong nhan}n
+Yeu cau xuat          = So yeu cau + Ngay yeu cau + Ma khach hang
+                        + {Ma mat hang + So luong yeu cau}n
+Xac nhan xuat kho     = So yeu cau + So phieu xuat + {Ma kien + Ma mat hang + So luong}n
+Quy hoach kho         = {Ma khu + Nhom hang uu tien + {Ma vi tri}n}n + ({Ma thiet bi}n)
+Phe duyet chenh lech  = Ma phien kiem ke + [Dieu chinh so | Dieu tra them]
+Bao cao kho           = [Bao cao nhap - xuat - ton | Bao cao hieu suat kho]
+Bang ke chung tu      = Ky + {So chung tu + Loai chung tu + Ngay}n
+Ma vi tri             = Ma khu + "-" + So day + "-" + So ke + "-" + So o
+* Ton kho khong phai luong hay kho du lieu: tinh tu cac kien co trang thai "Trong kho" *
+\end{lstlisting}
+
+\noindent Ký pháp: \code{=} được tạo từ, \code{+} và, \code{[ | ]} hoặc, \code{\{ \}n} lặp, \code{( )} tùy chọn, \code{* *} chú thích. Tên mục viết không dấu để giữ khuôn dạng; nghĩa tiếng Việt trùng với tên luồng trên BLD.
+
+\section{Mô hình thực thể liên kết}
+\label{sec:er}
+
+Mô hình gồm 20 kiểu thực thể phát hiện từ ba nguồn tài nguyên, giao dịch và thông tin cấu trúc hóa \cite[Ch.~6]{tung_qlhttt}, \cite{chen1976} (Hình~\ref{fig:er}). Các liên kết nhiều -- nhiều (đơn đặt hàng -- mặt hàng, phiếu nhập -- kiện, phiếu xuất -- kiện, yêu cầu xuất -- mặt hàng, phiên kiểm kê -- kiện) được thực thể hóa thành thực thể trung gian có khóa là tổ hợp khóa hai bên. Liên kết một -- một duy nhất là \code{THE\_RFID} -- \code{KIEN\_HANG}, tách riêng để thẻ được tái sử dụng độc lập với vòng đời kiện. \code{NHIEM\_VU\_VC} có hai liên kết với \code{VI\_TRI} (vị trí đi, vị trí đến). Liên kết của \code{NHAN\_VIEN} (người lập chứng từ, người kiểm kê) và \code{KHU} -- \code{PHIEN\_KIEM\_KE} không vẽ để sơ đồ dễ đọc; chi tiết ở Bảng~\ref{tab:luocdo}.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-er}
+\caption{Mô hình thực thể liên kết; \code{KIEN\_HANG} là trung tâm của mọi nghiệp vụ}
+\label{fig:er}
+\end{figure}
+
+\section{Chuẩn hóa từ phiếu nhập kho}
+\label{sec:chuanhoa}
+
+Từ chứng từ phiếu nhập kho, phương pháp phân rã \cite[Ch.~6]{tung_qlhttt}, \cite{codd1970} cho 7 quan hệ ở dạng chuẩn 3, trùng khớp với phần tương ứng của mô hình ER.
+
+\paragraph{Bước 1 -- Danh sách thuộc tính xuất phát} theo mẫu phiếu nhập/xuất kho của \cite[Ch.~6]{tung_qlhttt}: SoPN, NgayNhap, SoDDH, NgayDat, MaNCC, TenNCC, DiaChiNCC, MaNV, HoTenNV, \{MaKien, MaEPC, MaMH, TenMH, DonViTinh, SoLuong, MaViTri\}.
+
+\paragraph{Bước 2 -- Tu chỉnh} Loại Thành tiền, Cộng (thuộc tính tính toán); loại Đơn giá (giá trị kho thuộc phạm vi kế toán); tách người lập thành mã và họ tên.
+
+\paragraph{Bước 3 -- Phụ thuộc hàm}
+\begin{align*}
+&F_1: \text{SoPN} \to \text{NgayNhap, SoDDH, MaNV} &
+&F_2: \text{SoDDH} \to \text{NgayDat, MaNCC} \\
+&F_3: \text{MaNCC} \to \text{TenNCC, DiaChiNCC} &
+&F_4: \text{MaNV} \to \text{HoTenNV} \\
+&F_5: \text{MaKien} \to \text{MaEPC, MaMH, SoLuong, MaViTri} &
+&F_6: \text{MaEPC} \to \text{MaKien} \\
+&F_7: \text{MaMH} \to \text{TenMH, DonViTinh}
+\end{align*}
+
+\paragraph{Bước 4 -- Phân rã} Bảng~\ref{tab:chuanhoa} trình bày ba bước chuẩn hóa; thuộc tính khóa được gạch chân.
+
+\begin{table}[H]
+\centering
+\caption{Chuẩn hóa từ phiếu nhập kho}
+\label{tab:chuanhoa}
+\small
+\begin{tabularx}{\textwidth}{L{1.2cm} L{4.4cm} Y}
+\toprule
+\textbf{Dạng} & \textbf{Thao tác} & \textbf{Quan hệ thu được} \\
+\midrule
+1NF & Tách nhóm lặp \{MaKien\ldots\} kèm khóa SoPN & R1(\underline{SoPN}, NgayNhap, SoDDH, NgayDat, MaNCC, TenNCC, DiaChiNCC, MaNV, HoTenNV); R2(\underline{SoPN, MaKien}, MaEPC, MaMH, TenMH, DonViTinh, SoLuong, MaViTri) \\
+2NF & R2 có phụ thuộc bộ phận $F_5$; tách ra & DONG\_PHIEU\_NHAP(\underline{SoPN, MaKien}); R22(\underline{MaKien}, MaEPC, MaMH, TenMH, DonViTinh, SoLuong, MaViTri). R1 có khóa đơn nên đã ở 2NF \\
+3NF & R1 có bắc cầu qua SoDDH, MaNCC, MaNV; R22 có bắc cầu qua MaMH & PHIEU\_NHAP(\underline{SoPN}, NgayNhap, SoDDH, MaNV); DON\_DAT\_HANG(\underline{SoDDH}, NgayDat, MaNCC); NHA\_CUNG\_CAP(\underline{MaNCC}, TenNCC, DiaChiNCC); NHAN\_VIEN(\underline{MaNV}, HoTenNV); KIEN\_HANG(\underline{MaKien}, MaEPC, MaMH, SoLuong, MaViTri); MAT\_HANG(\underline{MaMH}, TenMH, DonViTinh) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Bước 5 -- Lặp lại} Các bước trên được lặp lại với phiếu xuất kho, biên bản kiểm kê, phiếu nhiệm vụ vận chuyển và sơ đồ quy hoạch kho. Khi gộp các quan hệ cùng tên, các phụ thuộc hàm phát sinh được kiểm tra lại và chuẩn hóa tiếp. Kết quả cuối cùng ở Mục~\ref{sec:luocdo}.
+
+\section{Lược đồ quan hệ}
+\label{sec:luocdo}
+
+Hai mươi quan hệ ở Bảng~\ref{tab:luocdo} đều ở dạng chuẩn 3 và là đầu vào cho thiết kế cơ sở dữ liệu ở Chương~\ref{ch:chitiet}; Bảng~\ref{tab:khoquanhe} đối chiếu từng kho dữ liệu trên BLD với các quan hệ tương ứng.
+
+{\small
+\begin{longtable}{r L{3.7cm} L{2.3cm} L{3.0cm} p{4.0cm}}
+\caption{Lược đồ quan hệ}\label{tab:luocdo}\\
+\toprule
+\textbf{\#} & \textbf{Quan hệ} & \textbf{Khóa chính} & \textbf{Khóa ngoại} & \textbf{Thuộc tính mô tả} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{\#} & \textbf{Quan hệ} & \textbf{Khóa chính} & \textbf{Khóa ngoại} & \textbf{Thuộc tính mô tả} \\
+\midrule
+\endhead
+1 & KHU & MaKhu & -- & TenKhu, NhomHangUuTien, LaKhuDuPhong \\
+2 & VI\_TRI & MaViTri & MaKhu & Day, Ke, O, SucChua, TrangThai \\
+3 & MAT\_HANG & MaMH & -- & TenMH, NhomHang, DonViTinh, MoTa \\
+4 & NHA\_CUNG\_CAP & MaNCC & -- & TenNCC, DiaChi, DienThoai \\
+5 & KHACH\_HANG & MaKH & -- & TenKH, DiaChi, DienThoai \\
+6 & NHAN\_VIEN & MaNV & -- & HoTen, VaiTro \\
+7 & THE\_RFID & MaEPC & -- & TrangThai, NgayDangKy \\
+8 & KIEN\_HANG & MaKien & MaEPC (duy nhất), MaMH, MaViTri & SoLuong, TrangThai, NgayNhap \\
+9 & THIET\_BI & MaTB & -- & LoaiTB, MoTaViTriLap, TrangThai \\
+10 & DON\_DAT\_HANG & SoDDH & MaNCC & NgayDat \\
+11 & DONG\_DDH & SoDDH, MaMH & SoDDH, MaMH & SoLuongDat \\
+12 & PHIEU\_NHAP & SoPN & SoDDH, MaNV & NgayNhap \\
+13 & DONG\_PHIEU\_NHAP & SoPN, MaKien & SoPN, MaKien & -- \\
+14 & YEU\_CAU\_XUAT & SoYC & MaKH & NgayYC \\
+15 & DONG\_YC\_XUAT & SoYC, MaMH & SoYC, MaMH & SoLuongYC \\
+16 & PHIEU\_XUAT & SoPX & SoYC, MaNV & NgayXuat \\
+17 & DONG\_PHIEU\_XUAT & SoPX, MaKien & SoPX, MaKien & -- \\
+18 & NHIEM\_VU\_VC & MaNVu & MaKien, ViTriDi, ViTriDen, MaTB & LoaiNVu, TrangThai, TgTao, TgHoanThanh \\
+19 & PHIEN\_KIEM\_KE & MaPhien & MaKhu, MaNV & NgayKK, TrangThai \\
+20 & DONG\_KIEM\_KE & MaPhien, MaKien & MaPhien, MaKien & KetQua \\
+\bottomrule
+\end{longtable}
+}
+
+\begin{table}[H]
+\centering
+\caption{Đối chiếu kho dữ liệu trên BLD với quan hệ}
+\label{tab:khoquanhe}
+\small
+\begin{tabularx}{0.9\textwidth}{L{4.2cm} Y}
+\toprule
+\textbf{Kho dữ liệu} & \textbf{Quan hệ} \\
+\midrule
+D1 Mặt hàng & MAT\_HANG \\
+D2 Đối tác & NHA\_CUNG\_CAP, KHACH\_HANG \\
+D3 Vị trí, thiết bị & KHU, VI\_TRI, THIET\_BI \\
+D4 Kiện, thẻ RFID & KIEN\_HANG, THE\_RFID \\
+D5 Đơn đặt hàng & DON\_DAT\_HANG, DONG\_DDH \\
+D6 Phiếu nhập & PHIEU\_NHAP, DONG\_PHIEU\_NHAP \\
+D7 Yêu cầu, phiếu xuất & YEU\_CAU\_XUAT, DONG\_YC\_XUAT, PHIEU\_XUAT, DONG\_PHIEU\_XUAT \\
+D8 Nhiệm vụ vận chuyển & NHIEM\_VU\_VC \\
+D9 Kiểm kê & PHIEN\_KIEM\_KE, DONG\_KIEM\_KE \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\code{NHAN\_VIEN} không gắn với kho dữ liệu nào vì nhân viên là người dùng hệ thống; quan hệ được giữ để ghi người lập chứng từ và phục vụ phân quyền. Cửa nhập, cửa xuất và khu chờ là các vị trí thuộc khu đặc biệt N, X, W, nên \code{ViTriDi}, \code{ViTriDen} luôn tham chiếu được \code{VI\_TRI}.
+
+\section{So sánh hai phương pháp lập biểu đồ cấu trúc dữ liệu}
+\label{sec:sosanh}
+
+Theo yêu cầu của \cite[Ch.~6]{tung_qlhttt}, kết quả của hai phương pháp được so sánh để phát hiện sai sót (Bảng~\ref{tab:sosanh}).
+
+\begin{table}[H]
+\centering
+\caption{So sánh mô hình thực thể liên kết và mô hình quan hệ}
+\label{tab:sosanh}
+\small
+\begin{tabularx}{\textwidth}{L{3.6cm} Y Y}
+\toprule
+\textbf{Tiêu chí} & \textbf{Thực thể liên kết (Mục~\ref{sec:er})} & \textbf{Quan hệ (Mục~\ref{sec:chuanhoa})} \\
+\midrule
+Hướng đi & Từ trên xuống: tài nguyên, giao dịch, thông tin cấu trúc hóa & Từ dưới lên: thuộc tính trên chứng từ \\
+Kết quả trên phạm vi phiếu nhập & 7 thực thể tương ứng & 7 quan hệ 3NF, trùng tên và khóa với ER \\
+Khác biệt & Tách THE\_RFID riêng khỏi KIEN\_HANG & Phụ thuộc $F_6$ sẽ gộp mã EPC vào KIEN\_HANG \\
+Chỉ một cách phát hiện được & KHU, THIET\_BI, NHIEM\_VU\_VC & -- \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Hai cách không mâu thuẫn. Khác biệt duy nhất được giải quyết theo hướng giữ \code{THE\_RFID} riêng, vì thẻ có vòng đời độc lập (đăng ký trước khi gắn, thu hồi sau khi xuất) mà phiếu nhập không thể hiện; điều này phù hợp nhận xét của giáo trình rằng mô hình thực thể liên kết bao quát hơn, còn mô hình quan hệ vừa đủ cho kết xuất.
+
+\section{Phân loại dữ liệu và nguồn gốc chính thức}
+\label{sec:phanloaidl}
+
+\textit{Mục bổ sung ngoài giáo trình.} Hai mươi thực thể được chia thành dữ liệu chủ, dữ liệu tham chiếu và dữ liệu giao dịch theo \cite{dmbok2}; cách chia trùng với ba nguồn phát hiện thực thể của \cite[Ch.~6]{tung_qlhttt} (Bảng~\ref{tab:phanloaidl}).
+
+\begin{table}[H]
+\centering
+\caption{Phân loại dữ liệu và nguồn gốc chính thức}
+\label{tab:phanloaidl}
+\small
+\begin{tabularx}{\textwidth}{L{2.4cm} L{2.3cm} Y L{4.2cm}}
+\toprule
+\textbf{Nhóm} & \textbf{Nguồn theo giáo trình} & \textbf{Thực thể} & \textbf{Nguồn gốc chính thức} \\
+\midrule
+Dữ liệu chủ & Tài nguyên & MAT\_HANG, NHA\_CUNG\_CAP & Phòng Mua hàng; kho giữ bản sao \\
+Dữ liệu chủ & Tài nguyên & KHACH\_HANG & Phòng Kinh doanh \\
+Dữ liệu chủ & Tài nguyên & NHAN\_VIEN & Bộ phận nhân sự (ngoài phạm vi) \\
+Dữ liệu chủ & Tài nguyên & KIEN\_HANG, THE\_RFID, THIET\_BI & Hệ thống kho \\
+Dữ liệu tham chiếu & Thông tin cấu trúc hóa & KHU, VI\_TRI; tập giá trị trạng thái, loại, kết quả & Hệ thống kho, theo quy hoạch được duyệt \\
+Dữ liệu giao dịch & Giao dịch & Đơn đặt hàng, phiếu nhập, yêu cầu xuất, phiếu xuất, nhiệm vụ, kiểm kê và các dòng chi tiết & Hệ thống kho; đơn đặt hàng là bản sao \\
+Dữ liệu sự kiện & (bổ sung ở thiết kế) & Bản tin thiết bị & Thiết bị kho, qua MQTT \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\code{KIEN\_HANG} được xếp vào dữ liệu chủ vì mỗi kiện được định danh duy nhất và được nhiều giao dịch tham chiếu suốt vòng đời; trạng thái và vị trí của kiện chỉ thay đổi thông qua giao dịch. Với dữ liệu chủ có nguồn gốc bên ngoài, hệ thống kho không tự sửa nội dung mà nhận cập nhật từ bộ phận sở hữu.
+
+\section{Ma trận chức năng -- dữ liệu}
+\label{sec:crud}
+
+\textit{Mục bổ sung ngoài giáo trình.} Ma trận CRUD kiểm chứng chéo BLD với mô hình dữ liệu: mỗi thực thể phải có chức năng tạo ra nó, và mỗi chức năng lá phải chạm tới ít nhất một thực thể (Bảng~\ref{tab:crud}).
+
+{\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{L{2.8cm} L{1.5cm} L{2.1cm} L{2.1cm} L{1.7cm} L{2.1cm} L{1.1cm}}
+\caption{Ma trận chức năng -- dữ liệu (số trong ngoặc là chức năng lá)}\label{tab:crud}\\
+\toprule
+\textbf{Thực thể} & \textbf{1 Danh mục} & \textbf{2 Nhập kho} & \textbf{3 Xuất kho} & \textbf{4 Điều phối} & \textbf{5 Kiểm kê} & \textbf{6 Báo cáo} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Thực thể} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} \\
+\midrule
+\endhead
+MAT\_HANG & CUD (1.1) & R (2.2, 2.3) & R (3.1, 3.2) & & R (5.3) & R \\
+NHA\_CUNG\_CAP & CUD (1.2) & R (2.1) & & & & R \\
+KHACH\_HANG & CUD (1.2) & & R (3.1) & & & R \\
+NHAN\_VIEN & & R (2.5) & R (3.3) & & R (5.1) & R \\
+THE\_RFID & CUD (1.4) & U (2.2) & U (3.4) & & R (5.2) & \\
+KIEN\_HANG & & C (2.2), U (2.5) & R (3.2), U (3.4) & U (4.3) & R (5.3), U (5.4) & R \\
+KHU & CUD (1.3) & R (2.4) & & & R (5.1) & R \\
+VI\_TRI & CUD (1.3) & RU (2.4) & R (3.2) & U (4.3) & R (5.3) & R \\
+THIET\_BI & CUD (1.4) & R (2.2) & R (3.4) & R (4.1), U (4.2) & R (5.2) & R \\
+Đơn đặt hàng\textsuperscript{*} & & C (2.1), R (2.3) & & & & R \\
+Phiếu nhập\textsuperscript{*} & & C (2.5) & & & & R \\
+Yêu cầu xuất\textsuperscript{*} & & & C (3.1), R (3.2) & & & R \\
+Phiếu xuất\textsuperscript{*} & & & C (3.3), U (3.4) & & & R \\
+NHIEM\_VU\_VC & & C (2.4) & C (3.2) & U (4.1--4.3) & & R \\
+Kiểm kê\textsuperscript{*} & & & & & C (5.1, 5.2), U (5.3, 5.4) & R \\
+\bottomrule
+\multicolumn{7}{l}{\footnotesize \textsuperscript{*} Gộp chứng từ và dòng chứng từ vì luôn được tạo và đọc cùng nhau.}
+\end{longtable}
+}
+
+Kết quả kiểm tra:
+\begin{enumerate}
+  \item \textbf{Phát hiện:} \code{NHAN\_VIEN} không có chức năng tạo. Xử lý: quản lý người dùng được đặt trong thiết kế kiểm soát và phân quyền (Mục~\ref{sec:kiemsoat}).
+  \item \textbf{Phát hiện:} nhiệm vụ vận chuyển được tạo ở 2.4 và 3.2, không phải ở 4.1. Xử lý: chức năng 4.1 được đặt tên “Giao nhiệm vụ” (gán thiết bị, phát lệnh) như trên Hình~\ref{fig:bpc}.
+  \item Không có thao tác xóa trên dữ liệu giao dịch và \code{KIEN\_HANG}, theo chủ ý: chứng từ phải giữ để đối chiếu và truy vết; hủy chứng từ thực hiện bằng trạng thái.
+  \item \code{KIEN\_HANG} được 5 trên 6 nhóm chức năng đọc hoặc ghi, nhiều nhất trong mô hình; đây là căn cứ ưu tiên chỉ dẫn và kiểm soát cập nhật đồng thời cho bảng này ở Mục~\ref{sec:csdl}.
+  \item Mọi chức năng lá đều chạm tới ít nhất một thực thể; nhóm 6 chỉ đọc, đúng bản chất báo cáo.
+\end{enumerate}
+
+\section{Giả định của giai đoạn phân tích}
+\label{sec:giadinh}
+
+Các giả định sau định hình toàn bộ BLD và mô hình dữ liệu; mỗi giả định ghi kèm phần bị ảnh hưởng nếu thay đổi.
+\begin{enumerate}
+  \item Xuất nguyên kiện, không tách lẻ kiện khi xuất. Nếu kho có xuất lẻ: thêm số lượng xuất vào \code{DONG\_PHIEU\_XUAT} và nghiệp vụ tách kiện.
+  \item Mỗi kiện gắn đúng một thẻ RFID; thẻ được tái sử dụng sau khi kiện xuất kho.
+  \item Thiết bị kho là tác nhân ngoài, nằm ngoài ranh giới hệ thống thông tin.
+  \item Hệ thống không quản lý giá trị hàng tồn; đơn giá và hạch toán thuộc Kế toán.
+  \item Đơn đặt hàng do Phòng Mua hàng lập và gửi sang; hệ thống chỉ lưu bản sao để đối chiếu.
+  \item Bản tin thiết bị thô chưa có trong mô hình logic; được bổ sung ở thiết kế theo hướng dẫn “thêm thực thể để thuận tiện cài đặt” của \cite[Ch.~7]{tung_qlhttt}.
+\end{enumerate}

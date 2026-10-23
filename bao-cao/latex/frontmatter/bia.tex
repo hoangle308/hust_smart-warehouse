@@ -1,0 +1,62 @@
+% ============================================================
+% bia.tex -- Trang bia theo mau Bai tap lon, DH Bach khoa Ha Noi
+% Noi dung lay tu frontmatter/thongtin.tex; khong can sua file nay.
+% ============================================================
+
+% Mot o sinh vien: ho ten (dam), MSSV, email
+\newcommand{\OSinhVien}[3]{%
+  \begin{minipage}[t]{0.47\textwidth}\centering
+    {\bfseries #1}\\
+    {\small MSSV: #2}\\
+    {\small Email: #3}
+  \end{minipage}}
+
+\begin{titlepage}
+% Khung vien kep quanh trang (vien ngoai dam, vien trong manh)
+\begin{tikzpicture}[remember picture, overlay]
+  \draw[line width=2.4pt]
+    ($(current page.south west)+(3.3cm,1.9cm)$) rectangle
+    ($(current page.north east)+(-1.4cm,-1.9cm)$);
+  \draw[line width=0.6pt]
+    ($(current page.south west)+(3.42cm,2.02cm)$) rectangle
+    ($(current page.north east)+(-1.52cm,-2.02cm)$);
+\end{tikzpicture}%
+\singlespacing\setlength{\parskip}{0pt}%
+\centering
+\vspace*{0.6cm}
+
+{\bfseries \TenDaiHoc}\\[4pt]
+{\bfseries \TenTruong}
+
+\vspace{0.9cm}
+\includegraphics[height=4.1cm]{figures/logo-hust}
+
+\vspace{1.2cm}
+{\fontsize{26}{32}\selectfont\bfseries BÁO CÁO BÀI TẬP LỚN\par}
+
+\vspace{0.9cm}
+{\fontsize{16}{20}\selectfont\bfseries \DeTaiDongMot\\ \DeTaiDongHai\par}
+
+\vspace{0.8cm}
+% Nhom 5 sinh vien: hai nguoi moi hang nhu mau, nguoi thu nam o giua
+\OSinhVien{\SVmotTen}{\SVmotMSSV}{\SVmotEmail}\hfill
+\OSinhVien{\SVhaiTen}{\SVhaiMSSV}{\SVhaiEmail}
+
+\vspace{0.45cm}
+\OSinhVien{\SVbaTen}{\SVbaMSSV}{\SVbaEmail}\hfill
+\OSinhVien{\SVbonTen}{\SVbonMSSV}{\SVbonEmail}
+
+\vspace{0.45cm}
+\OSinhVien{\SVnamTen}{\SVnamMSSV}{\SVnamEmail}
+
+\vspace{0.7cm}
+{\bfseries Học phần: \MaHocPhan{} -- \TenHocPhan}\\[4pt]
+{\bfseries Lớp: \Lop}
+
+\vfill
+{\bfseries Giảng viên hướng dẫn: \GVHD}
+
+\vspace{0.9cm}
+\ThoiGian
+\vspace*{0.4cm}
+\end{titlepage}

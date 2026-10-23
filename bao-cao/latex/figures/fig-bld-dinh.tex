@@ -1,0 +1,83 @@
+% Hinh: BLD logic muc dinh cua he thong moi (ve theo dai; tac nhan va kho duoc ve lap lai)
+\begin{tikzpicture}[ex/.style={ent, minimum width=27mm}]
+\def\X{6.4}\def\S{13.8}\def\SL{10.8}
+% ---- Dai 1: Quan ly danh muc
+\node[proc] (p1) at (\X,0) {\textbf{1}\\Quản lý danh mục};
+\node[ex] (a1) at (1.35, 0.85) {Phòng Mua hàng};
+\node[ex] (a2) at (1.35, 0)    {Phòng Kinh doanh};
+\node[ex] (a3) at (1.35,-0.85) {Ban giám đốc};
+\draw[flow] (a1.east) -- node[fl, above, sloped, pos=0.35] {Hàng, NCC} (p1);
+\draw[flow] (a2.east) -- node[fl, above, pos=0.35] {Khách hàng} (p1);
+\draw[flow] (a3.east) -- node[fl, below, sloped, pos=0.35] {Quy hoạch kho} (p1);
+\pic at (\S, 0.75) {store={D1/Mặt hàng}};   \draw[flow] (p1) -- (\SL, 0.75);
+\pic at (\S, 0)    {store={D2/Đối tác}};    \draw[flow] (p1) -- (\SL, 0);
+\pic at (\S,-0.75) {store={D3/Vị trí, thiết bị}}; \draw[flow] (p1) -- (\SL,-0.75);
+\draw[densely dotted, black!40] (0,-1.7) -- (\S,-1.7);
+% ---- Dai 2: Nhap kho
+\begin{scope}[yshift=-3.6cm]
+\node[proc] (p2) at (\X,0) {\textbf{2}\\Nhập kho};
+\node[ex] (b1) at (1.35, 1.0)  {Nhà cung cấp};
+\node[ex] (b2) at (1.35, 0)    {Phòng Mua hàng};
+\node[ex] (b3) at (1.35,-1.0)  {Thiết bị kho};
+\draw[flow] ($(b1.east)+(0,0.1)$) -- node[fl, above, sloped, pos=0.35] {Phiếu giao hàng} (p2);
+\draw[flow] (p2) -- node[fl, below, sloped, pos=0.65] {Biên bản giao nhận} ($(b1.east)+(0,-0.1)$);
+\draw[flow] ($(b2.east)+(0,0.1)$) -- node[fl, above, pos=0.35] {Đơn đặt hàng} (p2);
+\draw[flow] (p2) -- node[fl, below, pos=0.65] {Thông báo sai lệch} ($(b2.east)+(0,-0.1)$);
+\draw[flow] (b3.east) -- node[fl, below, sloped, pos=0.35] {Sự kiện đọc thẻ} (p2);
+\pic at (\S, 1.4)  {store={D5/Đơn đặt hàng}};      \draw[flow, <->] (p2) -- (\SL, 1.4);
+\pic at (\S, 0.7)  {store={D3/Vị trí, thiết bị}};  \draw[flow] (\SL, 0.7) -- (p2);
+\pic at (\S, 0)    {storehot={D4/Kiện, thẻ RFID}}; \draw[flow] (p2) -- (\SL, 0);
+\pic at (\S,-0.7)  {store={D6/Phiếu nhập}};        \draw[flow] (p2) -- (\SL,-0.7);
+\pic at (\S,-1.4)  {store={D8/Nhiệm vụ vận chuyển}}; \draw[flow] (p2) -- node[fl, below, sloped, pos=0.7] {Yêu cầu cất} (\SL,-1.4);
+\draw[densely dotted, black!40] (0,-2.1) -- (\S,-2.1);
+\end{scope}
+% ---- Dai 3: Xuat kho
+\begin{scope}[yshift=-7.6cm]
+\node[proc] (p3) at (\X,0) {\textbf{3}\\Xuất kho};
+\node[ex] (c1) at (1.35, 0.6) {Phòng Kinh doanh};
+\node[ex] (c2) at (1.35,-0.8) {Thiết bị kho};
+\draw[flow] ($(c1.east)+(0,0.1)$) -- node[fl, above, sloped, pos=0.35] {Yêu cầu xuất} (p3);
+\draw[flow] (p3) -- node[fl, below, sloped, pos=0.65] {Xác nhận xuất kho} ($(c1.east)+(0,-0.1)$);
+\draw[flow] (c2.east) -- node[fl, below, sloped, pos=0.35] {Sự kiện đọc thẻ} (p3);
+\pic at (\S, 1.05)  {store={D7/Yêu cầu, phiếu xuất}}; \draw[flow, <->] (p3) -- (\SL, 1.05);
+\pic at (\S, 0.35)  {storehot={D4/Kiện, thẻ RFID}};   \draw[flow, <->] (p3) -- (\SL, 0.35);
+\pic at (\S,-0.35)  {store={D3/Vị trí, thiết bị}};    \draw[flow] (\SL,-0.35) -- (p3);
+\pic at (\S,-1.05)  {store={D8/Nhiệm vụ vận chuyển}}; \draw[flow] (p3) -- node[fl, below, sloped, pos=0.7] {Yêu cầu lấy} (\SL,-1.05);
+\draw[densely dotted, black!40] (0,-1.75) -- (\S,-1.75);
+\end{scope}
+% ---- Dai 4: Dieu phoi van chuyen
+\begin{scope}[yshift=-11.0cm]
+\node[proc] (p4) at (\X,0) {\textbf{4}\\Điều phối vận chuyển};
+\node[ex] (d1) at (1.35,0) {Thiết bị kho};
+\draw[flow] ($(d1.east)+(0,0.1)$) -- node[fl, above, pos=0.4] {Trạng thái nhiệm vụ} ($(p4.west)+(0,0.1)$);
+\draw[flow] ($(p4.west)+(0,-0.1)$) -- node[fl, below, pos=0.6] {Lệnh nhiệm vụ} ($(d1.east)+(0,-0.1)$);
+\pic at (\S, 0.7)  {store={D8/Nhiệm vụ vận chuyển}}; \draw[flow, <->] (p4) -- (\SL, 0.7);
+\pic at (\S, 0)    {storehot={D4/Kiện, thẻ RFID}};   \draw[flow, <->] (p4) -- node[fl, above, pos=0.6] {Cập nhật vị trí} (\SL, 0);
+\pic at (\S,-0.7)  {store={D3/Vị trí, thiết bị}};    \draw[flow, <->] (p4) -- (\SL,-0.7);
+\draw[densely dotted, black!40] (0,-1.5) -- (\S,-1.5);
+\end{scope}
+% ---- Dai 5: Kiem ke
+\begin{scope}[yshift=-14.1cm]
+\node[proc] (p5) at (\X,0) {\textbf{5}\\Kiểm kê};
+\node[ex] (e1) at (1.35, 0.6) {Thiết bị kho};
+\node[ex] (e2) at (1.35,-0.6) {Ban giám đốc};
+\draw[flow] (e1.east) -- node[fl, above, sloped, pos=0.35] {Sự kiện đọc thẻ} (p5);
+\draw[flow] (e2.east) -- node[fl, below, sloped, pos=0.35] {Phê duyệt chênh lệch} (p5);
+\pic at (\S, 0.7)  {store={D9/Kiểm kê}};             \draw[flow] (p5) -- (\SL, 0.7);
+\pic at (\S, 0)    {storehot={D4/Kiện, thẻ RFID}};   \draw[flow, <->] (p5) -- (\SL, 0);
+\pic at (\S,-0.7)  {store={D3/Vị trí, thiết bị}};    \draw[flow] (\SL,-0.7) -- (p5);
+\draw[densely dotted, black!40] (0,-1.5) -- (\S,-1.5);
+\end{scope}
+% ---- Dai 6: Bao cao, tra cuu
+\begin{scope}[yshift=-17.3cm]
+\node[proc] (p6) at (\X,0) {\textbf{6}\\Báo cáo, tra cứu};
+\node[ex] (f1) at (1.35, 0.6) {Kế toán};
+\node[ex] (f2) at (1.35,-0.6) {Ban giám đốc};
+\draw[flow] (p6) -- node[fl, above, sloped, pos=0.65] {Bảng kê chứng từ} (f1.east);
+\draw[flow] (p6) -- node[fl, below, sloped, pos=0.65] {Báo cáo kho} (f2.east);
+\pic at (\S, 1.05)  {storehot={D4/Kiện, thẻ RFID}}; \draw[flow] (\SL, 1.05) -- (p6);
+\pic at (\S, 0.35)  {store={D6/Phiếu nhập}};        \draw[flow] (\SL, 0.35) -- (p6);
+\pic at (\S,-0.35)  {store={D7/Yêu cầu, phiếu xuất}}; \draw[flow] (\SL,-0.35) -- (p6);
+\pic at (\S,-1.05)  {store={D9/Kiểm kê}};           \draw[flow] (\SL,-1.05) -- (p6);
+\end{scope}
+\end{tikzpicture}

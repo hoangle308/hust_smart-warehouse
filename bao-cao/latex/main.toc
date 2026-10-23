@@ -1,0 +1,146 @@
+\xpginauxfiletrue 
+\selectlanguage *{vietnamese}
+\contentsline {chapter}{Tóm tắt}{1}{Doc-Start}%
+\contentsline {chapter}{Danh mục hình vẽ}{5}{section*.1}%
+\contentsline {chapter}{Danh mục bảng biểu}{5}{section*.2}%
+\contentsline {chapter}{Danh mục từ viết tắt}{7}{section*.2}%
+\contentsline {chapter}{Danh mục ký hiệu}{8}{table.0.1}%
+\contentsline {paragraph}{Ký hiệu trên sơ đồ}{8}{paragraph*.3}%
+\contentsline {paragraph}{Ký hiệu mã trong báo cáo}{8}{paragraph*.4}%
+\contentsline {paragraph}{Quy ước}{9}{paragraph*.5}%
+\contentsline {chapter}{\numberline {1}Giới thiệu}{9}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Bối cảnh}{9}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Mục tiêu và phạm vi}{9}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Phương pháp thực hiện}{10}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Bố cục báo cáo}{10}{section.1.4}%
+\contentsline {chapter}{\numberline {2}Cơ sở lý thuyết}{10}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Phương pháp phân tích và thiết kế hệ thống có cấu trúc}{10}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Công cụ diễn tả xử lý}{11}{section.2.2}%
+\contentsline {paragraph}{Biểu đồ phân cấp chức năng (BPC)}{11}{paragraph*.7}%
+\contentsline {paragraph}{Biểu đồ luồng dữ liệu (BLD)}{11}{paragraph*.8}%
+\contentsline {paragraph}{Đặc tả chức năng (P-Spec)}{11}{paragraph*.9}%
+\contentsline {section}{\numberline {2.3}Công cụ diễn tả dữ liệu}{11}{section.2.3}%
+\contentsline {paragraph}{Mã hóa}{11}{paragraph*.10}%
+\contentsline {paragraph}{Từ điển dữ liệu}{11}{paragraph*.11}%
+\contentsline {paragraph}{Mô hình thực thể liên kết và mô hình quan hệ}{11}{paragraph*.12}%
+\contentsline {section}{\numberline {2.4}Thiết kế chương trình có cấu trúc}{12}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Công nghệ RFID và chuẩn EPC}{12}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Giao thức MQTT}{12}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Kiến trúc ba tầng và công nghệ cài đặt}{12}{section.2.7}%
+\contentsline {chapter}{\numberline {3}Khảo sát hiện trạng và xác lập dự án}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Bối cảnh và mục đích khảo sát}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Phương pháp khảo sát}{13}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Hiện trạng quy trình nghiệp vụ kho}{14}{section.3.3}%
+\contentsline {paragraph}{Nhập kho}{14}{paragraph*.15}%
+\contentsline {paragraph}{Xuất kho}{14}{paragraph*.16}%
+\contentsline {paragraph}{Vận chuyển nội bộ}{14}{paragraph*.17}%
+\contentsline {paragraph}{Kiểm kê}{14}{paragraph*.18}%
+\contentsline {paragraph}{Báo cáo}{15}{paragraph*.19}%
+\contentsline {section}{\numberline {3.4}Phân loại thông tin thu thập}{15}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Đánh giá yếu kém và yêu cầu nảy sinh}{15}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Phạm vi, mục tiêu và hạn chế}{16}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Phạm vi}{16}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Mục tiêu}{17}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Hạn chế}{17}{subsection.3.6.3}%
+\contentsline {section}{\numberline {3.7}Phác họa giải pháp và nghiên cứu tính khả thi}{17}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Lập dự trù và kế hoạch triển khai dự án}{18}{section.3.8}%
+\contentsline {subsection}{\numberline {3.8.1}Hình thành thỏa thuận}{18}{subsection.3.8.1}%
+\contentsline {subsection}{\numberline {3.8.2}Dự trù thiết bị}{19}{subsection.3.8.2}%
+\contentsline {subsection}{\numberline {3.8.3}Kế hoạch triển khai}{19}{subsection.3.8.3}%
+\contentsline {chapter}{\numberline {4}Phân tích hệ thống}{19}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Biểu đồ phân cấp chức năng}{20}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Biểu đồ luồng dữ liệu mức ngữ cảnh}{20}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Biểu đồ luồng dữ liệu vật lý của hệ thống cũ}{21}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Chuyển BLD vật lý sang logic và hệ thống cũ sang mới}{21}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Biểu đồ luồng dữ liệu logic mức đỉnh của hệ thống mới}{22}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Biểu đồ luồng dữ liệu mức dưới đỉnh}{23}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Chức năng 2 -- Nhập kho}{24}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Chức năng 3 -- Xuất kho}{24}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Chức năng 4 -- Điều phối vận chuyển}{25}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.4}Chức năng 5 -- Kiểm kê}{25}{subsection.4.6.4}%
+\contentsline {section}{\numberline {4.7}Đặc tả chức năng}{26}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}P-Spec 2.3 -- Đối chiếu đơn đặt hàng}{26}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}P-Spec 2.4 -- Phân bổ vị trí cất}{27}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Bảng quyết định đối chiếu kiện tại cổng nhập}{27}{subsection.4.7.3}%
+\contentsline {section}{\numberline {4.8}Quy tắc mã hóa}{27}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Từ điển dữ liệu}{28}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Mô hình thực thể liên kết}{29}{section.4.10}%
+\contentsline {section}{\numberline {4.11}Chuẩn hóa từ phiếu nhập kho}{30}{section.4.11}%
+\contentsline {paragraph}{Bước 1 -- Danh sách thuộc tính xuất phát}{30}{paragraph*.38}%
+\contentsline {paragraph}{Bước 2 -- Tu chỉnh}{30}{paragraph*.39}%
+\contentsline {paragraph}{Bước 3 -- Phụ thuộc hàm}{30}{paragraph*.40}%
+\contentsline {paragraph}{Bước 4 -- Phân rã}{30}{paragraph*.41}%
+\contentsline {paragraph}{Bước 5 -- Lặp lại}{31}{paragraph*.43}%
+\contentsline {section}{\numberline {4.12}Lược đồ quan hệ}{31}{section.4.12}%
+\contentsline {section}{\numberline {4.13}So sánh hai phương pháp lập biểu đồ cấu trúc dữ liệu}{33}{section.4.13}%
+\contentsline {section}{\numberline {4.14}Phân loại dữ liệu và nguồn gốc chính thức}{34}{section.4.14}%
+\contentsline {section}{\numberline {4.15}Ma trận chức năng -- dữ liệu}{34}{section.4.15}%
+\contentsline {section}{\numberline {4.16}Giả định của giai đoạn phân tích}{36}{section.4.16}%
+\contentsline {chapter}{\numberline {5}Thiết kế tổng thể}{36}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Phương thức sử dụng máy tính và kiến trúc ba tầng}{36}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Phân định máy tính và thủ công}{37}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Phân định hệ thống con}{38}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Thiết kế chi tiết}{39}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Thiết kế thủ tục người dùng}{39}{section.6.1}%
+\contentsline {paragraph}{TC1 -- Dán và khai báo thẻ cho kiện mới}{39}{paragraph*.50}%
+\contentsline {paragraph}{TC2 -- Ký biên bản giao nhận}{39}{paragraph*.51}%
+\contentsline {paragraph}{TC3 -- Thu hồi thẻ khi xuất}{40}{paragraph*.52}%
+\contentsline {paragraph}{TC4 -- Cất, lấy hàng thay AGV khi AGV lỗi}{40}{paragraph*.53}%
+\contentsline {paragraph}{TC5 -- Quét kiểm kê bằng đầu đọc cầm tay}{40}{paragraph*.54}%
+\contentsline {paragraph}{TC6 -- Phê duyệt chênh lệch kiểm kê}{40}{paragraph*.55}%
+\contentsline {section}{\numberline {6.2}Thiết kế giao diện}{40}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Thiết kế tài liệu xuất}{41}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Thiết kế màn hình và đơn chọn}{41}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Thiết kế đầu vào}{42}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Giao diện với thiết bị: hợp đồng MQTT}{42}{subsection.6.2.4}%
+\contentsline {subsection}{\numberline {6.2.5}Giao diện giữa Web app và Server: REST API}{42}{subsection.6.2.5}%
+\contentsline {section}{\numberline {6.3}Thiết kế kiểm soát và phục hồi}{43}{section.6.3}%
+\contentsline {paragraph}{Phân biệt riêng tư ở tầng ứng dụng}{44}{paragraph*.61}%
+\contentsline {paragraph}{Giao quyền và rút quyền ở tầng CSDL}{44}{paragraph*.63}%
+\contentsline {paragraph}{Gián đoạn chương trình và phục hồi}{45}{paragraph*.64}%
+\contentsline {section}{\numberline {6.4}Thiết kế cơ sở dữ liệu}{45}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Thuộc tính tình huống, lặp thuộc tính và bảng bổ sung}{46}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Nghiên cứu đường truy nhập}{46}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.4.3}Lập tệp chỉ dẫn}{47}{subsection.6.4.3}%
+\contentsline {section}{\numberline {6.5}Thiết kế chương trình}{48}{section.6.5}%
+\contentsline {paragraph}{Chất lượng lược đồ}{49}{paragraph*.71}%
+\contentsline {paragraph}{Đóng gói và truy vết}{49}{paragraph*.72}%
+\contentsline {section}{\numberline {6.6}Thiết kế mẫu thử}{50}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Quyết định chốt trước khi cài đặt}{51}{section.6.7}%
+\contentsline {chapter}{\numberline {7}Cài đặt, lập trình}{51}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Môi trường và công cụ}{52}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Tổ chức mã nguồn}{52}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Điều chỉnh thiết kế phát sinh khi cài đặt}{53}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Cài đặt các thành phần chính}{54}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Đối chiếu kiện theo bảng quyết định (HT2)}{54}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Tiếp nhận bản tin và chống ghi trùng (HT4)}{54}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Chọn kiện theo nguyên tắc nhập trước, xuất trước (HT3)}{55}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.4}Giả lập thiết bị (tầng Device)}{55}{subsection.7.4.4}%
+\contentsline {subsection}{\numberline {7.4.5}Web app}{55}{subsection.7.4.5}%
+\contentsline {section}{\numberline {7.5}Triển khai}{55}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Chạy thử và ghép nối}{56}{section.7.6}%
+\contentsline {chapter}{\numberline {8}Khai thác và bảo trì}{58}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Tài liệu hướng dẫn sử dụng}{58}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Kế hoạch bảo trì}{58}{section.8.2}%
+\contentsline {chapter}{\numberline {9}Kết luận}{59}{chapter.9}%
+\contentsline {chapter}{Tài liệu tham khảo}{59}{section*.83}%
+\contentsline {chapter}{\numberline {A}Bảng câu hỏi phỏng vấn khảo sát}{60}{chapter.A}%
+\contentsline {chapter}{\numberline {B}Script tạo cơ sở dữ liệu}{61}{chapter.B}%
+\contentsline {chapter}{\numberline {C}Mã nguồn các module trọng yếu}{65}{chapter.C}%
+\contentsline {section}{\numberline {C.1}Đối chiếu kiện (2.3)}{65}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Phân bổ vị trí (2.4)}{66}{section.C.2}%
+\contentsline {section}{\numberline {C.3}Chọn kiện FIFO (3.2)}{67}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Hợp đồng bản tin MQTT}{68}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Tiếp nhận bản tin và chống ghi trùng}{70}{section.C.5}%
+\contentsline {section}{\numberline {C.6}Điều phối vận chuyển (4.1 -- 4.3)}{72}{section.C.6}%
+\contentsline {section}{\numberline {C.7}Đối chiếu tồn kiểm kê (5.3)}{75}{section.C.7}%
+\contentsline {section}{\numberline {C.8}Cấu hình và chọn trình điều khiển ODBC}{75}{section.C.8}%
+\contentsline {section}{\numberline {C.9}Kết nối và khởi tạo CSDL}{76}{section.C.9}%
+\contentsline {chapter}{\numberline {D}Hướng dẫn cài đặt và chạy thử}{80}{chapter.D}%
+\contentsline {section}{\numberline {D.1}Yêu cầu}{80}{section.D.1}%
+\contentsline {section}{\numberline {D.2}Khởi chạy}{80}{section.D.2}%
+\contentsline {section}{\numberline {D.3}Trình tự chạy thử xuyên ba tầng}{81}{section.D.3}%
+\contentsline {section}{\numberline {D.4}Kiểm thử tự động}{81}{section.D.4}%
+\contentsline {section}{\numberline {D.5}Sự cố thường gặp}{82}{section.D.5}%
+\contentsline {section}{\numberline {D.6}Tệp triển khai}{82}{section.D.6}%
+\xpginauxfilefalse 

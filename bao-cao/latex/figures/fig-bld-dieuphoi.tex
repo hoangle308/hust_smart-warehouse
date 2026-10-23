@@ -1,0 +1,21 @@
+% Hinh: BLD duoi dinh cua chuc nang 4 -- Dieu phoi van chuyen
+\begin{tikzpicture}
+\node[ent] (tb)  at (0,2.4)  {Thiết bị kho};
+\node[ent] (tbB) at (7.4,-0.6) {Thiết bị kho};
+\node[proc] (p41) at (3.6,2.4)  {\textbf{4.1} Giao nhiệm vụ};
+\node[proc] (p42) at (7.4,2.4)  {\textbf{4.2} Theo dõi trạng thái};
+\node[proc] (p43) at (11.2,2.4) {\textbf{4.3} Ghi nhận hoàn thành};
+\pic at (4.6,5.0)  {store={D3/Thiết bị}};
+\pic at (9.0,5.0)  {store={D8/Nhiệm vụ}};
+\pic at (14.6,5.0) {store={D3/Vị trí}};
+\pic at (14.6,-0.2) {storehot={D4/Kiện, thẻ RFID}};
+\draw[flow] (p41) -- node[fl, above] {Lệnh nhiệm vụ} (tb.east);
+\draw[flow] (3.0,4.68) -- node[fl, left] {AGV sẵn sàng} (p41);
+\draw[flow, <->] (p41) -- (6.4,4.68);
+\draw[flow] (tbB.north) -- node[fl, right] {Trạng thái nhiệm vụ} (p42);
+\draw[flow, <->] (p42) -- (7.4,4.68);
+\draw[flow] (p42) -- node[fl, above] {Nhiệm vụ hoàn thành} (p43);
+\draw[flow] (p43) -- (8.8,4.68);
+\draw[flow, <->] (p43) -- node[fl, right, pos=0.4] {Giải phóng ô} (12.6,4.68);
+\draw[flow] (p43) -- node[fl, right, pos=0.45] {Cập nhật vị trí} (12.6,0.12);
+\end{tikzpicture}

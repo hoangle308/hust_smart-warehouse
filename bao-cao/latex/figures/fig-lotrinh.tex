@@ -1,0 +1,29 @@
+% Hinh: lo trinh 6 giai doan theo giao trinh, 3 moc chot
+\begin{tikzpicture}[
+  gd/.style={draw, rounded corners=2pt, text width=21mm, minimum height=34mm,
+             align=center, anchor=north, font=\scriptsize, inner sep=3pt},
+  gate/.style={draw, solid, diamond, minimum size=4mm, inner sep=0pt},
+  gatehot/.style={gate, fill=black!70},
+  gatelbl/.style={font=\scriptsize, align=center, anchor=north}
+]
+\foreach \i/\so/\ten/\ch/\nd in {
+  0/GĐ1/{Khảo sát,\\xác lập dự án}/{Chương 4}/{Hiện trạng, yếu kém, mục tiêu, giải pháp, kế hoạch},
+  1/GĐ2/{Phân tích\\hệ thống}/{Chương 5, 6}/{BPC, BLD các mức; ER, chuẩn hóa 3NF},
+  2/GĐ3/{Thiết kế\\tổng thể}/{Ch.~7, mục 1--3}/{Phương thức sử dụng máy tính; máy tính/thủ công; hệ thống con},
+  3/GĐ4/{Thiết kế\\chi tiết}/{Ch.~7--10}/{Thủ công, giao diện, kiểm soát, CSDL, chương trình, mẫu thử},
+  4/GĐ5/{Cài đặt,\\lập trình}/{Ch.~11, mục 1--2}/{Lập trình, chạy thử, ghép nối},
+  5/GĐ6/{Khai thác,\\bảo trì}/{Ch.~11, mục 3--4}/{Hướng dẫn sử dụng, bảo trì, hướng phát triển}}
+{
+  \node[gd] (g\i) at (\i*2.62,0) {\textbf{\small \so}\\[1pt]\textbf{\ten}\\[2pt]{\color{black!60}\ch}\\[3pt]\raggedright \nd};
+}
+% Moc chot: G1 sau GD1, G2 sau GD2, G3 sau GD4
+\foreach \a/\b/\hot/\l in {
+  0/1/gate/{\textbf{Chốt phạm vi}\\thống nhất với GV},
+  1/2/gatehot/{\textbf{Chốt BLD + ER}\\xin ý kiến GV},
+  3/4/gate/{\textbf{Chốt thiết kế}\\rồi mới lập trình}}
+{
+  \coordinate (m) at ($(g\a.south east)!0.5!(g\b.south west)$);
+  \draw[densely dashed] (m) -- ++(0,-5mm) node[\hot, anchor=north] (d\a) {};
+  \node[gatelbl] at ($(d\a.south)+(0,-1mm)$) {\l};
+}
+\end{tikzpicture}

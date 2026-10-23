@@ -1,0 +1,44 @@
+% ============================================================
+% Chuong 8 -- Giai doan 6: Khai thac va bao tri [Ch. 11, muc 3-4]
+% ============================================================
+\chapter{Khai thác và bảo trì}
+\label{ch:khaithac}
+
+\section{Tài liệu hướng dẫn sử dụng}
+\label{sec:huongdan}
+
+Tài liệu hướng dẫn dành cho người dùng (thủ kho, nhân viên kho, quản lý) và nhân viên điều hành hệ thống, tổ chức theo cấu trúc của \cite[Ch.~11]{tung_qlhttt}:
+\begin{enumerate}
+  \item \textbf{Hướng dẫn chung:} yêu cầu phần cứng, phần mềm; cách khởi chạy hệ thống bằng một lệnh Docker Compose; tài khoản mẫu theo bốn vai trò.
+  \item \textbf{Giới thiệu chương trình và trình tự khai thác:} danh sách màn hình theo đơn chọn ở Bảng~\ref{tab:menu}; trình tự một ngày làm việc từ nhập, xuất tới báo cáo.
+  \item \textbf{Đặc trưng đầu vào:} các biểu mẫu nhập liệu và quy tắc kiểm tra ở Mục~\ref{sec:giaodien}.
+  \item \textbf{Đặc trưng của tệp:} cấu trúc cơ sở dữ liệu ở Phụ lục~\ref{app:csdl}.
+  \item \textbf{Đặc trưng đầu ra:} các tài liệu xuất ở Bảng~\ref{tab:tailieuxuat}.
+  \item \textbf{Hướng dẫn cho người dùng tác nghiệp:} sáu thủ tục TC1 -- TC6 ở Mục~\ref{sec:thucong}.
+  \item \textbf{Hướng dẫn cho nhân viên điều hành:} sao lưu, phục hồi, xử lý bản tin lỗi, cấp tài khoản thiết bị.
+\end{enumerate}
+Phần hướng dẫn chung, khởi chạy hệ thống, tài khoản mẫu, trình tự chạy thử và xử lý sự cố thường gặp được trình bày ở Phụ lục~\ref{app:caidat}; cùng nội dung được đặt trong tệp \code{README.md} của mã nguồn để người vận hành tra cứu tại chỗ.
+
+\section{Kế hoạch bảo trì}
+\label{sec:baotri}
+
+Giáo trình phân chia bảo trì theo bốn mức và ba loại \cite[Ch.~11]{tung_qlhttt}. Bảng~\ref{tab:baotri} cụ thể hóa cho hệ thống này.
+
+\begin{table}[H]
+\centering
+\caption{Kế hoạch bảo trì theo mức}
+\label{tab:baotri}
+\small
+\begin{tabularx}{\textwidth}{L{3.2cm} Y}
+\toprule
+\textbf{Mức bảo trì} & \textbf{Nội dung với hệ thống này} \\
+\midrule
+Mức 0 -- chương trình & Sửa lỗi trong một module; truy vết nhờ bảng module -- mã nguồn -- mẫu thử (Bảng~\ref{tab:truyvet}) \\
+Mức 1 -- vật lý & Thay thiết bị giả lập bằng ESP32 và đầu đọc thật; thay máy chủ \\
+Mức 2 -- truy nhập & Thêm chỉ dẫn khi xuất hiện đường truy nhập mới; điều chỉnh khi lượng dữ liệu tăng \\
+Mức 3 -- quan niệm & Thay đổi nghiệp vụ, ví dụ xuất lẻ kiện hoặc thêm kho thứ hai; quay lại giai đoạn phân tích \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Theo loại: bảo trì sửa chữa dựa trên nhật ký kiểm toán và bản tin lỗi; bảo trì thích ứng gồm việc chuyển sang phần cứng thật qua hợp đồng MQTT cố định; bảo trì hoàn thiện gồm thêm TLS cho MQTT và tối ưu báo cáo.

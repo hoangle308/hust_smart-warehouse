@@ -1,0 +1,50 @@
+% Hinh: Mo hinh thuc the lien ket (ER)
+\begin{tikzpicture}[e/.style={entity, minimum width=31mm}, ehot/.style={e, fill=black!8, line width=1.1pt}]
+\def\A{1.6}\def\B{5.6}\def\C{9.6}\def\D{13.6}
+\node[e] (ncc) at (\A,0) {NHA\_CUNG\_CAP};  \node[e] (ddh) at (\B,0) {DON\_DAT\_HANG};
+\node[e] (dddh) at (\C,0) {DONG\_DDH};      \node[e] (pkk) at (\D,0) {PHIEN\_KIEM\_KE};
+\node[e] (pn) at (\A,-1.9) {PHIEU\_NHAP};    \node[e] (dpn) at (\B,-1.9) {DONG\_PHIEU\_NHAP};
+\node[e] (mh) at (\C,-1.9) {MAT\_HANG};      \node[e] (dkk) at (\D,-1.9) {DONG\_KIEM\_KE};
+\node[e] (the) at (\A,-3.8) {THE\_RFID};     \node[ehot] (kien) at (\B,-3.8) {KIEN\_HANG};
+\node[e] (vt) at (\C,-3.8) {VI\_TRI};        \node[e] (khu) at (\D,-3.8) {KHU};
+\node[e] (px) at (\A,-5.7) {PHIEU\_XUAT};    \node[e] (dpx) at (\B,-5.7) {DONG\_PHIEU\_XUAT};
+\node[e] (nvu) at (\C,-5.7) {NHIEM\_VU\_VC}; \node[e] (tb) at (\D,-5.7) {THIET\_BI};
+\node[e] (ycx) at (\A,-7.6) {YEU\_CAU\_XUAT}; \node[e] (dycx) at (\B,-7.6) {DONG\_YC\_XUAT};
+\node[e] (nv) at (\D,-7.6) {NHAN\_VIEN};
+\node[e] (kh) at (\A,-9.5) {KHACH\_HANG};
+% Lien ket mot -- nhieu: \motnhieu{phia mot}{phia nhieu}
+\newcommand{\motnhieu}[2]{%
+  \draw (#1) -- (#2);
+  \draw ($(#1)!2.2mm!(#2)$) ++(0,0) coordinate (q1);
+  \draw ($(q1)!1.8mm!90:(#2)$) -- ($(q1)!1.8mm!-90:(#2)$);
+  \coordinate (q2) at ($(#2)!3mm!(#1)$);
+  \draw (q2) -- ($(#2)!2.2mm!90:(#1)$) (q2) -- ($(#2)!2.2mm!-90:(#1)$) (q2) -- (#2);}
+\motnhieu{ncc.east}{ddh.west}
+\motnhieu{ddh.east}{dddh.west}
+\motnhieu{mh.north}{dddh.south}
+\motnhieu{$(ddh.south)+(-0.6,0)$}{pn.north}
+\motnhieu{pn.east}{dpn.west}
+\motnhieu{kien.north}{dpn.south}
+\motnhieu{$(mh.south)+(-0.6,0)$}{$(kien.north)+(0.8,0)$}
+\motnhieu{vt.west}{kien.east}
+\motnhieu{khu.west}{vt.east}
+\motnhieu{kien.south}{dpx.north}
+\motnhieu{px.east}{dpx.west}
+\motnhieu{ycx.north}{px.south}
+\motnhieu{ycx.east}{dycx.west}
+\motnhieu{kh.north}{ycx.south}
+\motnhieu{$(kien.south)+(0.9,0)$}{$(nvu.north)+(-0.8,0)$}
+\motnhieu{vt.south}{nvu.north}
+\motnhieu{tb.west}{nvu.east}
+\motnhieu{pkk.south}{dkk.north}
+\motnhieu{$(kien.east)+(0,0.12)$}{$(dkk.west)+(0,-0.12)$}
+% THE_RFID -- KIEN_HANG: mot -- mot
+\draw (the.east) -- node[above, font=\tiny] {1--1} (kien.west);
+\draw ($(the.east)+(0.22,0.18)$) -- ++(0,-0.36);
+\draw ($(kien.west)+(-0.22,0.18)$) -- ++(0,-0.36);
+% MAT_HANG -- DONG_YC_XUAT: duong gap khuc ben phai
+\draw (mh.east) -- ++(0.35,0) coordinate (g1) -- (g1 |- dycx.east) -- (dycx.east);
+\draw ($(mh.east)+(0.2,0.18)$) -- ++(0,-0.36);
+\draw ($(dycx.east)+(0.3,0)$) -- ($(dycx.east)+(0,0.22)$) ($(dycx.east)+(0.3,0)$) -- ($(dycx.east)+(0,-0.22)$);
+\node[font=\tiny, anchor=west] at ($(vt.south)+(0.05,-0.55)$) {đi, đến};
+\end{tikzpicture}

@@ -1,0 +1,80 @@
+# Smart Warehouse - 5 dich vu, chay bang mot lenh:  docker compose up --build
+#   Web app       http://localhost:8501   (nguoi dung)
+#   Device panel  http://localhost:8502   (gia lap thiet bi, kich ban KB1-KB6)
+#   Server API    http://localhost:8000/docs
+name: smart-warehouse
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64          # image chi co ban x86; Mac chip M can bat Rosetta trong Docker Desktop
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${DB_SA_PASSWORD:-Kho@2026Sa!}
+      MSSQL_PID: Developer
+    volumes:
+      - du_lieu_sql:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    entrypoint: ["/bin/sh", "/mosquitto/config/entrypoint.sh"]
+    environment:
+      MQTT_SERVER_PASSWORD: ${MQTT_SERVER_PASSWORD:-mqtt-server-2026}
+      MQTT_DEVICE_PASSWORD: ${MQTT_DEVICE_PASSWORD:-mqtt-thiet-bi-2026}
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/acl:/mosquitto/config/acl:ro
+      - ./mosquitto/entrypoint.sh:/mosquitto/config/entrypoint.sh:ro
+      - du_lieu_mqtt:/mosquitto/data
+    ports:
+      - "1883:1883"                # de ESP32 that ket noi vao o giai doan do an
+
+  server:
+    build: { context: ., dockerfile: server/Dockerfile }
+    depends_on:
+      db: { condition: service_healthy }
+      mqtt: { condition: service_started }
+    environment:
+      DB_HOST: db
+      DB_SA_PASSWORD: ${DB_SA_PASSWORD:-Kho@2026Sa!}
+      DB_APP_PASSWORD: ${DB_APP_PASSWORD:-Kho@2026App!}
+      MQTT_HOST: mqtt
+      MQTT_PASSWORD: ${MQTT_SERVER_PASSWORD:-mqtt-server-2026}
+      JWT_SECRET: ${JWT_SECRET:-doi-chuoi-bi-mat-nay-dai-it-nhat-32-ky-tu}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://localhost:8000/api/v1/suc-khoe')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 15s
+
+  webapp:
+    build: { context: ., dockerfile: webapp/Dockerfile }
+    depends_on:
+      server: { condition: service_healthy }
+    environment:
+      API_URL: http://server:8000/api/v1
+    ports:
+      - "8501:8501"
+
+  device:
+    build: { context: ., dockerfile: device/Dockerfile }
+    depends_on:
+      server: { condition: service_healthy }
+    environment:
+      MQTT_HOST: mqtt
+      MQTT_DEVICE_PASSWORD: ${MQTT_DEVICE_PASSWORD:-mqtt-thiet-bi-2026}
+    ports:
+      - "8502:8502"
+
+volumes:
+  du_lieu_sql:
+  du_lieu_mqtt:

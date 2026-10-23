@@ -1,0 +1,83 @@
+\xpginauxfiletrue 
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Bốn khối của phân tích và thiết kế có cấu trúc, theo \cite {tung_qlhttt}}}{11}{figure.caption.6}%
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Lộ trình dự án theo sáu giai đoạn của giáo trình và ba mốc chốt}}{19}{figure.caption.25}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Biểu đồ phân cấp chức năng của hệ thống mới}}{20}{figure.caption.26}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces BLD mức ngữ cảnh}}{21}{figure.caption.27}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces BLD vật lý mức đỉnh của hệ thống cũ; nét đứt là chức năng bị loại khi chuyển sang mức logic}}{21}{figure.caption.28}%
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces BLD logic mức đỉnh của hệ thống mới; kho D4 được nhấn mạnh vì mọi nghiệp vụ đều đọc hoặc ghi kho này}}{23}{figure.caption.30}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces BLD dưới đỉnh của chức năng 2 -- Nhập kho}}{24}{figure.caption.31}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces BLD dưới đỉnh của chức năng 3 -- Xuất kho}}{25}{figure.caption.32}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces BLD dưới đỉnh của chức năng 4 -- Điều phối vận chuyển}}{25}{figure.caption.33}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces BLD dưới đỉnh của chức năng 5 -- Kiểm kê}}{26}{figure.caption.34}%
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Mô hình thực thể liên kết; \texttt {KIEN\_HANG} là trung tâm của mọi nghiệp vụ}}{30}{figure.caption.37}%
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Kiến trúc ba tầng; các tầng chỉ giao tiếp qua MQTT và REST, không dùng chung cơ sở dữ liệu}}{36}{figure.caption.47}%
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces LCT hệ con Nhập kho (HT2), phân tích theo giao tác}}{48}{figure.caption.67}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces LCT hệ con Xuất kho (HT3), phân tích theo giao tác}}{48}{figure.caption.68}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {6.3}{\ignorespaces LCT hệ con Điều phối và thiết bị (HT4), phân tích theo biến đổi}}{49}{figure.caption.69}%
+\setforeignlanguage {vietnamese}
+\contentsline {figure}{\numberline {6.4}{\ignorespaces LCT hệ con Kiểm kê (HT5)}}{49}{figure.caption.70}%
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\setforeignlanguage {vietnamese}
+\xpginauxfilefalse 

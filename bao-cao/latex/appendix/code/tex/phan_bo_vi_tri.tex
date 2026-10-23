@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Chuc nang 2.4 \PYZhy{} Phan bo vi tri cat (P\PYZhy{}Spec 2.4). Ham thuan. Mau thu: MT\PYZhy{}05, MT\PYZhy{}06.\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{cau\PYZus{}hinh}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{VI\PYZus{}TRI\PYZus{}KHU\PYZus{}CHO}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{chon\PYZus{}o}\PY{p}{(}\PY{n}{o\PYZus{}trong\PYZus{}uu\PYZus{}tien}\PY{p}{:} \PY{n+nb}{list}\PY{p}{[}\PY{n+nb}{str}\PY{p}{]}\PY{p}{,} \PY{n}{o\PYZus{}trong\PYZus{}du\PYZus{}phong}\PY{p}{:} \PY{n+nb}{list}\PY{p}{[}\PY{n+nb}{str}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{bool}\PY{p}{]}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Chon o trong ma nho nhat cua khu uu tien; het thi khu du phong; het nua thi khu cho W.}
+
+\PY{l+s+sd}{    Tra ve (ma\PYZus{}vi\PYZus{}tri, co\PYZus{}canh\PYZus{}bao\PYZus{}het\PYZus{}vi\PYZus{}tri).}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{if} \PY{n}{o\PYZus{}trong\PYZus{}uu\PYZus{}tien}\PY{p}{:}
+        \PY{k}{return} \PY{n+nb}{min}\PY{p}{(}\PY{n}{o\PYZus{}trong\PYZus{}uu\PYZus{}tien}\PY{p}{)}\PY{p}{,} \PY{k+kc}{False}
+    \PY{k}{if} \PY{n}{o\PYZus{}trong\PYZus{}du\PYZus{}phong}\PY{p}{:}
+        \PY{k}{return} \PY{n+nb}{min}\PY{p}{(}\PY{n}{o\PYZus{}trong\PYZus{}du\PYZus{}phong}\PY{p}{)}\PY{p}{,} \PY{k+kc}{False}
+    \PY{k}{return} \PY{n}{VI\PYZus{}TRI\PYZus{}KHU\PYZus{}CHO}\PY{p}{,} \PY{k+kc}{True}
+\end{Verbatim}

@@ -1,0 +1,42 @@
+% Hinh: Kien truc 3 tang
+\begin{tikzpicture}[
+  bx/.style={draw, rounded corners=2pt, minimum width=38mm, minimum height=7mm, font=\scriptsize},
+  bxh/.style={bx, fill=black!8, line width=0.9pt},
+  tang/.style={draw, rounded corners=4pt, fill=black!3, inner sep=3mm},
+  tieude/.style={font=\small\bfseries, anchor=south}]
+% Tang Device
+\node[bx]  (gt1) at (0,0)    {GT-01 Cổng RFID nhập};
+\node[bx]  (gt2) at (0,-1.0) {GT-02 Cổng RFID xuất};
+\node[bx]  (hh1) at (0,-2.0) {HH-01 Đầu đọc cầm tay};
+\node[bx]  (agv) at (0,-3.0) {AGV-01, AGV-02};
+\node[bxh, text width=34mm, align=center] (pan) at (0,-4.4) {Bảng điều khiển\\kịch bản KB1 -- KB6};
+\begin{scope}[on background layer]
+\node[tang, fit=(gt1)(pan), label={[tieude]above:Tầng Device}] (td) {};
+\end{scope}
+% Tang Server
+\node[bx] (mq) at (5.6,0) {Mosquitto (MQTT broker)};
+\node[bxh] (ht4) at (5.6,-1.4) {HT4 Tiếp nhận thiết bị};
+\node[bx] (ht) at (5.6,-2.4) {HT1--HT3, HT5, HT6};
+\node[bx] (api) at (5.6,-3.4) {REST API /api/v1 (FastAPI)};
+\node[bx] (db) at (5.6,-4.7) {SQL Server (23 bảng)};
+\begin{scope}[on background layer]
+\node[tang, fit=(mq)(db), label={[tieude]above:Tầng Server}] (ts) {};
+\end{scope}
+% Tang Web app
+\coordinate (wtop) at (11.2,0);
+\node[bx, text width=34mm, align=center, minimum height=18mm] (web) at (11.2,-2.4) {\textbf{Web app (Streamlit)}\\Nhập · Xuất · Kiểm kê\\Tra cứu · Báo cáo\\{\color{black!60}chỉ gọi REST API}};
+\node[bx] (nd) at (11.2,-4.6) {Người dùng (4 vai trò)};
+\begin{scope}[on background layer]
+\node[tang, fit=(web)(nd)(wtop), label={[tieude]above:Tầng Web app}] (tw) {};
+\end{scope}
+% Ket noi
+\draw[<->, thick] (gt1.east) -- node[above, font=\scriptsize\bfseries] {MQTT} (mq.west);
+\foreach \n in {gt2,hh1,agv} \draw (\n.east) -- ++(0.25,0) |- (gt1.east);
+\draw[<->] (mq) -- node[right, font=\tiny] {QoS 1, chống trùng} (ht4);
+\draw[->] (ht4) -- (ht);
+\draw[->] (ht) -- (api);
+\draw[<->] (api.south) -- node[right, font=\tiny] {SQL} (db.north);
+\draw[<->, thick] (api.east) -- node[above, font=\scriptsize\bfseries] {REST + JWT} (web.west |- api.east);
+\draw[->] (nd) -- node[right, font=\tiny] {trình duyệt} (web);
+\draw[->, densely dashed] (pan) -- (agv);
+\end{tikzpicture}

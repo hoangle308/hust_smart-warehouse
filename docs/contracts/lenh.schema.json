@@ -1,0 +1,48 @@
+{
+  "additionalProperties": false,
+  "description": "Topic kho/agv/{maTB}/lenh, QoS 1: Server -> AGV.",
+  "properties": {
+    "v": {
+      "const": 1,
+      "default": 1,
+      "title": "V",
+      "type": "integer"
+    },
+    "maBanTin": {
+      "format": "uuid",
+      "title": "Mabantin",
+      "type": "string"
+    },
+    "maNVu": {
+      "title": "Manvu",
+      "type": "string"
+    },
+    "maKien": {
+      "title": "Makien",
+      "type": "string"
+    },
+    "viTriDi": {
+      "title": "Vitridi",
+      "type": "string"
+    },
+    "viTriDen": {
+      "title": "Vitriden",
+      "type": "string"
+    },
+    "thoiDiem": {
+      "format": "date-time",
+      "title": "Thoidiem",
+      "type": "string"
+    }
+  },
+  "required": [
+    "maBanTin",
+    "maNVu",
+    "maKien",
+    "viTriDi",
+    "viTriDen",
+    "thoiDiem"
+  ],
+  "title": "LenhNhiemVu",
+  "type": "object"
+}

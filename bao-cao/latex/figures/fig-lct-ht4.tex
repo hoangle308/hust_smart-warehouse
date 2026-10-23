@@ -1,0 +1,17 @@
+% Hinh: LCT he con Dieu phoi va thiet bi (HT4) -- phan tich theo bien doi
+\setlength{\lctw}{15.5mm}
+\begin{forest} lct,
+[Điều khiển tiếp nhận và điều phối, goc
+  [Lấy bản tin hợp lệ\\{\tiny (luồng vào)}
+    [Đọc bản tin MQTT]
+    [Kiểm tra hợp đồng JSON]
+    [Kiểm tra bản tin trùng]]
+  [Phân phối bản tin\\{\tiny (trung tâm biến đổi)}, fill=black!4
+    [Chuyển HT2\\(cổng nhập)]
+    [Chuyển HT3\\(cổng xuất)]
+    [Chuyển HT5\\(đầu đọc cầm tay)]
+    [{Cập nhật nhiệm vụ\\(4.2, 4.3)}]]
+  [{Phát lệnh, trạng thái\\{\tiny (luồng ra)}}
+    [Phát lệnh nhiệm vụ (4.1)]
+    [Cập nhật trạng thái thiết bị]]]
+\end{forest}

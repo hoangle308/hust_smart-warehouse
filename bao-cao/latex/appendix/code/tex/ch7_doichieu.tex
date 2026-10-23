@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{doi\PYZus{}chieu\PYZus{}kien}\PY{p}{(}\PY{n}{kien}\PY{p}{:} \PY{n}{KienDaDoc} \PY{o}{|} \PY{k+kc}{None}\PY{p}{,} \PY{n}{con\PYZus{}lai}\PY{p}{:} \PY{n+nb}{dict}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{int}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{str}\PY{p}{:}
+    \PY{k}{if} \PY{n}{kien} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}                            \PY{c+c1}{\PYZsh{} C1 = K}
+        \PY{k}{return} \PY{n}{THE\PYZus{}CHUA\PYZus{}DANG\PYZus{}KY}                 \PY{c+c1}{\PYZsh{} Q1}
+    \PY{k}{if} \PY{n}{kien}\PY{o}{.}\PY{n}{ma\PYZus{}mh} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{con\PYZus{}lai}\PY{p}{:}               \PY{c+c1}{\PYZsh{} C2 = K}
+        \PY{k}{return} \PY{n}{NGOAI\PYZus{}DON}                        \PY{c+c1}{\PYZsh{} Q2}
+    \PY{k}{if} \PY{n}{kien}\PY{o}{.}\PY{n}{so\PYZus{}luong} \PY{o}{\PYZgt{}} \PY{n}{con\PYZus{}lai}\PY{p}{[}\PY{n}{kien}\PY{o}{.}\PY{n}{ma\PYZus{}mh}\PY{p}{]}\PY{p}{:}     \PY{c+c1}{\PYZsh{} C3 = K}
+        \PY{k}{return} \PY{n}{VUOT\PYZus{}SO\PYZus{}LUONG}                    \PY{c+c1}{\PYZsh{} Q3}
+    \PY{k}{return} \PY{n}{CHAP\PYZus{}NHAN}                            \PY{c+c1}{\PYZsh{} Q4}
+\end{Verbatim}

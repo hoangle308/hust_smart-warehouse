@@ -1,0 +1,34 @@
+% Hinh: BLD duoi dinh cua chuc nang 2 -- Nhap kho
+\begin{tikzpicture}
+\node[ent] (muaA) at (0,6.2)  {Phòng Mua hàng};
+\node[ent] (nccA) at (0,4.3)  {Nhà cung cấp};
+\node[ent] (tb)   at (0,0.6)  {Thiết bị kho};
+\node[ent] (muaB) at (12.6,6.9) {Phòng Mua hàng};
+\node[ent] (nccB) at (9.8,-2.2) {Nhà cung cấp};
+\node[proc] (p21) at (3.8,5.2) {\textbf{2.1} Tiếp nhận đơn, phiếu giao};
+\node[proc] (p22) at (3.8,1.2) {\textbf{2.2} Ghi nhận đọc thẻ nhập};
+\node[proc] (p23) at (7.4,3.2) {\textbf{2.3} Đối chiếu đơn đặt hàng};
+\node[proc] (p24) at (10.8,3.2) {\textbf{2.4} Phân bổ vị trí cất};
+\node[proc] (p25) at (9.8,0.0) {\textbf{2.5} Lập phiếu nhập};
+\pic at (8.6,6.9)  {store={D5/Đơn đặt hàng}};
+\pic at (14.6,4.8) {store={D3/Vị trí}};
+\pic at (14.6,1.6) {store={D8/Nhiệm vụ}};
+\pic at (14.6,0.0) {store={D6/Phiếu nhập}};
+\pic at (7.6,-1.6) {storehot={D4/Kiện, thẻ RFID}};
+\draw[flow] (muaA.east) -- node[fl, above, sloped] {Đơn đặt hàng} (p21);
+\draw[flow] (nccA.east) -- node[fl, below, sloped] {Phiếu giao hàng} (p21);
+\draw[flow] (p21) -- (5.8,6.58);
+\draw[flow] (7.4,6.58) -- (p23);
+\draw[flow] (p21) -- node[fl, above, sloped] {Phiếu giao đã nhận} (p23);
+\draw[flow] (tb.east) -- node[fl, below, sloped] {Sự kiện đọc thẻ} (p22);
+\draw[flow] (p22) -- node[fl, below, sloped] {Gắn thẻ kiện mới} (5.0,-1.28);
+\draw[flow] (p22) -- node[fl, above, sloped] {Kiện đã đọc} (p23);
+\draw[flow] (p23) -- node[fl, above, sloped, pos=0.6] {Thông báo sai lệch} (muaB.west);
+\draw[flow] (p23) -- node[fl, above] {Kiện hợp lệ} (p24);
+\draw[flow] (11.8,4.48) -- node[fl, right] {Vị trí trống} (p24);
+\draw[flow] (p24) -- node[fl, below, sloped] {Yêu cầu cất} (11.6,1.6);
+\draw[flow] (p24) -- node[fl, right, pos=0.4] {Kiện đã phân vị trí} (p25);
+\draw[flow] (p25) -- (11.6,0.0);
+\draw[flow] (p25) -- (7.6,-1.6);
+\draw[flow] (p25) -- node[fl, right] {Biên bản giao nhận} (nccB.north);
+\end{tikzpicture}

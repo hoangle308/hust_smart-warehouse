@@ -1,0 +1,119 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}HT4 \PYZhy{} Dieu phoi van chuyen: 4.1 Giao nhiem vu, 4.2 Theo doi trang thai, 4.3 Ghi nhan hoan thanh.}
+
+\PY{l+s+sd}{Nhiem vu duoc tao o 2.4 (cat) va 3.2 (lay) qua tao\PYZus{}nhiem\PYZus{}vu(); vong dieu phoi}
+\PY{l+s+sd}{giao nhiem vu cho AGV ranh va phat lenh qua MQTT.}
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{logging}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{threading}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{uuid}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{datetime}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{datetime}\PY{p}{,} \PY{n}{timezone}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{typing}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{Callable}
+
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{cau\PYZus{}hinh}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{cfg}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{db}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{giao\PYZus{}tac}\PY{p}{,} \PY{n}{ma\PYZus{}chung\PYZus{}tu}\PY{p}{,} \PY{n}{mot\PYZus{}dong}\PY{p}{,} \PY{n}{thanh\PYZus{}dict}
+
+\PY{n}{log} \PY{o}{=} \PY{n}{logging}\PY{o}{.}\PY{n}{getLogger}\PY{p}{(}\PY{n+nv+vm}{\PYZus{}\PYZus{}name\PYZus{}\PYZus{}}\PY{p}{)}
+
+\PY{n}{DANG\PYZus{}CHAY} \PY{o}{=} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DA\PYZus{}GIAO}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DANG\PYZus{}THUC\PYZus{}HIEN}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{tao\PYZus{}nhiem\PYZus{}vu}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{n}{loai}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{ma\PYZus{}kien}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{vi\PYZus{}tri\PYZus{}di}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{vi\PYZus{}tri\PYZus{}den}\PY{p}{:} \PY{n+nb}{str}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{str}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Ghi mot nhiem vu moi vao D8 (goi tu 2.4 va 3.2, trong giao tac cua ben goi).\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{ma} \PY{o}{=} \PY{n}{ma\PYZus{}chung\PYZus{}tu}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{NV}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{NHIEM\PYZus{}VU\PYZus{}VC}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{INSERT INTO kho.NHIEM\PYZus{}VU\PYZus{}VC (MaNVu, LoaiNVu, MaKien, ViTriDi, ViTriDen) VALUES (?,?,?,?,?)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{n}{ma}\PY{p}{,} \PY{n}{loai}\PY{p}{,} \PY{n}{ma\PYZus{}kien}\PY{p}{,} \PY{n}{vi\PYZus{}tri\PYZus{}di}\PY{p}{,} \PY{n}{vi\PYZus{}tri\PYZus{}den}\PY{p}{)}
+    \PY{k}{return} \PY{n}{ma}
+
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} 4.1 Giao nhiem vu}
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{giao\PYZus{}nhiem\PYZus{}vu}\PY{p}{(}\PY{n}{phat}\PY{p}{:} \PY{n}{Callable}\PY{p}{[}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{dict}\PY{p}{]}\PY{p}{,} \PY{k+kc}{None}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{int}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Ghep nhiem vu CHO\PYZus{}GIAO voi AGV truc tuyen dang ranh; phat lenh sau khi commit.\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{lenh} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{with} \PY{n}{giao\PYZus{}tac}\PY{p}{(}\PY{p}{)} \PY{k}{as} \PY{n}{cur}\PY{p}{:}
+        \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{SELECT MaTB FROM kho.THIET\PYZus{}BI t WHERE LoaiTB = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{AGV}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ AND TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{TRUC\PYZus{}TUYEN}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ }\PY{l+s+s2}{\PYZdq{}}
+                    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{AND NOT EXISTS (SELECT 1 FROM kho.NHIEM\PYZus{}VU\PYZus{}VC n WHERE n.MaTB = t.MaTB }\PY{l+s+s2}{\PYZdq{}}
+                    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{AND n.TrangThai IN (}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{DA\PYZus{}GIAO}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{DANG\PYZus{}THUC\PYZus{}HIEN}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)) ORDER BY MaTB}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{agv\PYZus{}ranh} \PY{o}{=} \PY{p}{[}\PY{n}{r}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{k}{for} \PY{n}{r} \PY{o+ow}{in} \PY{n}{cur}\PY{o}{.}\PY{n}{fetchall}\PY{p}{(}\PY{p}{)}\PY{p}{]}
+        \PY{k}{if} \PY{o+ow}{not} \PY{n}{agv\PYZus{}ranh}\PY{p}{:}
+            \PY{k}{return} \PY{l+m+mi}{0}
+        \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{SELECT TOP (}\PY{l+s+si}{\PYZob{}}\PY{n+nb}{len}\PY{p}{(}\PY{n}{agv\PYZus{}ranh}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{) MaNVu, MaKien, ViTriDi, ViTriDen }\PY{l+s+s2}{\PYZdq{}}
+                    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{FROM kho.NHIEM\PYZus{}VU\PYZus{}VC WITH (UPDLOCK, READPAST) WHERE TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{CHO\PYZus{}GIAO}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ }\PY{l+s+s2}{\PYZdq{}}
+                    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ORDER BY TgTao, MaNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{for} \PY{n}{nv}\PY{p}{,} \PY{n}{agv} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{thanh\PYZus{}dict}\PY{p}{(}\PY{n}{cur}\PY{p}{)}\PY{p}{,} \PY{n}{agv\PYZus{}ranh}\PY{p}{)}\PY{p}{:}
+            \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{UPDATE kho.NHIEM\PYZus{}VU\PYZus{}VC SET TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{DA\PYZus{}GIAO}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, MaTB = ? WHERE MaNVu = ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                        \PY{n}{agv}\PY{p}{,} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+            \PY{n}{lenh}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{agv}\PY{p}{,} \PY{n}{nv}\PY{p}{)}\PY{p}{)}
+    \PY{k}{for} \PY{n}{agv}\PY{p}{,} \PY{n}{nv} \PY{o+ow}{in} \PY{n}{lenh}\PY{p}{:}
+        \PY{n}{phat}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{kho/agv/}\PY{l+s+si}{\PYZob{}}\PY{n}{agv}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{/lenh}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{\PYZob{}}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{v}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{maBanTin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n+nb}{str}\PY{p}{(}\PY{n}{uuid}\PY{o}{.}\PY{n}{uuid4}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{maNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{maKien}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaKien}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{viTriDi}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ViTriDi}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{viTriDen}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ViTriDen}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{thoiDiem}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{datetime}\PY{o}{.}\PY{n}{now}\PY{p}{(}\PY{n}{timezone}\PY{o}{.}\PY{n}{utc}\PY{p}{)}\PY{o}{.}\PY{n}{isoformat}\PY{p}{(}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+        \PY{n}{log}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Giao }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{ cho }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{agv}\PY{p}{)}
+    \PY{k}{return} \PY{n+nb}{len}\PY{p}{(}\PY{n}{lenh}\PY{p}{)}
+
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} 4.3 Ghi nhan hoan thanh}
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{\PYZus{}hoan\PYZus{}thanh}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{n}{nv}\PY{p}{:} \PY{n+nb}{dict}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{bool}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Cap nhat vi tri kien va dong nhiem vu. Tra False neu da hoan thanh (bat bien nghiep vu).\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{if} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{TrangThai}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{HOAN\PYZus{}THANH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+        \PY{k}{return} \PY{k+kc}{False}
+    \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{UPDATE kho.KIEN\PYZus{}HANG SET MaViTri = ? WHERE MaKien = ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ViTriDen}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaKien}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+    \PY{k}{if} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{LoaiNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CAT}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+        \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{UPDATE kho.VI\PYZus{}TRI SET TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{SAN\PYZus{}SANG}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ WHERE MaViTri = ? AND TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{DAT\PYZus{}TRUOC}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                    \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ViTriDen}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+    \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{UPDATE kho.NHIEM\PYZus{}VU\PYZus{}VC SET TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{HOAN\PYZus{}THANH}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{, TgHoanThanh = SYSDATETIME() }\PY{l+s+s2}{\PYZdq{}}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WHERE MaNVu = ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaNVu}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+    \PY{k}{return} \PY{k+kc}{True}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{\PYZus{}doc\PYZus{}nhiem\PYZus{}vu}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{n}{ma\PYZus{}nvu}\PY{p}{:} \PY{n+nb}{str}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{dict}\PY{p}{:}
+    \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{SELECT * FROM kho.NHIEM\PYZus{}VU\PYZus{}VC WITH (UPDLOCK) WHERE MaNVu = ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ma\PYZus{}nvu}\PY{p}{)}
+    \PY{n}{nv} \PY{o}{=} \PY{n}{mot\PYZus{}dong}\PY{p}{(}\PY{n}{cur}\PY{p}{)}
+    \PY{k}{if} \PY{n}{nv} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}
+        \PY{k}{raise} \PY{n+ne}{LookupError}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Không có nhiệm vụ }\PY{l+s+si}{\PYZob{}}\PY{n}{ma\PYZus{}nvu}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{nv}
+
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} 4.2 Theo doi trang thai (xu ly ban tin AGV)}
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{cap\PYZus{}nhat\PYZus{}nhiem\PYZus{}vu}\PY{p}{(}\PY{n}{bt}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{k+kc}{None}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Xu ly ban tin trang thai nhiem vu tu AGV (hop dong: BanTinNhiemVu).\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{with} \PY{n}{giao\PYZus{}tac}\PY{p}{(}\PY{p}{)} \PY{k}{as} \PY{n}{cur}\PY{p}{:}
+        \PY{n}{nv} \PY{o}{=} \PY{n}{\PYZus{}doc\PYZus{}nhiem\PYZus{}vu}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{n}{bt}\PY{o}{.}\PY{n}{maNVu}\PY{p}{)}
+        \PY{k}{if} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MaTB}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{!=} \PY{n}{bt}\PY{o}{.}\PY{n}{maTB}\PY{p}{:}
+            \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{bt}\PY{o}{.}\PY{n}{maTB}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ báo trạng thái cho nhiệm vụ không được giao cho nó}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{if} \PY{n}{bt}\PY{o}{.}\PY{n}{trangThai} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DANG\PYZus{}THUC\PYZus{}HIEN}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{and} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{TrangThai}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DA\PYZus{}GIAO}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+            \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{UPDATE kho.NHIEM\PYZus{}VU\PYZus{}VC SET TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{DANG\PYZus{}THUC\PYZus{}HIEN}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ WHERE MaNVu = ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{bt}\PY{o}{.}\PY{n}{maNVu}\PY{p}{)}
+        \PY{k}{elif} \PY{n}{bt}\PY{o}{.}\PY{n}{trangThai} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{HOAN\PYZus{}THANH}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+            \PY{k}{if} \PY{o+ow}{not} \PY{n}{\PYZus{}hoan\PYZus{}thanh}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{n}{nv}\PY{p}{)}\PY{p}{:}
+                \PY{n}{log}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{ đã hoàn thành trước đó, bỏ qua}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{bt}\PY{o}{.}\PY{n}{maNVu}\PY{p}{)}
+        \PY{k}{elif} \PY{n}{bt}\PY{o}{.}\PY{n}{trangThai} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{LOI}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{and} \PY{n}{nv}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{TrangThai}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o+ow}{in} \PY{n}{DANG\PYZus{}CHAY}\PY{p}{:}
+            \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{UPDATE kho.NHIEM\PYZus{}VU\PYZus{}VC SET TrangThai = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{LOI}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ WHERE MaNVu = ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{bt}\PY{o}{.}\PY{n}{maNVu}\PY{p}{)}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{xac\PYZus{}nhan\PYZus{}thu\PYZus{}cong}\PY{p}{(}\PY{n}{ma\PYZus{}nvu}\PY{p}{:} \PY{n+nb}{str}\PY{p}{,} \PY{n}{ma\PYZus{}nv}\PY{p}{:} \PY{n+nb}{str}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{k+kc}{None}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Thu tuc TC4: thu kho xac nhan nhiem vu da duoc nguoi lam thay AGV.\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{with} \PY{n}{giao\PYZus{}tac}\PY{p}{(}\PY{n}{ma\PYZus{}nv}\PY{p}{)} \PY{k}{as} \PY{n}{cur}\PY{p}{:}
+        \PY{n}{nv} \PY{o}{=} \PY{n}{\PYZus{}doc\PYZus{}nhiem\PYZus{}vu}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{n}{ma\PYZus{}nvu}\PY{p}{)}
+        \PY{k}{if} \PY{o+ow}{not} \PY{n}{\PYZus{}hoan\PYZus{}thanh}\PY{p}{(}\PY{n}{cur}\PY{p}{,} \PY{n}{nv}\PY{p}{)}\PY{p}{:}
+            \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Nhiệm vụ }\PY{l+s+si}{\PYZob{}}\PY{n}{ma\PYZus{}nvu}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ đã hoàn thành}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{VongDieuPhoi}\PY{p}{(}\PY{n}{threading}\PY{o}{.}\PY{n}{Thread}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Chay giao\PYZus{}nhiem\PYZus{}vu theo chu ky; loi tam thoi khong lam dung vong lap.\PYZdq{}\PYZdq{}\PYZdq{}}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf+fm}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{phat}\PY{p}{:} \PY{n}{Callable}\PY{p}{[}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{dict}\PY{p}{]}\PY{p}{,} \PY{k+kc}{None}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb}{super}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n+nf+fm}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n}{daemon}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{name}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dieu\PYZhy{}phoi}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}phat} \PY{o}{=} \PY{n}{phat}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}dung} \PY{o}{=} \PY{n}{threading}\PY{o}{.}\PY{n}{Event}\PY{p}{(}\PY{p}{)}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{run}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+        \PY{k}{while} \PY{o+ow}{not} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}dung}\PY{o}{.}\PY{n}{wait}\PY{p}{(}\PY{n}{cfg}\PY{o}{.}\PY{n}{CHU\PYZus{}KY\PYZus{}DIEU\PYZus{}PHOI\PYZus{}GIAY}\PY{p}{)}\PY{p}{:}
+            \PY{k}{try}\PY{p}{:}
+                \PY{n}{giao\PYZus{}nhiem\PYZus{}vu}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}phat}\PY{p}{)}
+            \PY{k}{except} \PY{n+ne}{Exception}\PY{p}{:}
+                \PY{n}{log}\PY{o}{.}\PY{n}{exception}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Lỗi vòng điều phối}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{dung}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}dung}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}

@@ -1,0 +1,275 @@
+% ============================================================
+% Chuong 2 -- Giai doan 1: Khao sat hien trang va xac lap du an
+% Theo [tung_qlhttt, Ch. 4]
+% ============================================================
+\chapter{Khảo sát hiện trạng và xác lập dự án}
+\label{ch:khaosat}
+
+Giai đoạn khảo sát kết thúc bằng một quyết định: chọn giải pháp tin học hóa kho có tính khả thi cao nhất, đồng thời chốt phạm vi và mục tiêu làm thước đo nghiệm thu cho các giai đoạn sau. Trình tự của chương bám theo \cite[Ch.~4]{tung_qlhttt}.
+
+% ------------------------------------------------------------
+\section{Bối cảnh và mục đích khảo sát}
+\label{sec:boicanh}
+
+Đối tượng khảo sát là một công ty phân phối linh kiện và thiết bị điện tử, có một kho tổng khoảng \SI{1500}{m^2} tại Hà Nội. Kho quản lý hàng theo kiện và pallet trên hệ thống kệ chia Khu -- Dãy -- Kệ -- Ô. Các thông số hiện trạng ở Bảng~\ref{tab:thongso} là \emph{số liệu giả định} dùng cho bài tập; nếu khảo sát được một kho thực tế, các số liệu này được thay bằng số liệu đo được.
+
+\begin{table}[H]
+\centering
+\caption{Thông số hiện trạng của kho (giả định)}
+\label{tab:thongso}
+\begin{tabularx}{0.85\textwidth}{Y L{6cm}}
+\toprule
+\textbf{Thông số} & \textbf{Giá trị} \\
+\midrule
+Số mã hàng & khoảng 1.200 \\
+Số vị trí lưu trữ (ô kệ) & khoảng 800 \\
+Phiếu nhập mỗi ngày & 15 -- 20 \\
+Phiếu xuất mỗi ngày & 30 -- 40 \\
+Nhân sự kho & 1 thủ kho, 6 nhân viên nhận -- xếp dỡ -- soạn hàng, 1 kế toán kho \\
+Kiểm kê toàn kho & 1 lần/quý, kéo dài 2 -- 3 ngày, dừng xuất nhập \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Các bộ phận liên quan gồm Ban giám đốc, Phòng Mua hàng, Phòng Kinh doanh, Bộ phận Kho và Kế toán kho. Hệ thống thông tin cần nghiên cứu là phần xử lý thông tin của Bộ phận Kho; các bộ phận còn lại đóng vai trò tác nhân ngoài.
+
+% ------------------------------------------------------------
+\section{Phương pháp khảo sát}
+\label{sec:phuongphapks}
+
+Việc khảo sát được tiến hành đủ bốn mức theo \cite[Ch.~4]{tung_qlhttt}, mỗi mức một đối tượng và một hình thức chính (Bảng~\ref{tab:mucks}); kỹ thuật thu thập yêu cầu được đối chiếu với \cite{iso29148}.
+
+\begin{table}[H]
+\centering
+\caption{Các mức khảo sát}
+\label{tab:mucks}
+\small
+\begin{tabularx}{\textwidth}{L{2.6cm} L{3.2cm} Y L{3.4cm}}
+\toprule
+\textbf{Mức} & \textbf{Đối tượng} & \textbf{Cần thu được} & \textbf{Hình thức} \\
+\midrule
+Thao tác, thừa hành & Nhân viên nhận hàng, xếp dỡ, soạn hàng & Thao tác thực tế, khó khăn hằng ngày, thời gian mỗi việc & Quan sát không chính thức; phỏng vấn câu hỏi mở \\
+Điều phối, quản lý & Thủ kho, kế toán kho & Quy trình nhập/xuất, chứng từ, báo cáo định kỳ, sai lệch thường gặp & Phỏng vấn câu hỏi đóng và mở; thu thập chứng từ mẫu \\
+Quyết định, lãnh đạo & Ban giám đốc & Mục tiêu, ngân sách, kỳ vọng, kế hoạch mở rộng & Phỏng vấn có chuẩn bị \\
+Chuyên gia, tư vấn & Người có kinh nghiệm thiết bị RFID và điều khiển & Khả năng kỹ thuật, giới hạn thiết bị, chi phí & Trao đổi chuyên môn \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Tài liệu thu thập gồm mẫu phiếu nhập kho, phiếu xuất kho, thẻ kho, biên bản kiểm kê và file Excel theo dõi tồn. Bảng câu hỏi phỏng vấn ở Phụ lục~\ref{app:cauhoi}.
+
+% ------------------------------------------------------------
+\section{Hiện trạng quy trình nghiệp vụ kho}
+\label{sec:hientrang}
+
+Toàn bộ xử lý thông tin kho hiện được làm thủ công trên giấy và Excel; hệ thống không lưu vị trí lưu trữ của từng kiện hàng.
+
+\paragraph{Nhập kho}
+\begin{enumerate}
+  \item Nhà cung cấp giao hàng kèm phiếu giao hàng.
+  \item Nhân viên nhận hàng đếm từng kiện, đối chiếu bằng mắt với đơn đặt hàng in do Phòng Mua hàng gửi.
+  \item Hàng khớp được xếp lên kệ theo chỗ trống do nhân viên tự chọn; vị trí không được ghi lại.
+  \item Thủ kho lập phiếu nhập kho viết tay, ghi thẻ kho; cuối ngày kế toán kho nhập vào Excel.
+  \item Hàng không khớp được để riêng; thủ kho báo Phòng Mua hàng qua điện thoại.
+\end{enumerate}
+
+\paragraph{Xuất kho}
+\begin{enumerate}
+  \item Phòng Kinh doanh gửi yêu cầu xuất bằng email hoặc giấy.
+  \item Thủ kho lập phiếu xuất; nhân viên đi tìm hàng trên kệ theo trí nhớ.
+  \item Hàng soạn xong được kiểm đếm tại cửa xuất và giao cho đơn vị vận chuyển.
+  \item Kế toán kho cập nhật Excel cuối ngày.
+\end{enumerate}
+
+\paragraph{Vận chuyển nội bộ} Dùng xe đẩy tay và xe nâng tay; không có điều phối, nhân viên tự phân việc.
+
+\paragraph{Kiểm kê} Mỗi quý dừng xuất nhập 2 -- 3 ngày, đếm thủ công từng ô kệ, đối chiếu với Excel và lập biên bản chênh lệch.
+
+\paragraph{Báo cáo} Báo cáo nhập -- xuất -- tồn hằng tháng được lập bằng Excel, gửi Ban giám đốc và Kế toán.
+
+Hồ sơ, chứng từ đang dùng gồm: đơn đặt hàng, phiếu giao hàng của nhà cung cấp, phiếu nhập kho, yêu cầu xuất, phiếu xuất kho, thẻ kho, biên bản kiểm kê và file Excel nhập -- xuất -- tồn.
+
+% ------------------------------------------------------------
+\section{Phân loại thông tin thu thập}
+\label{sec:phanloaitt}
+
+Thông tin thu thập được phân loại theo ba tiêu chí của \cite[Ch.~4]{tung_qlhttt} (Bảng~\ref{tab:phanloaitt}); nhóm thông tin biến đổi là đầu vào cho đặc tả chức năng ở giai đoạn phân tích.
+
+\begin{table}[H]
+\centering
+\caption{Phân loại thông tin thu thập}
+\label{tab:phanloaitt}
+\small
+\begin{tabularx}{\textwidth}{L{3.2cm} L{2.2cm} Y}
+\toprule
+\textbf{Tiêu chí} & \textbf{Loại} & \textbf{Ví dụ trong kho} \\
+\midrule
+\multirow{3}{=}{Tĩnh / động / biến đổi} & Tĩnh & Danh mục mặt hàng, nhà cung cấp, sơ đồ Khu -- Dãy -- Kệ -- Ô, cơ cấu bộ phận kho \\
+ & Động & Đường đi của phiếu nhập/xuất giữa các bộ phận; thời gian nhận một lô hàng; hạn chuyển báo cáo cuối tháng \\
+ & Biến đổi & Quy tắc đối chiếu hàng giao với đơn đặt; quy tắc chọn vị trí cất; nguyên tắc xuất trước -- nhập trước; quy định xử lý chênh lệch kiểm kê \\
+\midrule
+\multirow{2}{=}{Hiện tại / tương lai} & Hiện tại & Số phiếu mỗi ngày, số mã hàng, chứng từ đang dùng \\
+ & Tương lai & Mong muốn biết vị trí hàng tức thời, kiểm kê không dừng kho, mở rộng thêm kho thứ hai \\
+\midrule
+\multirow{2}{=}{Nội bộ / môi trường} & Nội bộ & Tồn kho, vị trí, phân công nhân viên \\
+ & Môi trường & Phiếu giao hàng của nhà cung cấp, yêu cầu xuất từ Phòng Kinh doanh, quy định chứng từ kế toán \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Tần suất đỉnh cần lưu ý: phiếu xuất tăng mạnh vào cuối tháng và trước các đợt khuyến mãi; hệ thống mới phải chịu được tải này.
+
+% ------------------------------------------------------------
+\section{Đánh giá yếu kém và yêu cầu nảy sinh}
+\label{sec:yeukem}
+
+Yếu kém lớn nhất của hiện trạng là kho không biết hàng đang ở đâu; phần lớn các yếu kém khác bắt nguồn từ điểm này và từ việc đối chiếu thủ công (Bảng~\ref{tab:yeukem}).
+
+\begin{table}[H]
+\centering
+\caption{Yếu kém của hiện trạng}
+\label{tab:yeukem}
+\small
+\begin{tabularx}{\textwidth}{L{2.4cm} Y L{4.6cm}}
+\toprule
+\textbf{Nhóm} & \textbf{Biểu hiện} & \textbf{Nguyên nhân} \\
+\midrule
+Thiếu & Không có thông tin vị trí lưu trữ từng kiện & Không có chức năng quản lý vị trí \\
+Thiếu & Không biết tồn kho tức thời; Excel chỉ cập nhật cuối ngày & Thiếu xử lý trực tuyến \\
+Thiếu & Không điều phối vận chuyển nội bộ & Không có chức năng giao và theo dõi nhiệm vụ \\
+Kém hiệu lực & Nhận hàng chậm do đếm và đối chiếu từng kiện bằng mắt & Phương pháp xử lý thủ công \\
+Kém hiệu lực & Soạn hàng chậm, phụ thuộc trí nhớ nhân viên & Thiếu thông tin vị trí \\
+Kém hiệu lực & Sai lệch giữa sổ sách và thực tế; nhập liệu trùng lặp (thẻ kho, phiếu, Excel) & Lưu chuyển thông tin lòng vòng, ghi chép nhiều lần \\
+Tổn phí & Dừng xuất nhập 2 -- 3 ngày mỗi quý để kiểm kê & Kiểm kê đếm tay \\
+Tổn phí & Giao nhầm, giao thiếu, kéo theo chi phí xử lý và mất uy tín & Không xác nhận hàng tại cửa xuất \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Các yêu cầu nảy sinh:
+\begin{itemize}
+  \item Ban giám đốc cần xem nhập -- xuất -- tồn và tình trạng kho bất kỳ lúc nào, không chờ báo cáo cuối tháng.
+  \item Thủ kho cần biết ngay vị trí hàng và kiểm kê từng khu mà không dừng toàn kho.
+  \item Nhân viên cần giảm ghi chép tay và được giao việc rõ ràng.
+  \item Kế hoạch của đơn vị: chuẩn bị mở rộng sang kho thứ hai và tự động hóa vận chuyển nội bộ.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Phạm vi, mục tiêu và hạn chế}
+\label{sec:phamvi}
+
+Dự án chọn phương án trung hòa giữa phương pháp “giếng” và “hồ” \cite[Ch.~4]{tung_qlhttt}: làm sâu nghiệp vụ trong một kho, nhưng thiết kế dữ liệu đủ tổng quát để mở rộng thêm kho và thiết bị về sau.
+
+\subsection{Phạm vi}
+Trong phạm vi:
+\begin{enumerate}
+  \item Quản lý danh mục: mặt hàng, nhà cung cấp, khách hàng, vị trí lưu trữ, thẻ RFID, thiết bị (đầu đọc, cổng, AGV/băng tải).
+  \item Nhập kho: đọc thẻ tại cổng nhập, đối chiếu với đơn đặt hàng, phân bổ vị trí, lập phiếu nhập.
+  \item Xuất kho: chọn vị trí lấy hàng, xác nhận bằng đọc thẻ tại cổng xuất, lập phiếu xuất.
+  \item Điều phối vận chuyển nội bộ ở mức cơ bản: tạo nhiệm vụ, nhận trạng thái, ghi nhận hoàn thành.
+  \item Kiểm kê theo khu bằng RFID và xử lý chênh lệch.
+  \item Thống kê, báo cáo.
+\end{enumerate}
+Ngoài phạm vi: lập đơn đặt hàng và quản lý mua hàng (Phòng Mua hàng là tác nhân ngoài), kế toán, vận tải ngoài kho, thuật toán tối ưu vị trí và lộ trình. Thiết bị IoT được giả lập bằng phần mềm; tích hợp phần cứng thật là hướng phát triển.
+
+\subsection{Mục tiêu}
+Các mục tiêu ở Bảng~\ref{tab:muctieu} là thước đo nghiệm thu của dự án.
+
+\begin{table}[H]
+\centering
+\caption{Mục tiêu và chỉ tiêu nghiệm thu}
+\label{tab:muctieu}
+\small
+\begin{tabularx}{\textwidth}{L{5cm} Y}
+\toprule
+\textbf{Mục tiêu} & \textbf{Chỉ tiêu đo} \\
+\midrule
+Biết vị trí mọi kiện hàng & 100\% kiện có vị trí trong hệ thống ngay khi cất \\
+Tồn kho tức thời & Cập nhật ngay khi phiếu nhập/xuất được xác nhận \\
+Rút ngắn nhận hàng & Đối chiếu một lô hàng bằng đọc thẻ thay cho đếm từng kiện \\
+Không dừng kho khi kiểm kê & Kiểm kê từng khu khi kho vẫn hoạt động \\
+Giảm nhập liệu trùng lặp & Mỗi nghiệp vụ chỉ nhập một lần \\
+Xác nhận hàng tại cửa xuất & Mọi kiện xuất đều được đọc thẻ đối chiếu với phiếu xuất \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Hạn chế}
+\begin{itemize}
+  \item Tài chính: không mua thiết bị trong giai đoạn bài tập lớn; dùng phần mềm miễn phí.
+  \item Con người: nhóm sinh viên; người dùng kho cần được đào tạo sử dụng hệ thống.
+  \item Thiết bị: chạy trên máy cá nhân với SQL Server cục bộ; thiết bị IoT được giả lập.
+  \item Môi trường: sóng RFID bị ảnh hưởng bởi kim loại và chất lỏng; ghi nhận làm rủi ro cho giai đoạn phần cứng.
+  \item Thời gian: hoàn thành trong thời hạn bài tập lớn của học phần.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Phác họa giải pháp và nghiên cứu tính khả thi}
+\label{sec:giaiphap}
+
+Bốn giải pháp được cân nhắc, ứng với các mức tự động hóa của \cite[Ch.~4]{tung_qlhttt}:
+\begin{enumerate}
+  \item \textbf{GP1 -- Tổ chức lại thủ công:} chuẩn hóa mẫu Excel, đánh mã vị trí kệ, ghi vị trí bằng tay. Mức tự động hóa: tổ chức lại hoạt động thủ công.
+  \item \textbf{GP2 -- Phần mềm quản lý kho dùng mã vạch:} quét từng kiện bằng máy quét cầm tay, có quản lý vị trí. Mức tự động hóa: một phần, không đổi cơ cấu tổ chức.
+  \item \textbf{GP3 -- RFID UHF \cite{epcgen2} tại cổng nhập/xuất, phần mềm quản lý vị trí và điều phối nhiệm vụ vận chuyển}, thiết bị giả lập trước, tích hợp phần cứng sau. Mức tự động hóa: một phần, thay đổi nhẹ cách phân việc.
+  \item \textbf{GP4 -- Kho tự động toàn phần:} RFID UHF khắp kho, AGV và băng tải tự động hoàn toàn ngay từ đầu. Mức tự động hóa: làm thay đổi cơ cấu tổ chức.
+\end{enumerate}
+
+Tính khả thi được đánh giá theo ba tiêu chí kỹ thuật, tác vụ và kinh tế (Bảng~\ref{tab:khathi}).
+
+\begin{table}[H]
+\centering
+\caption{Đánh giá tính khả thi của các giải pháp}
+\label{tab:khathi}
+\small
+\begin{tabularx}{\textwidth}{l L{3cm} L{3cm} L{2.6cm} Y}
+\toprule
+\textbf{GP} & \textbf{Kỹ thuật} & \textbf{Tác vụ} & \textbf{Kinh tế} & \textbf{Khắc phục yếu kém} \\
+\midrule
+GP1 & Cao & Cao, nhưng vẫn ghi chép nhiều & Rất cao & Thấp: không có tồn tức thời, vẫn dừng kho khi kiểm kê \\
+GP2 & Cao & Cao & Cao & Trung bình: có vị trí và tồn tức thời, nhưng vẫn quét từng kiện, kiểm kê chậm \\
+GP3 & Cao: thiết bị giả lập được, giao tiếp chuẩn hóa & Cao: giữ cơ cấu tổ chức & Trung bình: chi phí thiết bị dồn sang giai đoạn sau & Cao: đáp ứng toàn bộ mục tiêu ở Bảng~\ref{tab:muctieu} \\
+GP4 & Thấp trong thời hạn học phần & Thấp: đảo lộn cách làm việc & Thấp: đầu tư lớn & Rất cao, nhưng vượt phạm vi \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Giải pháp được chọn là \textbf{GP3}: đáp ứng đủ mục tiêu nghiệm thu, nằm trong hạn chế về tài chính và thời gian, và có lộ trình nâng cấp rõ ràng lên phần cứng thật mà không phải xây lại hệ thống. GP4 được giữ làm hướng phát triển dài hạn. Về kỹ thuật, phần mềm viết bằng Python, cơ sở dữ liệu dùng Microsoft SQL Server; bộ giả lập thiết bị gửi dữ liệu theo một hợp đồng giao tiếp cố định trên giao thức MQTT \cite{mqtt5} để về sau thay bằng thiết bị ESP32 thật.
+
+% ------------------------------------------------------------
+\section{Lập dự trù và kế hoạch triển khai dự án}
+\label{sec:kehoach}
+
+Theo \cite[Ch.~4]{tung_qlhttt}, mục này gồm hình thành thỏa thuận, dự trù thiết bị và kế hoạch triển khai (tiến độ và tổ chức).
+
+\subsection{Hình thành thỏa thuận}
+Giai đoạn khảo sát kết thúc bằng việc ký kết thỏa thuận xây dựng hệ thống \cite[Ch.~4]{tung_qlhttt}. Trong bài tập lớn, thỏa thuận này là việc thống nhất với giảng viên về đề tài, phạm vi (Mục~\ref{sec:phamvi}) và giải pháp đã chọn (Mục~\ref{sec:giaiphap}).
+
+\subsection{Dự trù thiết bị}
+
+\begin{table}[H]
+\centering
+\caption{Dự trù thiết bị}
+\label{tab:dutru}
+\small
+\begin{tabularx}{\textwidth}{L{3.2cm} Y L{4.4cm}}
+\toprule
+\textbf{Hạng mục} & \textbf{Bài tập lớn} & \textbf{Hướng phát triển} \\
+\midrule
+Máy tính phát triển, chạy thử & Máy cá nhân & Như bài tập lớn \\
+Phần mềm & Python (Anaconda), SQL Server bản Developer, Docker Desktop, Mosquitto, Git; đều miễn phí & Bổ sung công cụ lập trình ESP32 \\
+Thiết bị IoT & Giả lập bằng phần mềm & ESP32, đầu đọc RFID, thẻ, mô hình AGV hoặc băng tải \\
+Chi phí & Không phát sinh & Lập dự toán khi chọn linh kiện ở giai đoạn phần cứng \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Kế hoạch triển khai}
+Dự án đi theo đúng sáu giai đoạn phân tích, thiết kế và cài đặt của \cite[Ch.~1]{tung_qlhttt}; mỗi giai đoạn ứng với một chương của báo cáo (Hình~\ref{fig:lotrinh}). Ba mốc chốt được đặt tại các điểm mà sai sót sẽ lan sang mọi giai đoạn phía sau.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-lotrinh}
+\caption{Lộ trình dự án theo sáu giai đoạn của giáo trình và ba mốc chốt}
+\label{fig:lotrinh}
+\end{figure}

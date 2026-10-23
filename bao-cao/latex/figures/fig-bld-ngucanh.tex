@@ -1,0 +1,22 @@
+% Hinh: BLD muc ngu canh
+\begin{tikzpicture}
+\node[draw, ellipse, minimum width=36mm, minimum height=60mm, line width=0.9pt, fill=black!4, align=center, font=\small\bfseries] (sys) at (0,0) {0\\[2pt]Hệ thống\\quản lý kho\\thông minh};
+\node[ent] (ncc) at (-5.9, 2.4)  {Nhà cung cấp};
+\node[ent] (mua) at (-5.9, 0)    {Phòng Mua hàng};
+\node[ent] (tb)  at (-5.9,-2.4)  {Thiết bị kho};
+\node[ent] (kd)  at ( 5.9, 2.4)  {Phòng Kinh doanh};
+\node[ent] (kt)  at ( 5.9, 0)    {Kế toán};
+\node[ent] (bgd) at ( 5.9,-2.4)  {Ban giám đốc};
+% Luong vao (tac nhan -> he thong) va luong ra
+\draw[flow] ($(ncc.east)+(0,0.12)$) -- node[fl, above, sloped, pos=0.4] {Phiếu giao hàng} (sys.150);
+\draw[flow] (sys.160) -- node[fl, below, sloped, pos=0.6] {Biên bản giao nhận} ($(ncc.east)+(0,-0.12)$);
+\draw[flow] ($(mua.east)+(0,0.12)$) -- node[fl, above, pos=0.45] {Đơn đặt hàng; hàng, NCC} (sys.176);
+\draw[flow] (sys.184) -- node[fl, below, pos=0.55] {Thông báo sai lệch} ($(mua.east)+(0,-0.12)$);
+\draw[flow] ($(tb.east)+(0,0.12)$) -- node[fl, above, sloped, pos=0.4] {Dữ liệu thiết bị} (sys.200);
+\draw[flow] (sys.210) -- node[fl, below, sloped, pos=0.6] {Lệnh nhiệm vụ} ($(tb.east)+(0,-0.12)$);
+\draw[flow] ($(kd.west)+(0,0.12)$) -- node[fl, above, sloped, pos=0.4] {Yêu cầu xuất; khách hàng} (sys.30);
+\draw[flow] (sys.20) -- node[fl, below, sloped, pos=0.6] {Xác nhận xuất kho} ($(kd.west)+(0,-0.12)$);
+\draw[flow] (sys.0) -- node[fl, above, pos=0.55] {Bảng kê chứng từ} (kt.west);
+\draw[flow] ($(bgd.west)+(0,0.12)$) -- node[fl, above, sloped, pos=0.4] {Quy hoạch kho; phê duyệt} (sys.-20);
+\draw[flow] (sys.-30) -- node[fl, below, sloped, pos=0.6] {Báo cáo kho} ($(bgd.west)+(0,-0.12)$);
+\end{tikzpicture}

@@ -1,0 +1,76 @@
+{
+  "$defs": {
+    "The": {
+      "additionalProperties": false,
+      "properties": {
+        "maEPC": {
+          "description": "Ma EPC 96 bit, 24 ky tu hexa",
+          "pattern": "^[0-9A-F]{24}$",
+          "title": "Maepc",
+          "type": "string"
+        },
+        "cuongDo": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "RSSI (dBm)",
+          "title": "Cuongdo"
+        }
+      },
+      "required": [
+        "maEPC"
+      ],
+      "title": "The",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Topic kho/thietbi/{maTB}/doc-the, QoS 1: mot luot doc cua cong hoac dau doc cam tay.",
+  "properties": {
+    "v": {
+      "const": 1,
+      "default": 1,
+      "title": "V",
+      "type": "integer"
+    },
+    "maBanTin": {
+      "description": "UUID do thiet bi sinh; server bo qua ban tin trung",
+      "format": "uuid",
+      "title": "Mabantin",
+      "type": "string"
+    },
+    "maTB": {
+      "pattern": "^[A-Z]{2,3}-\\d{2}$",
+      "title": "Matb",
+      "type": "string"
+    },
+    "thoiDiem": {
+      "description": "Thoi diem doc (ISO 8601 co mui gio), khong phai thoi diem gui",
+      "format": "date-time",
+      "title": "Thoidiem",
+      "type": "string"
+    },
+    "the": {
+      "items": {
+        "$ref": "#/$defs/The"
+      },
+      "minItems": 1,
+      "title": "The",
+      "type": "array"
+    }
+  },
+  "required": [
+    "maBanTin",
+    "maTB",
+    "thoiDiem",
+    "the"
+  ],
+  "title": "BanTinDocThe",
+  "type": "object"
+}

@@ -1,0 +1,73 @@
+% ============================================================
+% Chuong 2 -- Co so ly thuyet
+% ============================================================
+\chapter{Cơ sở lý thuyết}
+\label{ch:cosolythuyet}
+
+\section{Phương pháp phân tích và thiết kế hệ thống có cấu trúc}
+\label{sec:sadt}
+
+Phân tích và thiết kế hệ thống thông tin là phương pháp luận để xây dựng hệ thống, gồm các lý thuyết, mô hình, phương pháp và công cụ sử dụng trong quá trình đó \cite[Ch.~1]{tung_qlhttt}. Báo cáo bám theo phương pháp SADT, có nguồn gốc từ Mỹ, với ý tưởng cơ bản là phân rã một hệ thống lớn thành các phân hệ nhỏ và đơn giản theo lối từ trên xuống, kết hợp biểu diễn đồ họa và ưu tiên hồ sơ viết \cite[Ch.~1]{tung_qlhttt}, \cite{demarco1978}.
+
+Nguyên tắc quan trọng nhất của phương pháp là tách bạch hai cách nhìn \emph{vật lý} (hệ thống làm \emph{như thế nào}: ai làm, ở đâu, bằng phương tiện gì) và \emph{logic} (hệ thống làm \emph{gì}), áp dụng cho cả hệ thống cũ và hệ thống mới. Quá trình phân tích, thiết kế vì vậy đi qua bốn khối như Hình~\ref{fig:bonkhoi}: từ mô tả vật lý của hệ thống cũ, trừu tượng hóa thành mô tả logic, cải tiến thành mô tả logic của hệ thống mới, rồi cụ thể hóa thành mô tả vật lý của hệ thống mới \cite[Ch.~1, Ch.~5]{tung_qlhttt}.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[
+  khoi/.style={draw, minimum width=48mm, minimum height=15mm, text width=44mm, font=\small},
+  nhan/.style={font=\small\bfseries}]
+\node[khoi] (I)   at (0,0)    {\textbf{I.} Hệ thống cũ làm việc \emph{như thế nào}};
+\node[khoi] (II)  at (0,2.6)  {\textbf{II.} Hệ thống cũ làm \emph{gì}};
+\node[khoi] (III) at (7,2.6)  {\textbf{III.} Hệ thống mới làm \emph{gì}};
+\node[khoi] (IV)  at (7,0)    {\textbf{IV.} Hệ thống mới làm việc \emph{như thế nào}};
+\draw[->, thick] (I) -- node[left, font=\footnotesize, text width=22mm, align=right] {trừu tượng hóa} (II);
+\draw[->, thick] (II) -- node[above, font=\footnotesize] {cải tiến, bổ sung} (III);
+\draw[->, thick] (III) -- node[right, font=\footnotesize, text width=22mm, align=left] {cụ thể hóa} (IV);
+\node[nhan, anchor=east] at ($(II.west)+(-2.6,0)$) {Mức logic};
+\node[nhan, anchor=east] at ($(I.west)+(-2.6,0)$) {Mức vật lý};
+\node[nhan] at ($(II.north)+(0,0.45)$) {Hệ thống cũ};
+\node[nhan] at ($(III.north)+(0,0.45)$) {Hệ thống mới};
+\end{tikzpicture}
+\end{adjustbox}
+\caption{Bốn khối của phân tích và thiết kế có cấu trúc, theo \cite{tung_qlhttt}}
+\label{fig:bonkhoi}
+\end{figure}
+
+\section{Công cụ diễn tả xử lý}
+\label{sec:congcuxuly}
+
+\paragraph{Biểu đồ phân cấp chức năng (BPC)} Phân rã dần các chức năng từ mức tổng quát tới các chức năng lá không phân chia được nữa, cho kết quả là một cây chức năng. Biểu đồ mang tính tĩnh: chỉ cho biết hệ thống làm gì, bỏ qua mối liên hệ thông tin giữa các chức năng \cite[Ch.~2]{tung_qlhttt}.
+
+\paragraph{Biểu đồ luồng dữ liệu (BLD)} Diễn tả các chức năng trong mối quan hệ trước sau và trao đổi thông tin, gồm năm thành phần: chức năng xử lý (nhãn là động từ cộng bổ ngữ), luồng dữ liệu, kho dữ liệu, tác nhân ngoài (nhãn là danh từ) và tác nhân trong \cite[Ch.~2]{tung_qlhttt}, \cite{demarco1978}. BLD được phân mức: mức ngữ cảnh xem cả hệ thống là một chức năng; mức đỉnh phân rã thành các chức năng nhóm; mức dưới đỉnh phân rã tiếp từng chức năng. Khi phân rã, luồng dữ liệu vào/ra và tác nhân ngoài được bảo toàn \cite[Ch.~5]{tung_qlhttt}. Các quy tắc ràng buộc gồm: hai tác nhân ngoài không trao đổi trực tiếp, hai kho không trao đổi trực tiếp, tác nhân ngoài không trao đổi với kho mà phải qua chức năng xử lý, và mỗi kho có ít nhất một luồng vào và một luồng ra.
+
+\paragraph{Đặc tả chức năng (P-Spec)} Các chức năng lá được đặc tả bằng ngôn ngữ giả trình, bảng quyết định hoặc cây quyết định, gồm phần đầu đề (tên, dữ liệu vào, dữ liệu ra) và phần thân \cite[Ch.~2]{tung_qlhttt}.
+
+\section{Công cụ diễn tả dữ liệu}
+\label{sec:congcudulieu}
+
+\paragraph{Mã hóa} Mã tốt phải không nhập nhằng, thích ứng với phương thức sử dụng, mở rộng được, ngắn gọn và có tính gợi ý. Các kiểu mã cơ bản gồm mã liên tiếp, mã theo lát, mã phân đoạn, mã phân cấp và mã diễn nghĩa \cite[Ch.~3]{tung_qlhttt}.
+
+\paragraph{Từ điển dữ liệu} Mô tả chính xác nội dung các luồng và kho dữ liệu bằng văn phạm giả hình thức với các ký pháp tuần tự (\code{=}, \code{+}), tuyển chọn (\code{[ | ]}), lặp (\code{\{ \}n}), tùy chọn (\code{( )}) và chú thích (\code{* *}) \cite[Ch.~3]{tung_qlhttt}.
+
+\paragraph{Mô hình thực thể liên kết và mô hình quan hệ} Mô hình thực thể liên kết xác định các kiểu thực thể, kiểu liên kết và thuộc tính theo hướng từ trên xuống \cite{chen1976}; liên kết nhiều -- nhiều được thực thể hóa bằng một thực thể trung gian. Mô hình quan hệ đi từ dưới lên, xuất phát từ danh sách thuộc tính trên chứng từ, xác định các phụ thuộc hàm rồi chuẩn hóa qua các dạng 1NF, 2NF, 3NF \cite{codd1970}. Giáo trình yêu cầu lập biểu đồ cấu trúc dữ liệu theo cả hai cách rồi so sánh để phát hiện sai sót \cite[Ch.~6]{tung_qlhttt}.
+
+\section{Thiết kế chương trình có cấu trúc}
+\label{sec:lct}
+
+Thiết kế chương trình phân định các module theo lối từ trên xuống và diễn tả bằng lược đồ cấu trúc (LCT), trong đó module là hình chữ nhật, lời gọi là đoạn nối, thông tin chuyển giao là mũi tên đầu tròn rỗng (dữ liệu) hoặc đầu tròn đặc (điều khiển) \cite[Ch.~10]{tung_qlhttt}. BLD của mỗi hệ thống con được chuyển thành LCT theo hai phương thức: phân tích theo biến đổi, dựa trên trung tâm biến đổi thông tin; và phân tích theo giao tác, dựa trên một chức năng phân loại các loại giao tác loại trừ nhau. Chất lượng LCT được đánh giá qua mức tương tác giữa các module, càng lỏng và đơn giản càng tốt, và mức cố kết bên trong module, càng cao càng tốt \cite{yourdon1979}.
+
+\section{Công nghệ RFID và chuẩn EPC}
+\label{sec:rfid}
+
+Hệ thống RFID gồm thẻ gắn trên vật và đầu đọc phát sóng vô tuyến để đọc định danh lưu trong thẻ. Với thẻ thụ động dải UHF theo chuẩn EPC Gen2 \cite{epcgen2}, đầu đọc có thể đọc nhiều thẻ trong cùng một lượt nhờ cơ chế chống xung đột, và định danh trong thẻ là mã EPC duy nhất. Đặc điểm này cho phép đọc cả một lô hàng khi đi qua cổng, thay cho việc quét từng mã vạch. Hạn chế thực tế là tỷ lệ đọc suy giảm gần bề mặt kim loại và chất lỏng, được ghi nhận làm rủi ro ở Mục~\ref{sec:phamvi}.
+
+\section{Giao thức MQTT}
+\label{sec:mqtt}
+
+MQTT là giao thức truyền bản tin theo mô hình xuất bản -- đăng ký: thiết bị xuất bản bản tin lên các chủ đề (topic) tại một máy chủ trung gian (broker), các bên quan tâm đăng ký chủ đề để nhận bản tin \cite{mqtt5}. Giao thức định nghĩa ba mức bảo đảm chuyển phát: QoS 0 (nhiều nhất một lần), QoS 1 (ít nhất một lần) và QoS 2 (đúng một lần); cơ chế bản tin giữ lại (retain); và di chúc (Last Will) do broker phát thay thiết bị khi thiết bị mất kết nối bất thường. Với QoS 1, một bản tin có thể đến nhiều hơn một lần, nên phía nhận phải tự bảo đảm xử lý không trùng lặp; đây là cơ sở của thiết kế chống ghi trùng ở Mục~\ref{sec:kiemsoat}.
+
+\section{Kiến trúc ba tầng và công nghệ cài đặt}
+\label{sec:congnghe}
+
+Hệ thống được tổ chức thành ba ứng dụng độc lập: tầng Device giả lập thiết bị, tầng Server chứa toàn bộ hệ thống thông tin, tầng Web app phục vụ người dùng. Các tầng chỉ giao tiếp qua giao thức: MQTT giữa Device và Server, REST qua HTTP giữa Web app và Server, xác thực bằng JSON Web Token \cite{rfc7519}. Toàn bộ mã nguồn viết bằng Python: tầng Server dùng FastAPI, tầng Web app và bảng điều khiển thiết bị dùng Streamlit; cơ sở dữ liệu dùng Microsoft SQL Server; MQTT broker dùng Mosquitto. Năm dịch vụ được đóng gói bằng Docker Compose để khởi chạy bằng một lệnh.

@@ -1,0 +1,10 @@
+# Danh sach kiem soat truy cap (Bang 6.6): moi thiet bi chi ghi vao chu de mang ma cua chinh no.
+# %u = ten dang nhap = ma thiet bi (GT-01, AGV-01, ...)
+pattern write kho/thietbi/%u/doc-the
+pattern write kho/thietbi/%u/trang-thai
+pattern write kho/agv/%u/nhiem-vu
+pattern read  kho/agv/%u/lenh
+
+# Tang Server doc ghi toan bo cay chu de kho/
+user server
+topic readwrite kho/#

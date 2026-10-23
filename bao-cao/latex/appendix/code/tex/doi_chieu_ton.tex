@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Chuc nang 5.3 \PYZhy{} Doi chieu ton so sach. Ham thuan (mau thu cua KB5).}
+
+\PY{l+s+sd}{so\PYZus{}sach: kien TRONG\PYZus{}KHO co vi tri thuoc khu dang kiem ke.}
+\PY{l+s+sd}{da\PYZus{}doc : kien doc duoc khi quet khu do (kien da biet, dang TRONG\PYZus{}KHO).}
+\PY{l+s+sd}{  doc duoc va co trong so sach        \PYZhy{}\PYZgt{} KHOP}
+\PY{l+s+sd}{  co trong so sach, khong doc duoc    \PYZhy{}\PYZgt{} THIEU}
+\PY{l+s+sd}{  doc duoc trong khu nhung so sach ghi o noi khac \PYZhy{}\PYZgt{} SAI\PYZus{}VI\PYZus{}TRI}
+\PY{l+s+sd}{The doc duoc nhung khong gan voi kien nao khong ghi duoc vao DONG\PYZus{}KIEM\PYZus{}KE}
+\PY{l+s+sd}{(khoa ngoai MaKien) va duoc bao rieng.}
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{n}{KHOP}\PY{p}{,} \PY{n}{THIEU}\PY{p}{,} \PY{n}{SAI\PYZus{}VI\PYZus{}TRI} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{KHOP}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{THIEU}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{SAI\PYZus{}VI\PYZus{}TRI}\PY{l+s+s2}{\PYZdq{}}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{doi\PYZus{}chieu\PYZus{}ton}\PY{p}{(}\PY{n}{so\PYZus{}sach}\PY{p}{:} \PY{n+nb}{set}\PY{p}{[}\PY{n+nb}{str}\PY{p}{]}\PY{p}{,} \PY{n}{da\PYZus{}doc}\PY{p}{:} \PY{n+nb}{set}\PY{p}{[}\PY{n+nb}{str}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{dict}\PY{p}{[}\PY{n+nb}{str}\PY{p}{,} \PY{n+nb}{str}\PY{p}{]}\PY{p}{:}
+    \PY{n}{ket\PYZus{}qua} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{k}\PY{p}{:} \PY{p}{(}\PY{n}{KHOP} \PY{k}{if} \PY{n}{k} \PY{o+ow}{in} \PY{n}{so\PYZus{}sach} \PY{k}{else} \PY{n}{SAI\PYZus{}VI\PYZus{}TRI}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{da\PYZus{}doc}\PY{p}{\PYZcb{}}
+    \PY{n}{ket\PYZus{}qua}\PY{o}{.}\PY{n}{update}\PY{p}{(}\PY{p}{\PYZob{}}\PY{n}{k}\PY{p}{:} \PY{n}{THIEU} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{so\PYZus{}sach} \PY{o}{\PYZhy{}} \PY{n}{da\PYZus{}doc}\PY{p}{\PYZcb{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{ket\PYZus{}qua}
+\end{Verbatim}

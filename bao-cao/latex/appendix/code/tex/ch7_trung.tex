@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{ghi\PYZus{}moi}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{ma\PYZus{}ban\PYZus{}tin}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{noi\PYZus{}dung}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{bool}\PY{p}{:}
+    \PY{k}{try}\PY{p}{:}
+        \PY{k}{with} \PY{n}{giao\PYZus{}tac}\PY{p}{(}\PY{p}{)} \PY{k}{as} \PY{n}{cur}\PY{p}{:}
+            \PY{n}{cur}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{INSERT INTO kho.BAN\PYZus{}TIN\PYZus{}THIET\PYZus{}BI }\PY{l+s+s2}{\PYZdq{}}
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{(MaBanTin, MaTB, ChuDe, NoiDung) VALUES (?,?,?,?)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                        \PY{n}{ma\PYZus{}ban\PYZus{}tin}\PY{p}{,} \PY{n}{ma\PYZus{}tb}\PY{p}{,} \PY{n}{chu\PYZus{}de}\PY{p}{,} \PY{n}{noi\PYZus{}dung}\PY{p}{)}
+        \PY{k}{return} \PY{k+kc}{True}
+    \PY{k}{except} \PY{n}{pyodbc}\PY{o}{.}\PY{n}{IntegrityError} \PY{k}{as} \PY{n}{e}\PY{p}{:}
+        \PY{k}{if} \PY{n+nb}{any}\PY{p}{(}\PY{n}{m} \PY{o+ow}{in} \PY{n+nb}{str}\PY{p}{(}\PY{n}{e}\PY{p}{)} \PY{k}{for} \PY{n}{m} \PY{o+ow}{in} \PY{n}{\PYZus{}LOI\PYZus{}TRUNG\PYZus{}KHOA}\PY{p}{)}\PY{p}{:}
+            \PY{k}{return} \PY{k+kc}{False}          \PY{c+c1}{\PYZsh{} ban tin trung: bo qua}
+        \PY{k}{raise}
+\end{Verbatim}

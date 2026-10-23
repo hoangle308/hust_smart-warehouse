@@ -1,0 +1,43 @@
+\chapter{Mã nguồn các module trọng yếu}
+\label{app:maguon}
+
+Phụ lục trích nguyên văn các module cài đặt logic quyết định và cơ chế chống ghi trùng, theo thứ tự truy vết ở Bảng~\ref{tab:truyvet}, cùng hai module kết nối CSDL đã điều chỉnh để chạy ổn định trên Docker (Mục~\ref{sec:pl-ketnoi}). Toàn bộ mã nguồn nằm trong thư mục \code{smart-warehouse/} của bộ bài nộp.
+
+\needspace{8\baselineskip}
+\section{Đối chiếu kiện (2.3)}
+\maPy{\code{server/ht2\_nhap\_kho/doi\_chieu.py}}{lst:pl-doi-chieu}{doi_chieu}
+
+\needspace{8\baselineskip}
+\section{Phân bổ vị trí (2.4)}
+\maPy{\code{server/ht2\_nhap\_kho/phan\_bo\_vi\_tri.py}}{lst:pl-phan-bo-vi-tri}{phan_bo_vi_tri}
+
+\needspace{8\baselineskip}
+\section{Chọn kiện FIFO (3.2)}
+\maPy{\code{server/ht3\_xuat\_kho/chon\_kien.py}}{lst:pl-chon-kien}{chon_kien}
+
+\needspace{8\baselineskip}
+\section{Hợp đồng bản tin MQTT}
+\maPy{\code{server/ht4\_thiet\_bi/hop\_dong.py}}{lst:pl-hop-dong}{hop_dong}
+
+\needspace{8\baselineskip}
+\section{Tiếp nhận bản tin và chống ghi trùng}
+\maPy{\code{server/ht4\_thiet\_bi/tiep\_nhan.py}}{lst:pl-tiep-nhan}{tiep_nhan}
+
+\needspace{8\baselineskip}
+\section{Điều phối vận chuyển (4.1 -- 4.3)}
+\maPy{\code{server/ht4\_thiet\_bi/dieu\_phoi.py}}{lst:pl-dieu-phoi}{dieu_phoi}
+
+\needspace{8\baselineskip}
+\section{Đối chiếu tồn kiểm kê (5.3)}
+\maPy{\code{server/ht5\_kiem\_ke/doi\_chieu\_ton.py}}{lst:pl-doi-chieu-ton}{doi_chieu_ton}
+
+\needspace{8\baselineskip}
+\section{Cấu hình và chọn trình điều khiển ODBC}
+\label{sec:pl-ketnoi}
+Máy chủ ưu tiên ODBC Driver 18 hoặc 17 của Microsoft; nếu ảnh Docker không tải được driver này (mạng chặn \code{packages.microsoft.com}) thì tự dùng FreeTDS lấy từ kho Debian.
+\maPy{\code{server/cau\_hinh.py}}{lst:pl-cau-hinh}{cau_hinh}
+
+\needspace{8\baselineskip}
+\section{Kết nối và khởi tạo CSDL}
+Với FreeTDS, các tùy chọn ANSI mà view có chỉ mục và chỉ mục có lọc yêu cầu được bật tường minh sau khi mở kết nối; lần khởi động đầu, máy chủ chờ SQL Server sẵn sàng rồi tạo CSDL, chạy lược đồ, dữ liệu mẫu và tài khoản ứng dụng quyền tối thiểu.
+\maPy{\code{server/db/\_\_init\_\_.py}}{lst:pl-ket-noi}{ket_noi_csdl}

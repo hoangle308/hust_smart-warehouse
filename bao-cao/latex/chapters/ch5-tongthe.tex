@@ -1,0 +1,87 @@
+% ============================================================
+% Chuong 5 -- Giai doan 3: Thiet ke tong the [Ch. 7, muc 1-3]
+% ============================================================
+\chapter{Thiết kế tổng thể}
+\label{ch:tongthe}
+
+Thiết kế tổng thể xác lập vai trò của máy tính trong hệ thống \cite[Ch.~1]{tung_qlhttt}: chọn phương thức sử dụng máy tính và kiến trúc, phân định phần máy tính -- thủ công, và phân định các hệ thống con, theo \cite[Ch.~7]{tung_qlhttt}. Thiết kế chi tiết được trình bày ở Chương~\ref{ch:chitiet}.
+
+\section{Phương thức sử dụng máy tính và kiến trúc ba tầng}
+\label{sec:kientruc}
+
+Tác nhân ngoài “Thiết bị kho” trên BLD được hiện thực thành tầng Device; toàn bộ hệ thống thông tin nằm ở tầng Server; tầng Web app chỉ hiển thị và gửi yêu cầu qua REST API (Hình~\ref{fig:kientruc}). Phương thức sử dụng máy tính theo các lựa chọn của \cite[Ch.~7]{tung_qlhttt}: xử lý \textbf{phân tán} trên ba ứng dụng thay vì tập trung; \textbf{trực tuyến} cho mọi nghiệp vụ nhập, xuất, điều phối và kiểm kê; \textbf{theo lô} cho báo cáo cuối kỳ và sao lưu.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-kientruc}
+\caption{Kiến trúc ba tầng; các tầng chỉ giao tiếp qua MQTT và REST, không dùng chung cơ sở dữ liệu}
+\label{fig:kientruc}
+\end{figure}
+
+Hai ranh giới MQTT và REST là nơi đặt hợp đồng giao tiếp (Mục~\ref{sec:giaodien}) và cũng là hai điểm hở mức cao (Mục~\ref{sec:kiemsoat}). Nhờ ranh giới này, thay tầng Device giả lập bằng thiết bị ESP32 thật không đòi hỏi sửa tầng Server và tầng Web app.
+
+\section{Phân định máy tính và thủ công}
+\label{sec:mttc}
+
+Mười trên 23 chức năng lá chạy hoàn toàn bằng máy tính; 13 chức năng còn lại có phần thủ công, chủ yếu ở các điểm con người chạm vào hàng hóa hoặc ra quyết định (Bảng~\ref{tab:mttc}). Ranh giới máy tính -- thủ công là nơi phải thiết kế giao diện người dùng \cite[Ch.~7]{tung_qlhttt}.
+
+{\small
+\begin{longtable}{L{3.6cm} L{3.9cm} L{4.0cm} p{2.6cm}}
+\caption{Phân định máy tính và thủ công}\label{tab:mttc}\\
+\toprule
+\textbf{Chức năng lá} & \textbf{Máy tính} & \textbf{Thủ công} & \textbf{Phương thức} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Chức năng lá} & \textbf{Máy tính} & \textbf{Thủ công} & \textbf{Phương thức} \\
+\midrule
+\endhead
+1.1 -- 1.4 Cập nhật danh mục & Lưu, kiểm tra, tra cứu & Nhận thông tin từ bộ phận sở hữu & Trực tuyến \\
+2.1 Tiếp nhận đơn, phiếu giao & Lưu, kiểm tra khuôn dạng & Nhập phiếu giao hàng giấy & Trực tuyến \\
+2.2 Ghi nhận đọc thẻ nhập & Khai báo kiện, nhận sự kiện từ cổng & Dán thẻ lên kiện & Trực tuyến \\
+2.3 Đối chiếu đơn đặt hàng & Toàn bộ (Bảng~\ref{tab:bqd}) & -- & Tự động \\
+2.4 Phân bổ vị trí cất & Toàn bộ & -- & Tự động \\
+2.5 Lập phiếu nhập & Lập phiếu, in biên bản & Ký biên bản giao nhận & Trực tuyến \\
+3.1 Tiếp nhận yêu cầu xuất & Lưu, kiểm tra tồn khả dụng & -- & Trực tuyến \\
+3.2 Chọn kiện, vị trí lấy & Toàn bộ (FIFO) & -- & Tự động \\
+3.3 Lập phiếu xuất & Toàn bộ & -- & Trực tuyến \\
+3.4 Xác nhận đọc thẻ xuất & Nhận sự kiện từ cổng xuất, đối chiếu & -- & Tự động \\
+4.1 -- 4.2 Giao, theo dõi nhiệm vụ & Phát lệnh, nhận trạng thái AGV & -- & Tự động \\
+4.3 Ghi nhận hoàn thành & Cập nhật vị trí kiện & Xác nhận khi AGV lỗi và người cất tay & Tự động; ngoại lệ trực tuyến \\
+5.1 Lập phiên kiểm kê & Lập phiên, gán thiết bị & Chọn khu kiểm kê & Trực tuyến \\
+5.2 Ghi nhận đọc thẻ kiểm kê & Nhận sự kiện từ đầu đọc cầm tay & Đi quét từng dãy kệ & Trực tuyến \\
+5.3 Đối chiếu tồn sổ sách & Toàn bộ & -- & Tự động \\
+5.4 Xử lý chênh lệch & Ghi nhận quyết định, điều chỉnh & Ban giám đốc phê duyệt & Trực tuyến \\
+6.1, 6.3 Báo cáo & Toàn bộ & Phân phối báo cáo in & Theo lô \\
+6.2 Tra cứu vị trí, tồn & Toàn bộ & -- & Trực tuyến \\
+\bottomrule
+\end{longtable}
+}
+
+Các chức năng thủ công mới xuất hiện “ăn theo” máy tính \cite[Ch.~7]{tung_qlhttt} gồm dán và thu hồi thẻ RFID, xử lý ngoại lệ khi AGV lỗi, và kiểm tra tài liệu xuất trước khi ký; thủ tục cho các chức năng này được thiết kế chi tiết ở Mục~\ref{sec:thucong}.
+
+\section{Phân định hệ thống con}
+\label{sec:hecon}
+
+Hệ thống chia thành 6 hệ thống con, mỗi hệ con là một gói chương trình riêng trong tầng Server; căn cứ phân định theo bốn tiêu chí của \cite[Ch.~7]{tung_qlhttt} (Bảng~\ref{tab:hecon}).
+
+\begin{table}[H]
+\centering
+\caption{Phân định hệ thống con}
+\label{tab:hecon}
+\small
+\begin{tabularx}{\textwidth}{L{3.1cm} L{4.1cm} L{2.6cm} Y}
+\toprule
+\textbf{Hệ thống con} & \textbf{Căn cứ phân định} & \textbf{Chức năng lá} & \textbf{Thực thể chính} \\
+\midrule
+HT1 Danh mục và quản trị & Theo thực thể (gom quanh dữ liệu chủ) & 1.1 -- 1.4, quản lý người dùng & MAT\_HANG, đối tác, KHU, VI\_TRI, THE\_RFID, THIET\_BI, NHAN\_VIEN \\
+HT2 Nhập kho & Theo giao dịch “phiếu giao hàng” & 2.1 -- 2.5 & Đơn đặt hàng, phiếu nhập, KIEN\_HANG \\
+HT3 Xuất kho & Theo giao dịch “yêu cầu xuất” & 3.1 -- 3.4 & Yêu cầu, phiếu xuất, KIEN\_HANG \\
+HT4 Điều phối và thiết bị & Theo thông tin biến đổi: trung tâm tiếp nhận mọi bản tin thiết bị & 4.1 -- 4.3, tiếp nhận dữ liệu thiết bị & NHIEM\_VU\_VC, BAN\_TIN\_THIET\_BI \\
+HT5 Kiểm kê & Theo giao dịch “phiên kiểm kê” & 5.1 -- 5.4 & PHIEN\_KIEM\_KE, DONG\_KIEM\_KE \\
+HT6 Báo cáo & Theo tính thiết thực: chỉ đọc, quyền xem riêng & 6.1 -- 6.3 & Các view báo cáo \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+HT4 là điểm nối duy nhất giữa tầng Device và nghiệp vụ: bản tin MQTT đi vào HT4, được kiểm tra trùng rồi chuyển sang HT2, HT3 hoặc HT5 tùy loại thiết bị phát. Các hệ con nghiệp vụ không phụ thuộc vào MQTT, đúng nguyên tắc tương tác tối thiểu giữa các module \cite{yourdon1979}.

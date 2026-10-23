@@ -1,0 +1,53 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Cau hinh tang Server, doc tu bien moi truong (xem .env.example o goc repo).\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{os}
+
+\PY{n}{\PYZus{}THU\PYZus{}MUC} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{dirname}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{abspath}\PY{p}{(}\PY{n+nv+vm}{\PYZus{}\PYZus{}file\PYZus{}\PYZus{}}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Co so du lieu}
+\PY{n}{DB\PYZus{}HOST} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}HOST}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{localhost}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{DB\PYZus{}PORT} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}PORT}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1433}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{n}{DB\PYZus{}NAME} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}NAME}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{SmartWarehouse}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{\PYZus{}chon\PYZus{}driver}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{str}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Uu tien driver Microsoft (18, 17); khong co thi dung FreeTDS.\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{try}\PY{p}{:}
+        \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{pyodbc}
+        \PY{n}{co} \PY{o}{=} \PY{n}{pyodbc}\PY{o}{.}\PY{n}{drivers}\PY{p}{(}\PY{p}{)}
+    \PY{k}{except} \PY{n+ne}{Exception}\PY{p}{:}
+        \PY{n}{co} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{ten} \PY{o+ow}{in} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ODBC Driver 18 for SQL Server}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ODBC Driver 17 for SQL Server}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{FreeTDS}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
+        \PY{k}{if} \PY{n}{ten} \PY{o+ow}{in} \PY{n}{co}\PY{p}{:}
+            \PY{k}{return} \PY{n}{ten}
+    \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ODBC Driver 18 for SQL Server}\PY{l+s+s2}{\PYZdq{}}
+
+
+\PY{n}{ODBC\PYZus{}DRIVER} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ODBC\PYZus{}DRIVER}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o+ow}{or} \PY{n}{\PYZus{}chon\PYZus{}driver}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Tai khoan quan tri: chi dung luc khoi tao CSDL}
+\PY{n}{DB\PYZus{}SA\PYZus{}USER} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}SA\PYZus{}USER}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sa}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{DB\PYZus{}SA\PYZus{}PASSWORD} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}SA\PYZus{}PASSWORD}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Tai khoan ung dung, quyen toi thieu (role r\PYZus{}ung\PYZus{}dung, r\PYZus{}bao\PYZus{}cao) \PYZhy{}\PYZhy{} Muc 6.3}
+\PY{n}{DB\PYZus{}APP\PYZus{}USER} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}APP\PYZus{}USER}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ung\PYZus{}dung}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{DB\PYZus{}APP\PYZus{}PASSWORD} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}APP\PYZus{}PASSWORD}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Chay cuc bo voi SQL Server dung Windows Authentication}
+\PY{n}{DB\PYZus{}TRUSTED} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}TRUSTED}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{KHOI\PYZus{}TAO\PYZus{}CSDL} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{KHOI\PYZus{}TAO\PYZus{}CSDL}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{DB\PYZus{}SCRIPT\PYZus{}DIR} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DB\PYZus{}SCRIPT\PYZus{}DIR}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{\PYZus{}THU\PYZus{}MUC}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{..}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{db}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} MQTT}
+\PY{n}{MQTT\PYZus{}HOST} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MQTT\PYZus{}HOST}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{localhost}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{MQTT\PYZus{}PORT} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MQTT\PYZus{}PORT}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1883}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{n}{MQTT\PYZus{}USER} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MQTT\PYZus{}USER}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{server}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{MQTT\PYZus{}PASSWORD} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MQTT\PYZus{}PASSWORD}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Xac thuc REST}
+\PY{n}{JWT\PYZus{}SECRET} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{JWT\PYZus{}SECRET}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{doi\PYZhy{}chuoi\PYZhy{}bi\PYZhy{}mat\PYZhy{}nay}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{JWT\PYZus{}HET\PYZus{}HAN\PYZus{}GIO} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{JWT\PYZus{}HET\PYZus{}HAN\PYZus{}GIO}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{8}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Dieu phoi AGV}
+\PY{n}{CHU\PYZus{}KY\PYZus{}DIEU\PYZus{}PHOI\PYZus{}GIAY} \PY{o}{=} \PY{n+nb}{float}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{getenv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CHU\PYZus{}KY\PYZus{}DIEU\PYZus{}PHOI\PYZus{}GIAY}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Vi tri dac biet (khu N, X, W \PYZhy{}\PYZhy{} Bang 4.6)}
+\PY{n}{VI\PYZus{}TRI\PYZus{}CUA\PYZus{}NHAP} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{N\PYZhy{}01\PYZhy{}01\PYZhy{}01}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{VI\PYZus{}TRI\PYZus{}CUA\PYZus{}XUAT} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{X\PYZhy{}01\PYZhy{}01\PYZhy{}01}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{VI\PYZus{}TRI\PYZus{}KHU\PYZus{}CHO} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZhy{}01\PYZhy{}01\PYZhy{}01}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}

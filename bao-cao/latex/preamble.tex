@@ -1,0 +1,188 @@
+% ============================================================
+% preamble.tex -- cau hinh chung cho bao cao
+% Bien dich bang XeLaTeX (hoac LuaLaTeX):
+%   xelatex main && bibtex main && xelatex main && xelatex main
+% ============================================================
+
+% ---------- Ngon ngu va phong chu ----------
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{vietnamese}
+\setotherlanguage{english}
+% TeX Gyre Termes: phong tuong duong Times New Roman, co san trong TeX Live.
+% Neu may co Times New Roman, co the thay bang: \setmainfont{Times New Roman}
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+
+% ---------- Trang va dan dong ----------
+% Le theo quy uoc thuong gap cua do an DH Bach khoa Ha Noi.
+% Doi chieu va dieu chinh theo mau trinh bay cua khoa truoc khi nop.
+\usepackage[a4paper,left=3cm,right=2cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.2}
+\setlength{\parindent}{1.0cm}
+\setlength{\parskip}{3pt}
+
+% ---------- Toan, bang, danh sach ----------
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\sisetup{group-separator={.},output-decimal-marker={,}}
+\usepackage{array,booktabs,longtable,tabularx,multirow}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+\renewcommand{\arraystretch}{1.25}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% ---------- Hinh, chu thich ----------
+\usepackage{graphicx}
+\usepackage{adjustbox}
+% Hinh TikZ da duoc bien dich san thanh figures/<ten>.pdf de Overleaf ban mien phi khong qua thoi gian.
+% Sua hinh: sua figures/<ten>.tex roi bien dich lai xuat_hinh.tex (xem README.md), hoac dat \VeTikZtrue
+% de ve truc tiep tu ma TikZ (cham hon).
+\ifcsname ifVeTikZ\endcsname\else\expandafter\newif\csname ifVeTikZ\endcsname\fi
+\newcommand{\vehinh}[1]{\ifVeTikZ\begin{adjustbox}{max width=\linewidth}\input{figures/#1}\end{adjustbox}%
+  \else\adjustbox{max width=\linewidth}{\includegraphics{figures/#1.pdf}}\fi}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf,labelsep=period,justification=justified,singlelinecheck=true]{caption}
+\captionsetup[table]{position=top}
+
+% ---------- Ma nguon ----------
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  framerule=0.3pt,
+  rulecolor=\color{black!40},
+  backgroundcolor=\color{black!3},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  numbers=none,
+  extendedchars=true
+}
+\lstdefinelanguage{gia-trinh}{
+  morekeywords={READ,READ-FILE,IF,THEN,ELSE,CASE,WHEN,DO,WHILE,REPEAT,UNTIL},
+  sensitive=true
+}
+% Ma Python co chuoi tieng Viet: listings khong xu ly ky tu Unicode duoi XeLaTeX,
+% nen to mau truoc bang Pygments (appendix/code/tex/*.tex), khong can -shell-escape.
+\usepackage{fvextra}
+\input{appendix/code/tex/pygments-style}
+\usepackage{needspace}
+\newcommand{\maPy}[3]{\par\medskip{\centering\captionof{lstlisting}{#1}\label{#2}\par}\input{appendix/code/tex/#3}\par\medskip}
+\lstdefinestyle{json}{morestring=[b]",stringstyle=\color{black!70}}
+
+% ---------- Tieu de, muc luc ----------
+\usepackage{titlesec}
+\titleclass{\chapter}{straight}
+\titleformat{\chapter}[hang]{\bfseries\fontsize{17}{21}\selectfont}{\chaptertitlename\ \thechapter.}{0.4em}{}
+\titleformat{name=\chapter,numberless}[hang]{\bfseries\fontsize{17}{21}\selectfont}{}{0pt}{}
+\titlespacing*{\chapter}{0pt}{16pt}{8pt}
+\titleformat{\section}{\bfseries\fontsize{14}{17}\selectfont}{\thesection}{0.8em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titleformat{\subsection}{\bfseries\fontsize{12.5}{15}\selectfont}{\thesubsection}{0.8em}{}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\titleformat{\paragraph}[runin]{\bfseries}{}{0pt}{}[.]
+\titlespacing*{\paragraph}{0pt}{6pt}{0.5em}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+\usepackage{fancyhdr}
+% \usepackage{forest}  % chi can khi ve lai hinh LCT (xuat_hinh.tex)
+% \useforestlibrary{edges}
+\usepackage{pifont}
+\usepackage{etoolbox}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% ---------- Trich dan va lien ket ----------
+\usepackage{cite}
+\usepackage{url}
+\usepackage[hidelinks,unicode]{hyperref}
+
+% ---------- TikZ: bo kieu theo ky phap cua giao trinh ----------
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,calc,fit,backgrounds}
+\tikzset{
+  >={Stealth[length=2.2mm]},
+  every node/.style={font=\small, align=center},
+  % Bieu do phan cap chuc nang (BPC)
+  bpc/.style={draw, rectangle, minimum width=26mm, minimum height=9mm, inner sep=2pt},
+  bpcroot/.style={bpc, line width=0.9pt, fill=black!6},
+  % Bieu do luong du lieu (BLD) -- ky phap DeMarco/Yourdon nhu giao trinh
+  proc/.style={draw, circle, minimum size=20mm, inner sep=0pt, text width=17mm, font=\scriptsize},
+  procsm/.style={draw, circle, minimum size=17mm, inner sep=1pt, text width=15mm, font=\footnotesize},
+  procold/.style={proc, dashed},
+  ent/.style={draw, rectangle, minimum width=26mm, minimum height=7mm, font=\scriptsize},
+  fl/.style={font=\tiny, inner sep=1pt},
+  flow/.style={->, thick},
+  flowlbl/.style={font=\footnotesize, fill=white, inner sep=1pt},
+  % Kho du lieu: hinh chu nhat ho mot dau, co o ma kho
+  pics/store/.style args={#1/#2}{code={
+      \draw (0,0.32) -- (-3.0,0.32) -- (-3.0,-0.32) -- (0,-0.32);
+      \draw (-2.5,0.32) -- (-2.5,-0.32);
+      \node[font=\scriptsize] at (-2.75,0) {#1};
+      \node[font=\scriptsize, anchor=west, inner sep=1pt] at (-2.45,0) {#2};
+  }},
+  pics/storehot/.style args={#1/#2}{code={
+      \draw[line width=1.1pt] (0,0.32) -- (-3.0,0.32) -- (-3.0,-0.32) -- (0,-0.32);
+      \draw[line width=1.1pt] (-2.5,0.32) -- (-2.5,-0.32);
+      \node[font=\scriptsize] at (-2.75,0) {#1};
+      \node[font=\scriptsize\bfseries, anchor=west, inner sep=1pt] at (-2.45,0) {#2};
+  }},
+  % Mo hinh thuc the lien ket (ER)
+  entity/.style={draw, rectangle, minimum width=30mm, minimum height=8mm, font=\footnotesize\bfseries},
+  % Luoc do cau truc chuong trinh (LCT)
+  module/.style={draw, rectangle, minimum width=26mm, minimum height=9mm, font=\footnotesize},
+  modlib/.style={module, font=\scriptsize, minimum width=30mm, minimum height=8mm, path picture={
+      \draw ([xshift=2mm]path picture bounding box.north west) -- ([xshift=2mm]path picture bounding box.south west);
+      \draw ([xshift=-2mm]path picture bounding box.north east) -- ([xshift=-2mm]path picture bounding box.south east);}},
+}
+
+% ---------- Lenh tien ich ----------
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\canbosung}[1]{\textcolor{red!70!black}{[#1]}}
+
+% ---------- Ten goi theo mau trinh bay ----------
+\newcommand{\DatTenGoi}{%
+  \renewcommand{\contentsname}{Mục lục}%
+  \renewcommand{\listfigurename}{Danh mục hình vẽ}%
+  \renewcommand{\listtablename}{Danh mục bảng biểu}%
+  \renewcommand{\bibname}{Tài liệu tham khảo}%
+  \renewcommand{\figurename}{Hình}%
+  \renewcommand{\tablename}{Bảng}%
+  \renewcommand{\chaptername}{Chương}%
+  \renewcommand{\appendixname}{Phụ lục}}
+
+% Danh muc hinh/bang khong chen khoang trong giua cac chuong
+\makeatletter
+\patchcmd{\@chapter}{\addtocontents{lof}{\protect\addvspace{10\p@}}}{}{}{}
+\patchcmd{\@chapter}{\addtocontents{lot}{\protect\addvspace{10\p@}}}{}{}{}
+\makeatother
+
+% Gia thiet / quy uoc danh so theo chuong
+\newcounter{giathiet}[chapter]
+\renewcommand{\thegiathiet}{\thechapter.\arabic{giathiet}}
+\newenvironment{giathiet}{\refstepcounter{giathiet}\par\smallskip\noindent\textbf{Giả thiết \thegiathiet.}\ }{\par\smallskip}
+
+% ---------- Ky hieu so do dung trong bang ky hieu ----------
+\newcommand{\kyhieu}[1]{\tikz[baseline=-0.6ex,scale=0.9]{#1}}
+
+% ---------- Kieu luoc do cau truc chuong trinh (forest) ----------
+\newlength{\lctw}\setlength{\lctw}{19mm}
+\ifVeTikZ\usepackage{forest}\useforestlibrary{edges}
+\forestset{
+  lct/.style={for tree={draw, font=\scriptsize, minimum height=8mm,
+      node options={align=center, text width=\lctw},
+      s sep=2mm, l sep=9mm, inner sep=1.5pt,
+      parent anchor=south, child anchor=north},
+    forked edges, for tree={fork sep=4mm}},
+  goc/.style={fill=black!8, line width=0.9pt, node options={text width=34mm}, font=\scriptsize\bfseries},
+}
+\fi

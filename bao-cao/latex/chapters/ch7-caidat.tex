@@ -1,0 +1,213 @@
+% ============================================================
+% Chuong 7 -- Giai doan 5: Cai dat, lap trinh [Ch. 11, muc 1-2]
+% ============================================================
+\chapter{Cài đặt, lập trình}
+\label{ch:caidat}
+
+Giai đoạn cài đặt chuyển các đặc tả của Chương~\ref{ch:tongthe} và Chương~\ref{ch:chitiet} thành chương trình chạy được, sau đó chạy thử và ghép nối theo \cite[Ch.~11]{tung_qlhttt}. Chương trình bày môi trường cài đặt, tổ chức mã nguồn, các điều chỉnh thiết kế phát sinh khi lập trình, cài đặt các module trọng yếu, cách triển khai, và kết quả kiểm thử.
+
+\section{Môi trường và công cụ}
+\label{sec:moitruong}
+
+\begin{table}[H]
+\centering
+\caption{Môi trường cài đặt}
+\label{tab:moitruong}
+\small
+\begin{tabularx}{\textwidth}{L{3.6cm} Y}
+\toprule
+\textbf{Thành phần} & \textbf{Công nghệ, phiên bản} \\
+\midrule
+Ngôn ngữ & Python 3.12 cho cả ba tầng \\
+Tầng Server & FastAPI 0.115, Uvicorn 0.32, Pydantic 2, pyodbc 5, paho-mqtt 2, PyJWT 2 \\
+Tầng Web app & Streamlit 1.40, requests, pandas, openpyxl (xuất Excel) \\
+Tầng Device & Python, paho-mqtt 2; bảng điều khiển kịch bản bằng Streamlit 1.40 \\
+Cơ sở dữ liệu & Microsoft SQL Server 2022 bản Developer \\
+Trình điều khiển CSDL & ODBC Driver 18 for SQL Server; dự phòng FreeTDS khi không tải được driver của Microsoft \\
+MQTT broker & Eclipse Mosquitto 2, giao thức MQTT 3.1.1 \\
+Đóng gói, triển khai & Docker, Docker Compose, 5 dịch vụ \\
+Kiểm thử & pytest; \code{streamlit.testing} cho giao diện; FastAPI TestClient cho API \\
+Hệ điều hành chạy thử & Windows 11 với Docker Desktop (WSL 2); Linux \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tổ chức mã nguồn}
+\label{sec:tochucma}
+
+Mã nguồn tổ chức theo ba tầng và sáu hệ thống con của Bảng~\ref{tab:hecon}; tên gói và tên file theo số hiệu chức năng để truy vết từ BPC tới mã (Bảng~\ref{tab:truyvet}). Toàn bộ mã gồm khoảng 3\,200 dòng Python, trong đó tầng Server khoảng 1\,700 dòng, và một script SQL tạo CSDL.
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+smart-warehouse/
+|-- docker-compose.yml        # 5 dich vu: db, mqtt, server, webapp, device
+|-- .env.example              # mat khau, khoa JWT (co gia tri mac dinh)
+|-- docs/contracts/           # JSON Schema cua 4 hop dong ban tin MQTT
+|-- db/schema/01_schema.sql   # 23 bang, chi dan, view, trigger, vai tro (Phu luc B)
+|-- db/seed/                  # du lieu mau va chuong trinh sinh du lieu mau
+|-- mosquitto/                # cau hinh broker, ACL theo thiet bi
+|-- server/
+|   |-- main.py               # khoi dong, gan bo xu ly ban tin, REST /api/v1
+|   |-- cau_hinh.py           # doc cau hinh tu bien moi truong
+|   |-- db/                   # module "Truy cap CSDL" dung chung
+|   |-- ht1_danh_muc/         # 1.x, xac thuc JWT, phan quyen
+|   |-- ht2_nhap_kho/         # 2.1-2.5: doi_chieu.py, phan_bo_vi_tri.py, dieu_khien.py
+|   |-- ht3_xuat_kho/         # 3.1-3.4: chon_kien.py, dieu_khien.py
+|   |-- ht4_thiet_bi/         # hop_dong.py, tiep_nhan.py, dieu_phoi.py, kenh_mqtt.py
+|   |-- ht5_kiem_ke/          # 5.1-5.4: doi_chieu_ton.py, dieu_khien.py
+|   `-- ht6_bao_cao/          # 6.1-6.3
+|-- webapp/                   # Streamlit, chi goi REST API
+|-- device/                   # gia lap GT-01, GT-02, HH-01, AGV-01, AGV-02; KB1-KB6
+`-- tests/                    # pytest: MT-01..MT-10, tich hop MQTT, man hinh Web app
+\end{lstlisting}
+
+Mỗi hệ con tách logic quyết định thành \emph{hàm thuần} không truy cập CSDL (\code{doi\_chieu.py}, \code{phan\_bo\_vi\_tri.py}, \code{chon\_kien.py}, \code{doi\_chieu\_ton.py}) và một module điều khiển truy cập dữ liệu qua module “Truy cập CSDL”. Cách tách này cài đặt trực tiếp lược đồ cấu trúc ở Mục~\ref{sec:chuongtrinh} và cho phép chạy mẫu thử module mà không cần CSDL.
+
+\section{Điều chỉnh thiết kế phát sinh khi cài đặt}
+\label{sec:dieuchinh}
+
+Lập trình làm lộ ra một số chi tiết mà giai đoạn thiết kế chưa đặc tả đủ. Theo giáo trình, sai sót phát hiện ở giai đoạn sau được phản hồi về giai đoạn trước \cite[Ch.~1]{tung_qlhttt}; các điều chỉnh ở Bảng~\ref{tab:dieuchinh} đã được cập nhật ngược vào Chương~\ref{ch:chitiet} và Phụ lục~\ref{app:csdl}, nên tài liệu thiết kế và mã nguồn nhất quán.
+
+\begin{table}[H]
+\centering
+\caption{Điều chỉnh thiết kế khi cài đặt}
+\label{tab:dieuchinh}
+\small
+\begin{tabularx}{\textwidth}{L{3.4cm} Y L{4.2cm}}
+\toprule
+\textbf{Hạng mục} & \textbf{Điều chỉnh} & \textbf{Lý do} \\
+\midrule
+Bảng \code{SAI\_LECH} & Thêm bảng ghi từng sai lệch Q1--Q3 của lượt đọc cổng nhập và kiện ngoài phiếu ở cổng xuất; CSDL có 23 bảng & Biên bản sai lệch (2.5) cần dữ liệu bền vững, không chỉ thông báo tức thời \\
+Trạng thái phiếu nhập & Thêm trạng thái \code{DANG\_NHAN}, \code{DA\_LAP}; mỗi thời điểm chỉ một phiếu đang nhận & Máy chủ biết lượt đọc cổng nhập thuộc phiếu nào mà thiết bị không phải mang thông tin nghiệp vụ \\
+Trạng thái kiện & Thêm \code{THAT\_LAC} & Xử lý chênh lệch kiểm kê (5.4) cần phân biệt kiện thất lạc với kiện đã xuất \\
+Chỉ dẫn \code{UX\_KIEN\_EPC} & Chỉ dẫn duy nhất có lọc, chỉ trên kiện đang khai báo hoặc trong kho & Thẻ RFID được tái sử dụng sau khi kiện xuất \\
+Bản tin \code{trang-thai} & Không mang \code{maBanTin} & Bản tin giữ lại (retain) chỉ phản ánh trạng thái mới nhất, ghi đè là đúng nghĩa \\
+Điểm cuối REST & Gộp 3.2 và 3.3 thành \code{POST /yeu-cau-xuat/\{so\}/lap-phieu}; lập phiếu nhập bằng \code{POST /phieu-nhap/\{so\}/lap} & Chọn kiện và lập phiếu xuất cần nằm trong một giao tác để kiện không bị chọn hai lần \\
+Tài khoản CSDL & Ứng dụng đăng nhập bằng login \code{ung\_dung} thuộc vai trò \code{r\_ung\_dung}, không dùng \code{sa} & Quyền tối thiểu (Mục~\ref{sec:kiemsoat}) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Cài đặt các thành phần chính}
+\label{sec:caidatchinh}
+
+\subsection{Đối chiếu kiện theo bảng quyết định (HT2)}
+
+Hàm \code{doi\_chieu\_kien} cài đặt nguyên văn bảng quyết định Q1--Q4 của P-Spec 2.3: thứ tự kiểm tra ba điều kiện trùng với thứ tự cột của bảng nên mỗi nhánh \code{return} ứng với đúng một quy tắc. Hàm \code{doi\_chieu\_luot} cài đặt vòng lặp của P-Spec trên một lượt đọc và trừ dần số lượng còn phải nhận, nhờ đó kiện thứ hai của cùng một mặt hàng có thể rơi vào Q3 dù từng kiện riêng lẻ hợp lệ (kịch bản KB3).
+
+\maPy{Đối chiếu một kiện -- \code{ht2\_nhap\_kho/doi\_chieu.py}}{lst:doichieu}{ch7_doichieu}
+
+\subsection{Tiếp nhận bản tin và chống ghi trùng (HT4)}
+
+Module tiếp nhận cài đặt nhánh luồng vào của lược đồ HT4: kiểm tra hợp đồng bằng mô hình Pydantic sinh từ cùng định nghĩa với JSON Schema ở \code{docs/contracts}, kiểm tra thiết bị đúng loại kênh, rồi ghi bản tin với trạng thái \code{CHO} \emph{trước} khi xử lý nghiệp vụ. Khóa chính \code{MaBanTin} làm cho lần ghi thứ hai của cùng bản tin vi phạm ràng buộc; máy chủ coi đó là bản tin trùng và bỏ qua. Khi khởi động lại, các bản tin còn \code{CHO} được xử lý tiếp (nguyên tắc biến mốc).
+
+\maPy{Ghi bản tin, phát hiện trùng bằng khóa chính -- \code{ht4\_thiet\_bi/kho\_ban\_tin.py}}{lst:trung}{ch7_trung}
+
+Chống trùng được đặt ở hai lớp: lớp bản tin như trên, và lớp nghiệp vụ trong hàm ghi nhận hoàn thành nhiệm vụ (4.3), vốn không làm gì nếu nhiệm vụ đã ở trạng thái \code{HOAN\_THANH}. Lớp thứ hai bảo vệ cả trường hợp thủ kho xác nhận thủ công (TC4) trước khi AGV kết nối lại.
+
+\subsection{Chọn kiện theo nguyên tắc nhập trước, xuất trước (HT3)}
+
+\maPy{Chọn kiện FIFO -- \code{ht3\_xuat\_kho/chon\_kien.py}}{lst:fifo}{ch7_fifo}
+
+Do giả định xuất nguyên kiện, tổng số lượng chọn có thể vượt số yêu cầu (KB6: yêu cầu 150, xuất 2 kiện 100). Mã kiện được dùng làm khóa phụ khi sắp xếp để kết quả xác định khi hai kiện cùng ngày nhập.
+
+\subsection{Giả lập thiết bị (tầng Device)}
+
+Mỗi thiết bị là một MQTT client riêng với tài khoản riêng, mô phỏng vòng đời firmware ESP32: khi kết nối, đăng ký di chúc (Last Will) \code{NGOAI\_TUYEN} và phát \code{TRUC\_TUYEN} có giữ lại; khi mất kết nối, bản tin được đưa vào bộ đệm và gửi lại đúng thứ tự khi kết nối lại. Kịch bản KB4 ngắt socket mà không gửi gói \code{DISCONNECT} để broker phát di chúc, sau đó AGV gửi bản tin \code{HOAN\_THANH} hai lần với cùng \code{maBanTin}, mô phỏng việc gửi lại khi không nhận được xác nhận \code{PUBACK}. Bảng điều khiển trên cổng 8502 có một nút cho mỗi kịch bản KB1--KB6 kèm phần chuẩn bị và kết quả mong đợi.
+
+\subsection{Web app}
+
+Web app gồm 12 màn hình, ghép thành 19 mục đơn chọn cho bốn vai trò đúng như Bảng~\ref{tab:menu}. Web app chỉ gọi REST API, không kết nối CSDL hay MQTT; lỗi nghiệp vụ từ máy chủ (mã 400, 404, 409) được hiển thị nguyên văn thông báo tiếng Việt. Các bảng báo cáo có nút xuất Excel.
+
+\section{Triển khai}
+\label{sec:trienkhai}
+
+Hệ thống được triển khai bằng Docker Compose với năm dịch vụ (Bảng~\ref{tab:dichvu}); toàn bộ được khởi chạy bằng một lệnh \code{docker compose up}. Khi khởi động lần đầu, tầng Server tự tạo CSDL, nạp lược đồ và dữ liệu mẫu, tạo login ứng dụng; dịch vụ \code{server} chỉ khởi động sau khi \code{db} và \code{mqtt} báo sẵn sàng qua cơ chế kiểm tra sức khỏe (healthcheck). Hướng dẫn chi tiết ở Phụ lục~\ref{app:caidat}.
+
+\begin{table}[H]
+\centering
+\caption{Các dịch vụ triển khai}
+\label{tab:dichvu}
+\small
+\begin{tabularx}{\textwidth}{l l L{2.1cm} Y}
+\toprule
+\textbf{Dịch vụ} & \textbf{Ảnh nền} & \textbf{Cổng} & \textbf{Vai trò} \\
+\midrule
+\code{db} & \code{mssql/server:2022} & 1433 & CSDL, dữ liệu lưu trong volume \\
+\code{mqtt} & \code{eclipse-mosquitto:2} & 1883 & Broker; tài khoản và ACL theo thiết bị \\
+\code{server} & \code{python:3.12-slim} & 8000 & Tầng Server, REST API, tài liệu OpenAPI tại \code{/docs} \\
+\code{webapp} & \code{python:3.12-slim} & 8501 & Tầng Web app \\
+\code{device} & \code{python:3.12-slim} & 8502 & Tầng Device, bảng điều khiển kịch bản \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Chạy thử trên máy Windows trong mạng có proxy làm lộ ba vấn đề triển khai, đều đã xử lý trong mã nguồn nộp: (i) không tải được driver ODBC của Microsoft, xử lý bằng driver dự phòng FreeTDS và tự chọn driver khi khởi động; (ii) kho gói Debian trả lỗi 503 qua HTTP, xử lý bằng HTTPS, tự thử lại và máy chủ dự phòng; (iii) tải thư viện Python bị quá thời gian chờ, xử lý bằng tăng thời gian chờ, số lần thử lại và bộ nhớ đệm khi build. Ngoài ra, mọi mật khẩu trong \code{docker-compose.yml} có giá trị mặc định để hệ thống vẫn khởi động được khi thiếu tệp \code{.env}.
+
+\section{Chạy thử và ghép nối}
+\label{sec:chaythu}
+
+Theo giáo trình, chạy thử đi từ từng module tới ghép nối toàn hệ thống \cite[Ch.~11]{tung_qlhttt}. Kiểm thử được tổ chức thành bốn mức, trong đó ba mức đầu tự động hóa bằng pytest (Bảng~\ref{tab:kqtudong}).
+
+\begin{table}[H]
+\centering
+\caption{Kết quả kiểm thử tự động}
+\label{tab:kqtudong}
+\small
+\begin{tabularx}{\textwidth}{L{3.0cm} Y c c}
+\toprule
+\textbf{Mức} & \textbf{Phạm vi} & \textbf{Số ca} & \textbf{Đạt} \\
+\midrule
+Module & Mẫu thử MT-01 -- MT-10 và các ca biên bổ sung cho đối chiếu kiện, phân bổ vị trí, chọn kiện FIFO, tiếp nhận bản tin, đối chiếu tồn, phân quyền & 24 & 24 \\
+Tích hợp Device -- Server & Broker Mosquitto thật: lượt đọc cổng nhập tới bộ xử lý nghiệp vụ; ACL chặn thiết bị giả mạo; AGV nhận lệnh, báo hoàn thành; KB4 mất kết nối, di chúc, bộ đệm, chống trùng & 4 & 4 \\
+Web app & 16 mục đơn chọn, bao phủ cả 12 màn hình, hiển thị không lỗi với API giả lập; đơn chọn đúng theo vai trò & 17 & 17 \\
+\midrule
+\textbf{Tổng} & & \textbf{45} & \textbf{45} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Kết quả mẫu thử module}
+\label{tab:kqmt}
+\footnotesize
+\begin{tabularx}{\textwidth}{l L{3.0cm} Y c}
+\toprule
+\textbf{Mã} & \textbf{Module} & \textbf{Ca kiểm thử pytest} & \textbf{Kết quả} \\
+\midrule
+MT-01 & Đối chiếu kiện & \code{test\_mt01\_the\_chua\_dang\_ky} & Đạt \\
+MT-02 & Đối chiếu kiện & \code{test\_mt02\_ngoai\_don} & Đạt \\
+MT-03 & Đối chiếu kiện & \code{test\_mt03\_vuot\_so\_luong} & Đạt \\
+MT-04 & Đối chiếu kiện & \code{test\_mt04\_bien\_bang\_dung\_so\_con\_lai} & Đạt \\
+MT-05 & Phân bổ vị trí & \code{test\_mt05\_het\_khu\_uu\_tien\_dung\_khu\_du\_phong} & Đạt \\
+MT-06 & Phân bổ vị trí & \code{test\_mt06\_het\_ca\_hai\_dua\_ve\_khu\_cho\_va\_canh\_bao} & Đạt \\
+MT-07 & Tiếp nhận bản tin & \code{test\_mt07\_ban\_tin\_trung\_bi\_bo\_qua} & Đạt \\
+MT-08 & Tiếp nhận bản tin & \code{test\_mt08\_sai\_hop\_dong\_thieu\_ma\_epc} & Đạt \\
+MT-09 & Chọn kiện xuất & \code{test\_mt09\_chon\_kien\_nhap\_truoc} & Đạt \\
+MT-10 & Phân quyền & \code{test\_mt10\_nv\_kho\_goi\_xu\_ly\_kiem\_ke\_bi\_403} & Đạt \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Mức thứ tư là sáu kịch bản xuyên ba tầng của Bảng~\ref{tab:kichban}, chạy trên toàn bộ hệ thống triển khai bằng Docker Compose với CSDL SQL Server thật, thao tác bằng tay trên bảng điều khiển Device và Web app theo thứ tự KB4, KB1, KB2, KB3, lập phiếu nhập, KB5, KB6 (Phụ lục~\ref{app:caidat}). Riêng KB4 còn được kiểm chứng tự động ở mức tích hợp.
+
+\begin{table}[H]
+\centering
+\caption{Kết quả kịch bản kiểm thử xuyên ba tầng}
+\label{tab:kqkichban}
+\small
+\begin{tabularx}{\textwidth}{l Y L{2.6cm} L{2.6cm}}
+\toprule
+\textbf{Mã} & \textbf{Kết quả mong đợi} & \textbf{Kiểm chứng tự động} & \textbf{Chạy trên hệ thống} \\
+\midrule
+KB1 & 3 kiện Chấp nhận (Q4); 3 nhiệm vụ cất hoàn thành; lập được phiếu nhập; tồn tăng & Logic: MT-04 và ca lượt KB1--KB3 & Đạt \\
+KB2 & Sai lệch Thẻ chưa đăng ký (Q1) & Logic: MT-01 & Đạt \\
+KB3 & Sai lệch Ngoài đơn (Q2), Vượt số lượng (Q3) & Logic: MT-02, MT-03 & Đạt \\
+KB4 & AGV ngoại tuyến rồi trực tuyến lại; nhiệm vụ hoàn thành đúng 1 lần; 1 bản tin trùng bị bỏ qua & Tích hợp MQTT: đạt & Đạt \\
+KB5 & 1 kiện Thiếu (\code{KI-2609-00010}), các kiện còn lại Khớp; phiên chờ duyệt & Logic: ca KB5 của đối chiếu tồn & Đạt \\
+KB6 & Phiếu xuất xác nhận; 2 kiện Đã xuất; thẻ về Chưa dùng; tồn CAP-00001 giảm 200 & Logic: MT-09, ca xuất nguyên kiện & Đạt \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Mẫu thử chỉ chứng minh sự có mặt của lỗi chứ không chứng minh sự vắng mặt của lỗi \cite[Ch.~10]{tung_qlhttt}; các kịch bản trên bao phủ mọi quy tắc của bảng quyết định Q1--Q4, cả hai nhánh của thuật toán phân bổ vị trí và tình huống mất kết nối là rủi ro chính của kiến trúc, nhưng chưa bao phủ tải đồng thời nhiều cổng đọc.

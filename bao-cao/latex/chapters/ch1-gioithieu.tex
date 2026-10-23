@@ -1,0 +1,30 @@
+% ============================================================
+% Chuong 1 -- Gioi thieu
+% ============================================================
+\chapter{Giới thiệu}
+\label{ch:gioithieu}
+
+\section{Bối cảnh}
+
+Kho hàng là mắt xích có lượng giao dịch dày đặc nhất trong chuỗi cung ứng: mỗi kiện hàng đi qua ít nhất bốn lần ghi nhận thông tin là nhận hàng, cất lên kệ, lấy xuống và xuất đi. Khi các lần ghi nhận này làm thủ công trên giấy rồi nhập lại vào bảng tính, sai lệch giữa sổ sách và thực tế tích tụ theo thời gian, và chi phí kiểm kê để phát hiện sai lệch đó trở nên đáng kể.
+
+Công nghệ nhận dạng bằng sóng vô tuyến (RFID) dải UHF cho phép đọc định danh của nhiều kiện hàng cùng lúc mà không cần tiếp xúc hay nhìn thấy mã, nhờ đó việc ghi nhận có thể diễn ra tự động tại cổng nhập, cổng xuất và trong lúc kiểm kê \cite{epcgen2}. Tuy nhiên đầu đọc RFID chỉ tạo ra các sự kiện “thẻ nào được đọc ở đâu, lúc nào”; giá trị nghiệp vụ chỉ xuất hiện khi các sự kiện đó được đưa vào một hệ thống thông tin quản lý được phân tích và thiết kế đúng. Đây là trọng tâm của báo cáo.
+
+\section{Mục tiêu và phạm vi}
+
+Báo cáo đặt ba mục tiêu:
+\begin{enumerate}
+  \item Áp dụng trọn vẹn phương pháp phân tích và thiết kế hệ thống thông tin có cấu trúc của học phần \cite{tung_qlhttt} cho một bài toán quản lý kho có yếu tố IoT, từ khảo sát hiện trạng tới thiết kế chương trình và mẫu thử.
+  \item Cài đặt hệ thống theo kiến trúc ba tầng gồm tầng thiết bị (Device), tầng máy chủ (Server) và tầng ứng dụng web (Web app), cho phép kiểm thử độc lập toàn bộ chuỗi từ thiết bị tới giao diện người dùng.
+  \item Thiết kế ranh giới giữa thiết bị và hệ thống thông tin đủ chặt chẽ để thiết bị giả lập ở bài này được thay bằng thiết bị ESP32 thật mà không phải sửa tầng máy chủ và tầng ứng dụng.
+\end{enumerate}
+
+Phạm vi nghiệp vụ gồm quản lý danh mục, nhập kho, xuất kho, điều phối vận chuyển nội bộ ở mức cơ bản, kiểm kê và báo cáo trong một kho. Thiết bị RFID và xe tự hành (AGV) được giả lập bằng phần mềm; mua hàng, kế toán và vận tải ngoài kho nằm ngoài phạm vi. Số liệu hiện trạng của kho là số liệu giả định phục vụ bài tập và được ghi rõ tại những chỗ sử dụng.
+
+\section{Phương pháp thực hiện}
+
+Dự án đi theo đúng sáu giai đoạn của \cite[Ch.~1]{tung_qlhttt}: (1) khảo sát hiện trạng và xác lập dự án; (2) phân tích hệ thống; (3) thiết kế tổng thể; (4) thiết kế chi tiết; (5) cài đặt, lập trình; (6) khai thác và bảo trì. Mỗi giai đoạn ứng với một chương của báo cáo, và ba mốc chốt được đặt sau giai đoạn 1, 2 và 4 (Mục~\ref{sec:kehoach}). Các công cụ diễn tả dùng ký pháp của giáo trình; những nội dung vượt ra ngoài giáo trình được ghi rõ là phần bổ sung và có trích dẫn nguồn.
+
+\section{Bố cục báo cáo}
+
+Chương~\ref{ch:cosolythuyet} trình bày cơ sở lý thuyết về phương pháp và công nghệ. Chương~\ref{ch:khaosat} khảo sát hiện trạng và xác lập dự án. Chương~\ref{ch:phantich} phân tích hệ thống về xử lý và về dữ liệu. Chương~\ref{ch:tongthe} trình bày thiết kế tổng thể, Chương~\ref{ch:chitiet} trình bày thiết kế chi tiết. Chương~\ref{ch:caidat} mô tả cài đặt và kết quả kiểm thử. Chương~\ref{ch:khaithac} trình bày tài liệu khai thác và kế hoạch bảo trì. Chương~\ref{ch:ketluan} kết luận. Phụ lục gồm bảng câu hỏi khảo sát và script tạo cơ sở dữ liệu.

@@ -1,0 +1,32 @@
+{
+  "additionalProperties": false,
+  "description": "Topic kho/thietbi/{maTB}/trang-thai, QoS 1, retain; Last Will gui NGOAI_TUYEN.\n\nTrang thai la gia tri luy dang (ghi de) nen khong can maBanTin.",
+  "properties": {
+    "v": {
+      "const": 1,
+      "default": 1,
+      "title": "V",
+      "type": "integer"
+    },
+    "maTB": {
+      "pattern": "^[A-Z]{2,3}-\\d{2}$",
+      "title": "Matb",
+      "type": "string"
+    },
+    "trangThai": {
+      "enum": [
+        "TRUC_TUYEN",
+        "NGOAI_TUYEN",
+        "LOI"
+      ],
+      "title": "Trangthai",
+      "type": "string"
+    }
+  },
+  "required": [
+    "maTB",
+    "trangThai"
+  ],
+  "title": "TrangThaiThietBi",
+  "type": "object"
+}

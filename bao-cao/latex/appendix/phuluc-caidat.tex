@@ -1,0 +1,97 @@
+\chapter{Hướng dẫn cài đặt và chạy thử}
+\label{app:caidat}
+
+\section{Yêu cầu}
+Máy tính Windows 10/11, macOS hoặc Linux; Docker Desktop, cấp cho Docker ít nhất 4\,GB bộ nhớ (SQL Server cần khoảng 2\,GB). Trên máy Mac chip Apple cần bật tùy chọn giả lập x86\_64 bằng Rosetta trong Docker Desktop vì ảnh SQL Server chỉ có bản amd64.
+
+\section{Khởi chạy}
+Mở cửa sổ dòng lệnh (PowerShell trên Windows) tại thư mục \code{smart-warehouse} rồi chạy:
+\begin{lstlisting}
+docker compose up --build
+\end{lstlisting}
+Mọi mật khẩu trong \code{docker-compose.yml} đã có giá trị mặc định nên không bắt buộc tạo tệp \code{.env}; muốn đổi mật khẩu thì sao chép \code{.env.example} thành \code{.env} (PowerShell: \code{copy .env.example .env}) và sửa trước khi chạy lần đầu.
+Lần đầu mất vài phút để tải ảnh và thư viện; trên mạng chậm nên build lần lượt từng dịch vụ bằng \code{docker compose build server}, \code{webapp}, \code{device} rồi mới \code{docker compose up}. Khi nhật ký dịch vụ \code{server} có dòng \code{Application startup complete}, mở:
+\begin{itemize}
+  \item Web app: \code{http://localhost:8501}
+  \item Bảng điều khiển thiết bị: \code{http://localhost:8502}
+  \item Tài liệu API: \code{http://localhost:8000/docs}
+\end{itemize}
+Lệnh \code{docker compose down} dừng hệ thống; \code{docker compose down -v} xóa cả dữ liệu để chạy lại từ dữ liệu mẫu.
+
+\begin{table}[H]
+\centering
+\caption{Tài khoản mẫu}
+\label{tab:taikhoan}
+\small
+\begin{tabular}{l l l}
+\toprule
+\textbf{Tên đăng nhập} & \textbf{Mật khẩu} & \textbf{Vai trò} \\
+\midrule
+\code{quantri} & \code{quantri123} & Quản trị \\
+\code{thukho} & \code{thukho123} & Thủ kho \\
+\code{nvkho} & \code{nvkho123} & Nhân viên kho \\
+\code{quanly} & \code{quanly123} & Quản lý \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Trình tự chạy thử xuyên ba tầng}
+Mở Web app (tài khoản \code{thukho}) và bảng điều khiển thiết bị cạnh nhau, làm đúng thứ tự ở Bảng~\ref{tab:trinhtu} vì các kịch bản dùng chung dữ liệu mẫu.
+
+\begin{table}[H]
+\centering
+\caption{Trình tự chạy thử}
+\label{tab:trinhtu}
+\small
+\begin{tabularx}{\textwidth}{c L{6.0cm} Y}
+\toprule
+\textbf{Bước} & \textbf{Thao tác} & \textbf{Kết quả mong đợi} \\
+\midrule
+1 & Bảng thiết bị: bấm KB4 & AGV-01 được gài lỗi cho nhiệm vụ kế tiếp \\
+2 & Web app: Nhập kho, tiếp nhận phiếu giao cho đơn \code{DDH-0001}; bảng thiết bị: bấm KB1 & 3 kiện Chấp nhận; 3 nhiệm vụ cất; AGV-01 ngoại tuyến rồi trực tuyến lại sau khoảng 12 giây; nhiệm vụ hoàn thành đúng một lần; 1 bản tin trùng bị bỏ qua \\
+3 & Bấm KB2 & Sai lệch Thẻ chưa đăng ký \\
+4 & Bấm KB3 & Sai lệch Ngoài đơn và Vượt số lượng \\
+5 & Chờ nhiệm vụ cất hoàn thành; Web app: Lập phiếu nhập & Có phiếu nhập và biên bản sai lệch; tồn tăng \\
+6 & Web app: Kiểm kê, lập phiên khu A; bấm KB5; Đối chiếu & 1 kiện Thiếu (\code{KI-2609-00010}); đăng nhập \code{quanly} để duyệt \\
+7 & Web app: Xuất kho, yêu cầu \code{KH-0001}, \code{CAP-00001} số lượng 150, lập phiếu xuất; chờ AGV lấy xong; bấm KB6 & Phiếu xuất Đã xác nhận; 2 kiện Đã xuất; tồn CAP-00001 giảm 200 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Kiểm thử tự động}
+\begin{lstlisting}
+pip install -r server/requirements.txt -r device/requirements.txt -r webapp/requirements.txt pytest
+python -m pytest -q tests
+\end{lstlisting}
+Kiểm thử tích hợp MQTT cần lệnh \code{mosquitto} trong biến môi trường \code{PATH} và tự bỏ qua nếu không có.
+
+\section{Sự cố thường gặp}
+
+\begin{table}[H]
+\centering
+\caption{Xử lý sự cố}
+\label{tab:suco}
+\small
+\begin{tabularx}{\textwidth}{L{5.2cm} Y}
+\toprule
+\textbf{Hiện tượng} & \textbf{Cách xử lý} \\
+\midrule
+Dịch vụ \code{db} thoát, báo mật khẩu quá ngắn hoặc quá yếu & Tệp \code{.env} sai (lưu thành \code{.env.txt}, mật khẩu thiếu chữ hoa, số hoặc ký tự đặc biệt); sửa hoặc xóa \code{.env}, chạy \code{docker compose down -v} rồi chạy lại \\
+Build \code{server} không tải được driver ODBC của Microsoft & Bình thường khi mạng chặn \code{packages.microsoft.com}: Dockerfile tự bỏ qua và dùng FreeTDS, nhật ký server in \code{Trình điều khiển ODBC: FreeTDS} \\
+Build lỗi tải gói Debian, Python hoặc quá thời gian chờ & Chạy lại đúng lệnh build (hoặc build lần lượt từng dịch vụ); gói đã tải được giữ trong bộ nhớ đệm; xem lỗi đầy đủ bằng \code{docker compose --progress plain build server} \\
+Server báo \code{Login failed for user 'ung\_dung'} & CSDL cũ còn mật khẩu khác: \code{docker compose down -v} rồi chạy lại \\
+\code{port is already allocated} (cổng 1433, 1883, 8000, 8501, 8502) & Một hệ thống khác đang chạy cùng cổng: kiểm tra bằng \code{docker ps}, dừng bằng \code{docker compose down} trong thư mục của hệ thống đó; hoặc dừng SQL Server cài sẵn trên máy \\
+Nhật ký \code{db} có dòng \code{Login failed for user 'sa'} lúc khởi động & Bình thường: lần kiểm tra sức khỏe đầu chạy khi SQL Server chưa sẵn sàng; các lần sau thành công \\
+Thiết bị báo \emph{Kết nối bị từ chối} & Mật khẩu MQTT trong \code{.env} đã đổi sau lần chạy đầu: \code{docker compose down -v} rồi chạy lại \\
+AGV không nhận nhiệm vụ & Trang Giám sát thiết bị: AGV phải Trực tuyến; vòng điều phối chạy mỗi 2 giây \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tệp triển khai}
+Hai tệp dưới đây quyết định cách hệ thống được dựng trên Docker: \code{docker-compose.yml} khai báo năm dịch vụ, mật khẩu mặc định, kiểm tra sức khỏe và thứ tự khởi động; \code{server/Dockerfile} dựng ảnh tầng Server với cơ chế thử lại khi tải gói và driver ODBC dự phòng.
+
+{\footnotesize
+\lstinputlisting[basicstyle=\ttfamily\scriptsize, caption={Tệp \code{docker-compose.yml}}, label={lst:pl-compose}]{appendix/docker-compose.yml}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize, caption={Tệp \code{server/Dockerfile}}, label={lst:pl-dockerfile}]{appendix/Dockerfile-server}
+}

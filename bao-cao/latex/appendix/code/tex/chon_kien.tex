@@ -1,0 +1,33 @@
+\begin{Verbatim}[commandchars=\\\{\},frame=single,framerule=0.3pt,rulecolor=\color{black!40},fontsize=\footnotesize,breaklines=true]
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Chuc nang 3.2 \PYZhy{} Chon kien theo nguyen tac nhap truoc, xuat truoc (FIFO). Ham thuan. Mau thu MT\PYZhy{}09.}
+
+\PY{l+s+sd}{Gia dinh 1 (Muc 4.16): xuat nguyen kien, nen tong so luong chon co the lon hon so yeu cau.}
+\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{dataclasses}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{dataclass}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{datetime}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{datetime}
+
+
+\PY{n+nd}{@dataclass}\PY{p}{(}\PY{n}{frozen}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{KienTon}\PY{p}{:}
+    \PY{n}{ma\PYZus{}kien}\PY{p}{:} \PY{n+nb}{str}
+    \PY{n}{so\PYZus{}luong}\PY{p}{:} \PY{n+nb}{int}
+    \PY{n}{ngay\PYZus{}nhap}\PY{p}{:} \PY{n}{datetime}
+
+
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{KhongDuHang}\PY{p}{(}\PY{n+ne}{ValueError}\PY{p}{)}\PY{p}{:}
+    \PY{k}{pass}
+
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{chon\PYZus{}kien\PYZus{}fifo}\PY{p}{(}\PY{n}{ds\PYZus{}kien}\PY{p}{:} \PY{n+nb}{list}\PY{p}{[}\PY{n}{KienTon}\PY{p}{]}\PY{p}{,} \PY{n}{so\PYZus{}luong\PYZus{}can}\PY{p}{:} \PY{n+nb}{int}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{list}\PY{p}{[}\PY{n}{KienTon}\PY{p}{]}\PY{p}{:}
+    \PY{k}{if} \PY{n}{so\PYZus{}luong\PYZus{}can} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Số lượng yêu cầu phải dương}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{da\PYZus{}chon}\PY{p}{,} \PY{n}{tong} \PY{o}{=} \PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{ds\PYZus{}kien}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{k}\PY{p}{:} \PY{p}{(}\PY{n}{k}\PY{o}{.}\PY{n}{ngay\PYZus{}nhap}\PY{p}{,} \PY{n}{k}\PY{o}{.}\PY{n}{ma\PYZus{}kien}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{k}{if} \PY{n}{tong} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{so\PYZus{}luong\PYZus{}can}\PY{p}{:}
+            \PY{k}{break}
+        \PY{n}{da\PYZus{}chon}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{k}\PY{p}{)}
+        \PY{n}{tong} \PY{o}{+}\PY{o}{=} \PY{n}{k}\PY{o}{.}\PY{n}{so\PYZus{}luong}
+    \PY{k}{if} \PY{n}{tong} \PY{o}{\PYZlt{}} \PY{n}{so\PYZus{}luong\PYZus{}can}\PY{p}{:}
+        \PY{k}{raise} \PY{n}{KhongDuHang}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tồn khả dụng }\PY{l+s+si}{\PYZob{}}\PY{n}{tong}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ nhỏ hơn số lượng yêu cầu }\PY{l+s+si}{\PYZob{}}\PY{n}{so\PYZus{}luong\PYZus{}can}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{da\PYZus{}chon}
+\end{Verbatim}

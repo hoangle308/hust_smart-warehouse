@@ -1,0 +1,49 @@
+\chapter*{Danh mục ký hiệu}
+\addcontentsline{toc}{chapter}{Danh mục ký hiệu}
+
+\paragraph{Ký hiệu trên sơ đồ} Theo quy ước của giáo trình học phần \cite{tung_qlhttt}.
+
+{\small
+\begin{longtable}{>{\centering\arraybackslash}m{2.4cm} L{5.4cm} p{6.4cm}}
+\toprule
+\textbf{Ký hiệu} & \textbf{Ý nghĩa} & \textbf{Dùng trong} \\
+\midrule
+\endhead
+\kyhieu{\draw (0,0) circle (0.28);} & Chức năng xử lý & Biểu đồ luồng dữ liệu \\
+\kyhieu{\draw[dashed] (0,0) circle (0.28);} & Chức năng bị loại khi chuyển sang mức logic & BLD vật lý của hệ thống cũ \\
+\kyhieu{\draw (0,0) rectangle (1.2,0.4);} & Tác nhân ngoài & Biểu đồ luồng dữ liệu \\
+\kyhieu{\draw (1.4,0) -- (0,0) -- (0,0.4) -- (1.4,0.4); \draw (0.35,0) -- (0.35,0.4);} & Kho dữ liệu, ô đầu là mã kho & Biểu đồ luồng dữ liệu \\
+\kyhieu{\draw[->,thick] (0,0) -- (1.2,0);} & Luồng dữ liệu & Biểu đồ luồng dữ liệu \\
+\kyhieu{\draw (0,0) rectangle (1.2,0.4);} & Chức năng (nút cây) & Biểu đồ phân cấp chức năng \\
+\kyhieu{\draw (0,0) -- (1.2,0); \draw (0.15,-0.12) -- (0.15,0.12); \draw (0.95,0) -- (1.2,0.15) (0.95,0) -- (1.2,-0.15);} & Liên kết một -- nhiều: vạch ngang phía một, chân gà phía nhiều & Mô hình thực thể liên kết \\
+\kyhieu{\draw (0,0) rectangle (1.2,0.4); \draw (0.12,0) -- (0.12,0.4) (1.08,0) -- (1.08,0.4);} & Module có sẵn, được nhiều module gọi & Lược đồ cấu trúc chương trình \\
+\kyhieu{\draw (0,0) circle (0.06); \draw[->] (0.08,0) -- (0.9,0);} & Thông tin chuyển giao là dữ liệu & Lược đồ cấu trúc chương trình \\
+\kyhieu{\fill (0,0) circle (0.06); \draw[->] (0.08,0) -- (0.9,0);} & Thông tin chuyển giao là điều khiển & Lược đồ cấu trúc chương trình \\
+\kyhieu{\draw (0,0) -- (0.15,0.15) -- (0.3,0) -- (0.15,-0.15) -- cycle;} & Lời gọi có chọn lựa & Lược đồ cấu trúc chương trình \\
+\kyhieu{\draw[->] (0,0) arc (180:-90:0.18);} & Lời gọi lặp & Lược đồ cấu trúc chương trình \\
+\bottomrule
+\end{longtable}
+}
+
+\paragraph{Ký hiệu mã trong báo cáo}
+
+{\small
+\begin{longtable}{L{2.4cm} p{12cm}}
+\toprule
+\textbf{Ký hiệu} & \textbf{Ý nghĩa} \\
+\midrule
+\endhead
+1 -- 6; 1.1 -- 6.3 & Số hiệu chức năng nhóm và chức năng lá theo biểu đồ phân cấp chức năng; dùng thống nhất trên mọi BLD, LCT và tên file mã nguồn \\
+D1 -- D9 & Mã kho dữ liệu trên biểu đồ luồng dữ liệu \\
+HT1 -- HT6 & Mã hệ thống con \\
+C, R, U, D & Tạo, đọc, cập nhật, xóa trong ma trận chức năng -- dữ liệu \\
+Q1 -- Q4 & Quy tắc của bảng quyết định đối chiếu kiện tại cổng nhập \\
+TC1 -- TC6 & Thủ tục người dùng cho chức năng thủ công \\
+KB1 -- KB6 & Kịch bản kiểm thử xuyên ba tầng \\
+MT-01 -- MT-10 & Mẫu thử module \\
+\underline{Thuộc tính} & Thuộc tính khóa trong lược đồ quan hệ \\
+\bottomrule
+\end{longtable}
+}
+
+\paragraph{Quy ước} Tên quan hệ và tên bảng viết hoa, nối bằng dấu gạch dưới (ví dụ \code{KIEN\_HANG}); tên thuộc tính viết liền theo kiểu chữ hoa đầu từ (ví dụ \code{MaViTri}). Mã vị trí, mã kiện và mã chứng từ theo quy tắc mã hóa tại Mục~\ref{sec:mahoa}.

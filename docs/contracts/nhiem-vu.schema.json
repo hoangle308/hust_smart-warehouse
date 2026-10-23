@@ -1,0 +1,49 @@
+{
+  "additionalProperties": false,
+  "description": "Topic kho/agv/{maTB}/nhiem-vu, QoS 1: trang thai thuc hien nhiem vu.",
+  "properties": {
+    "v": {
+      "const": 1,
+      "default": 1,
+      "title": "V",
+      "type": "integer"
+    },
+    "maBanTin": {
+      "format": "uuid",
+      "title": "Mabantin",
+      "type": "string"
+    },
+    "maTB": {
+      "pattern": "^[A-Z]{2,3}-\\d{2}$",
+      "title": "Matb",
+      "type": "string"
+    },
+    "maNVu": {
+      "title": "Manvu",
+      "type": "string"
+    },
+    "trangThai": {
+      "enum": [
+        "DANG_THUC_HIEN",
+        "HOAN_THANH",
+        "LOI"
+      ],
+      "title": "Trangthai",
+      "type": "string"
+    },
+    "thoiDiem": {
+      "format": "date-time",
+      "title": "Thoidiem",
+      "type": "string"
+    }
+  },
+  "required": [
+    "maBanTin",
+    "maTB",
+    "maNVu",
+    "trangThai",
+    "thoiDiem"
+  ],
+  "title": "BanTinNhiemVu",
+  "type": "object"
+}

@@ -1,0 +1,25 @@
+% Hinh: BLD duoi dinh cua chuc nang 5 -- Kiem ke
+\begin{tikzpicture}
+\node[ent] (tb)  at (7.2,6.0)  {Thiết bị kho};
+\node[ent] (bgd) at (9.6,-3.0) {Ban giám đốc};
+\node[proc] (p51) at (3.6,3.0)  {\textbf{5.1} Lập phiên kiểm kê};
+\node[proc] (p52) at (7.2,3.0)  {\textbf{5.2} Ghi nhận đọc thẻ kiểm kê};
+\node[proc] (p53) at (10.8,3.0) {\textbf{5.3} Đối chiếu tồn sổ sách};
+\node[proc] (p54) at (9.6,-0.6) {\textbf{5.4} Xử lý chênh lệch};
+\pic at (4.6,6.0)  {store={D3/Khu, vị trí}};
+\pic at (14.6,6.0) {storehot={D4/Kiện, thẻ RFID}};
+\pic at (7.6,0.6)  {store={D9/Kiểm kê}};
+\pic at (14.6,-0.6) {storehot={D4/Kiện, thẻ RFID}};
+\draw[flow] (3.0,5.68) -- (p51);
+\draw[flow] (p51) -- node[fl, above] {Phiên kiểm kê} (p52);
+\draw[flow] (p51) -- (4.8,0.92);
+\draw[flow] (tb.south) -- node[fl, right] {Sự kiện đọc thẻ} (p52);
+\draw[flow] (p52) -- (7.0,0.92);
+\draw[flow] (p52) -- node[fl, above] {Thẻ đã đọc} (p53);
+\draw[flow] (12.4,5.68) -- node[fl, right] {Tồn sổ sách} (p53);
+\draw[flow] (p53) -- node[fl, right, pos=0.4] {Bảng chênh lệch} (p54);
+\draw[flow] (bgd.north) -- node[fl, right] {Phê duyệt chênh lệch} (p54);
+\draw[flow, <->] (p54) -- node[fl, above, pos=0.45] {Điều chỉnh} (11.6,-0.6);
+\draw[flow] (p54) -- (7.6,0.45);
+\draw[flow] (p53) -- node[fl, above, sloped, pos=0.6] {Kết quả} (7.6,0.75);
+\end{tikzpicture}

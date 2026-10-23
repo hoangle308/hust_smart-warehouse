@@ -1,0 +1,453 @@
+% ============================================================
+% Chuong 6 -- Giai doan 4: Thiet ke chi tiet
+% Thu cong, giao dien [Ch. 7 muc 4]; kiem soat [Ch. 8]; CSDL [Ch. 9];
+% chuong trinh va mau thu [Ch. 10]
+% ============================================================
+\chapter{Thiết kế chi tiết}
+\label{ch:chitiet}
+
+Thiết kế chi tiết cụ thể hóa thiết kế tổng thể theo bốn nội dung của \cite[Ch.~1]{tung_qlhttt}: thủ công, kiểm soát phục hồi, cơ sở dữ liệu và chương trình; cùng với thiết kế giao diện \cite[Ch.~7]{tung_qlhttt} và thiết kế mẫu thử \cite[Ch.~10]{tung_qlhttt}. Kết quả là đầu vào trực tiếp cho cài đặt ở Chương~\ref{ch:caidat}.
+
+% ------------------------------------------------------------
+\section{Thiết kế thủ tục người dùng}
+\label{sec:thucong}
+
+Sáu thủ tục thủ công được thiết kế cho các điểm ranh giới máy tính -- thủ công đã phân định ở Mục~\ref{sec:mttc}; mỗi thủ tục nêu người làm, thời điểm, các bước và cách xử lý sai sót (Bảng~\ref{tab:thutuc}).
+
+\begin{table}[H]
+\centering
+\caption{Danh mục thủ tục người dùng}
+\label{tab:thutuc}
+\small
+\begin{tabularx}{\textwidth}{l L{4.4cm} L{1.6cm} L{3.0cm} Y}
+\toprule
+\textbf{Mã} & \textbf{Thủ tục} & \textbf{Chức năng} & \textbf{Người thực hiện} & \textbf{Thời điểm} \\
+\midrule
+TC1 & Dán và khai báo thẻ cho kiện mới & 2.2 & NV kho & Lô hàng về, trước cổng nhập \\
+TC2 & Ký biên bản giao nhận & 2.5 & Thủ kho, đại diện NCC & Sau khi lập phiếu nhập \\
+TC3 & Thu hồi thẻ khi xuất & 3.4 & NV kho tại cửa xuất & Sau khi kiện qua cổng xuất \\
+TC4 & Cất, lấy hàng thay AGV khi AGV lỗi & 4.3 & Thủ kho, NV kho & AGV báo lỗi hoặc ngoại tuyến \\
+TC5 & Quét kiểm kê bằng đầu đọc cầm tay & 5.2 & NV kho & Trong phiên kiểm kê \\
+TC6 & Phê duyệt chênh lệch kiểm kê & 5.4 & Quản lý & Phiên kiểm kê có chênh lệch \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{TC1 -- Dán và khai báo thẻ cho kiện mới}
+\begin{enumerate}
+  \item Lấy thẻ từ hộp thẻ trống (thẻ ở trạng thái “Chưa dùng”).
+  \item Dán thẻ lên mặt bên kiện, tránh bề mặt kim loại và chất lỏng.
+  \item Trên màn hình Khai báo kiện: chọn mặt hàng, nhập số lượng, quét thẻ bằng đầu đọc cầm tay.
+  \item Xác nhận; hệ thống sinh mã kiện và chuyển thẻ sang “Đang dùng”.
+\end{enumerate}
+Sai sót: thẻ không đọc được thì thay thẻ khác và đánh dấu thẻ hỏng trên màn hình Danh mục thẻ.
+
+\paragraph{TC2 -- Ký biên bản giao nhận}
+\begin{enumerate}
+  \item In biên bản giao nhận từ phiếu nhập vừa lập.
+  \item Đối chiếu số kiện trên biên bản với phiếu giao hàng của nhà cung cấp.
+  \item Hai bên ký; ghi số biên bản giấy vào phiếu nhập trên hệ thống; lưu bản giấy vào hồ sơ.
+\end{enumerate}
+Sai sót: số kiện không khớp thì không ký, đối chiếu lại với Thông báo sai lệch trên màn hình.
+
+\paragraph{TC3 -- Thu hồi thẻ khi xuất}
+\begin{enumerate}
+  \item Tháo thẻ khỏi kiện sau khi kiện qua cổng xuất, bỏ vào hộp thu hồi.
+  \item Hệ thống tự chuyển thẻ về “Chưa dùng” khi phiếu xuất được xác nhận.
+  \item Cuối ngày, thủ kho đối chiếu số thẻ thu hồi với số kiện đã xuất trên báo cáo.
+\end{enumerate}
+
+\paragraph{TC4 -- Cất, lấy hàng thay AGV khi AGV lỗi}
+\begin{enumerate}
+  \item Thủ kho xem nhiệm vụ đang treo trên màn hình Nhiệm vụ, giao cho một NV kho.
+  \item NV kho dùng xe nâng tay đưa kiện tới đúng vị trí ghi trên nhiệm vụ.
+  \item Quét thẻ kiện tại vị trí đích bằng đầu đọc cầm tay.
+  \item Thủ kho bấm “Xác nhận hoàn thành thủ công”; hệ thống ghi tên người xác nhận vào nhật ký kiểm toán.
+\end{enumerate}
+
+\paragraph{TC5 -- Quét kiểm kê bằng đầu đọc cầm tay}
+\begin{enumerate}
+  \item Nhận phiên kiểm kê đã lập trên đầu đọc cầm tay.
+  \item Đi lần lượt theo thứ tự mã dãy, quét từng ô kệ, theo dõi tiến độ trên màn hình.
+  \item Ô báo không đọc được thẻ thì đưa đầu đọc lại gần và quét lại trước khi chuyển dãy.
+  \item Báo hoàn tất phiên trên màn hình.
+\end{enumerate}
+
+\paragraph{TC6 -- Phê duyệt chênh lệch kiểm kê}
+\begin{enumerate}
+  \item Xem bảng chênh lệch của phiên (Thiếu, Thừa, Sai vị trí).
+  \item Với từng dòng, chọn “Điều chỉnh sổ” hoặc “Điều tra thêm”.
+  \item Hệ thống áp dụng điều chỉnh và đóng phiên khi mọi dòng đã có quyết định.
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section{Thiết kế giao diện}
+\label{sec:giaodien}
+
+Giao diện được thiết kế đầu ra trước, đầu vào sau \cite[Ch.~7]{tung_qlhttt}. Ngoài giao diện người dùng, hệ thống có hai giao diện máy -- máy là ranh giới giữa ba tầng ở Mục~\ref{sec:kientruc}.
+
+\subsection{Thiết kế tài liệu xuất}
+
+\begin{table}[H]
+\centering
+\caption{Tài liệu xuất}
+\label{tab:tailieuxuat}
+\small
+\begin{tabularx}{\textwidth}{L{3.2cm} L{2.8cm} L{2.4cm} Y}
+\toprule
+\textbf{Tài liệu} & \textbf{Phương tiện} & \textbf{Phương thức} & \textbf{Bố cục} \\
+\midrule
+Biên bản giao nhận & Giấy, khung không in sẵn & Lập tức sau 2.5 & Đầu: số phiếu giao, số phiếu nhập, NCC, ngày; thân: mặt hàng, số kiện, số lượng; cuối: chữ ký hai bên \\
+Thông báo sai lệch & Màn hình, gửi Phòng Mua hàng & Lập tức sau 2.3 & Số phiếu giao; danh sách thẻ và kết quả đối chiếu \\
+Phiếu xuất kho & Giấy & Lập tức sau 3.3 & Theo mẫu phiếu xuất của đơn vị \\
+Báo cáo nhập -- xuất -- tồn & Màn hình, Excel & Trì hoãn, theo kỳ & Theo mặt hàng: tồn đầu, nhập, xuất, tồn cuối \\
+Bảng kê chứng từ & Excel gửi Kế toán & Trì hoãn, cuối tháng & Theo loại chứng từ và ngày \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Thiết kế màn hình và đơn chọn}
+
+Đơn chọn phân cấp hai mức, tổ chức theo vai trò, mỗi mức có lối thoát về trang chủ (Bảng~\ref{tab:menu}). Đơn chọn khác BPC: một mục gom nhiều chức năng lá (“Nhập kho” gồm 2.1, 2.3, 2.5), và một chức năng có thể nằm ở nhiều mục (6.2 Tra cứu) -- điểm giáo trình lưu ý hay bị nhầm lẫn \cite{tung_qlhttt}.
+
+\begin{table}[H]
+\centering
+\caption{Đơn chọn theo vai trò}
+\label{tab:menu}
+\small
+\begin{tabularx}{\textwidth}{L{2.4cm} Y}
+\toprule
+\textbf{Vai trò} & \textbf{Mục đơn chọn} \\
+\midrule
+NV kho & Bảng điều khiển · Khai báo kiện · Nhiệm vụ của tôi · Tra cứu vị trí \\
+Thủ kho & Bảng điều khiển · Nhập kho · Xuất kho · Kiểm kê · Nhiệm vụ · Danh mục · Tra cứu · Báo cáo \\
+Quản lý & Bảng điều khiển · Phê duyệt chênh lệch · Báo cáo · Tra cứu \\
+Quản trị & Khu, vị trí, thẻ, thiết bị · Người dùng · Giám sát thiết bị \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Năm màn hình chính: (1) \textbf{Bảng điều khiển}: số kiện trong kho, phiếu chờ xử lý, nhiệm vụ đang chạy, trạng thái thiết bị, cảnh báo; tự làm mới mỗi 5 giây; (2) \textbf{Nhập kho}: chọn phiếu giao, xem kết quả đối chiếu từng kiện khi qua cổng theo bốn quy tắc Q1 -- Q4, lập phiếu nhập; (3) \textbf{Khai báo kiện}: điền mẫu, phục vụ TC1; (4) \textbf{Tra cứu vị trí}: nhập mã hoặc tên hàng, trả về danh sách kiện và mã vị trí; (5) \textbf{Kiểm kê}: chọn khu, theo dõi tiến độ quét, bảng chênh lệch, gửi phê duyệt.
+
+\subsection{Thiết kế đầu vào}
+
+Mọi trường nhập được kiểm tra trực tiếp (có mặt, khuôn dạng, kiểu, miền giá trị) ngay trên biểu mẫu trước khi gửi; mã có cấu trúc (mã vị trí, mã kiện, mã mặt hàng) được chọn từ danh sách thay vì gõ tay để giảm sai sót và số lần gõ phím.
+
+\subsection{Giao diện với thiết bị: hợp đồng MQTT}
+\label{sec:mqttcontract}
+
+Bốn chủ đề với định dạng JSON cố định là toàn bộ giao diện giữa thiết bị và máy chủ \cite{mqtt5} (Bảng~\ref{tab:topic}); bộ giả lập ở bài này và thiết bị ESP32 về sau đều phải tuân thủ.
+
+\begin{table}[H]
+\centering
+\caption{Các chủ đề MQTT}
+\label{tab:topic}
+\small
+\begin{tabularx}{\textwidth}{L{6.0cm} L{2.3cm} c c Y}
+\toprule
+\textbf{Chủ đề} & \textbf{Chiều} & \textbf{QoS} & \textbf{Retain} & \textbf{Nội dung} \\
+\midrule
+\code{kho/thietbi/\{maTB\}/doc-the} & Device $\to$ Server & 1 & Không & Một lượt đọc thẻ \\
+\code{kho/thietbi/\{maTB\}/trang-thai} & Device $\to$ Server & 1 & Có & Trực tuyến / ngoại tuyến (Last Will) \\
+\code{kho/agv/\{maTB\}/lenh} & Server $\to$ Device & 1 & Không & Lệnh nhiệm vụ cho AGV \\
+\code{kho/agv/\{maTB\}/nhiem-vu} & Device $\to$ Server & 1 & Không & Trạng thái thực hiện nhiệm vụ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{lstlisting}[style=json, caption={Mẫu bản tin đọc thẻ}, label={lst:bantin}]
+{
+  "v": 1,
+  "maBanTin": "6f1c2a9e-4b7d-4e2a-9c1f-2d8e5a7b3c10",
+  "maTB": "GT-01",
+  "thoiDiem": "2026-10-06T09:15:02+07:00",
+  "the": [ {"maEPC": "<24 ky tu hexa>", "cuongDo": -52} ]
+}
+\end{lstlisting}
+
+Quy tắc bắt buộc: (i) bản tin \code{doc-the} và \code{nhiem-vu} mang \code{maBanTin} là UUID do thiết bị sinh, máy chủ bỏ qua bản tin trùng; bản tin \code{trang-thai} không cần khóa này vì chỉ trạng thái mới nhất có nghĩa; (ii) thiết bị đệm bản tin khi mất kết nối và gửi lại theo thứ tự, \code{thoiDiem} là thời điểm đọc chứ không phải thời điểm gửi; (iii) thời gian theo ISO 8601 có múi giờ, trường \code{v} cho phép nâng cấp định dạng; (iv) thiết bị không mang logic nghiệp vụ, máy chủ tự biết cổng nhập hay xuất qua bảng \code{THIET\_BI}; (v) mỗi thiết bị một tài khoản MQTT.
+
+\subsection{Giao diện giữa Web app và Server: REST API}
+
+Web app chỉ truy cập dữ liệu qua REST API tiền tố \code{/api/v1}, xác thực bằng JWT \cite{rfc7519}; mỗi nhóm điểm cuối ánh xạ về chức năng lá trong BPC (Bảng~\ref{tab:api}). Chức năng 2.3, 2.4, 3.4, 4.1, 4.2 không có điểm cuối ghi vì máy chủ tự kích hoạt khi nhận bản tin thiết bị. Đặc tả đầy đủ được FastAPI sinh tự động theo chuẩn OpenAPI tại \code{/docs}.
+
+\begin{table}[H]
+\centering
+\caption{Các nhóm điểm cuối REST}
+\label{tab:api}
+\small
+\begin{tabularx}{\textwidth}{Y L{2.4cm} L{3.2cm}}
+\toprule
+\textbf{Nhóm điểm cuối} & \textbf{Chức năng lá} & \textbf{Vai trò} \\
+\midrule
+\code{/auth/dang-nhap}, \code{/nguoi-dung} & Quản trị & Mọi người dùng; Quản trị \\
+\code{/mat-hang}, \code{/doi-tac}, \code{/khu}, \code{/vi-tri}, \code{/the-rfid}, \code{/thiet-bi} & 1.1 -- 1.4 & Thủ kho, Quản trị \\
+\code{/don-dat-hang}, \code{/phieu-giao}, \code{/phieu-giao/dang-nhan}, \code{/kien}, \code{/phieu-giao/\{so\}/doi-chieu}, \code{/phieu-nhap/\{so\}/lap} & 2.1 -- 2.5 & Thủ kho, NV kho \\
+\code{/yeu-cau-xuat}, \code{/yeu-cau-xuat/\{so\}/lap-phieu}, \code{/phieu-xuat} & 3.1 -- 3.4 & Thủ kho \\
+\code{/nhiem-vu}, \code{/nhiem-vu/\{ma\}/xac-nhan-thu-cong} & 4.2, 4.3 (TC4) & Thủ kho, NV kho \\
+\code{/kiem-ke}, \code{/kiem-ke/\{ma\}/doi-chieu}, \code{/kiem-ke/\{ma\}/ket-qua}, \code{/kiem-ke/\{ma\}/xu-ly} & 5.1 -- 5.4 & Thủ kho, Quản lý \\
+\code{/bang-dieu-khien}, \code{/bao-cao/ton-kho}, \code{/bao-cao/nhap-xuat-ton}, \code{/bao-cao/bang-ke-chung-tu}, \code{/bao-cao/hieu-suat}, \code{/tra-cuu/vi-tri}, \code{/sai-lech} & 6.1 -- 6.3 & Thủ kho, Quản lý, NV kho (tra cứu) \\
+\code{/thiet-bi/trang-thai}, \code{/ban-tin} & Giám sát & Mọi vai trò \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Thiết kế kiểm soát và phục hồi}
+\label{sec:kiemsoat}
+
+Bảy điểm hở được xác định theo trình tự của \cite[Ch.~8]{tung_qlhttt}; ba điểm có mức đe dọa cao đều nằm ở ranh giới giữa các tầng (Bảng~\ref{tab:diemho}).
+
+\begin{table}[H]
+\centering
+\caption{Điểm hở, mức đe dọa và biện pháp kiểm soát}
+\label{tab:diemho}
+\small
+\begin{tabularx}{\textwidth}{L{2.6cm} L{3.6cm} l Y}
+\toprule
+\textbf{Điểm hở} & \textbf{Đe dọa} & \textbf{Mức} & \textbf{Biện pháp kiểm soát} \\
+\midrule
+MQTT broker & Thiết bị giả mạo gửi sự kiện giả, làm sai tồn kho & Cao & Tài khoản riêng từng thiết bị; ACL chỉ cho ghi vào chủ đề mang mã của chính nó; TLS ở giai đoạn phần cứng \\
+Bản tin gửi lại & Ghi trùng nghiệp vụ khi mạng chập chờn & Cao & Khóa chính \code{MaBanTin}; xử lý trong một giao tác CSDL \\
+REST API & Truy cập trái phép, sửa hoặc hủy chứng từ & Cao & Đăng nhập, JWT hết hạn sau 8 giờ, kiểm tra vai trò ở mọi điểm cuối \\
+Biểu mẫu nhập liệu & Nhập sai mã, số lượng & Vừa & Kiểm tra trực tiếp trước, gián tiếp sau \\
+Cơ sở dữ liệu & Sửa trực tiếp bỏ qua nghiệp vụ & Vừa & Tài khoản ứng dụng quyền tối thiểu; nhật ký kiểm toán bằng trigger \\
+Mất điện, sự cố & Mất giao dịch đang xử lý & Vừa & Giao tác CSDL; sao lưu; thiết bị đệm bản tin \\
+Báo cáo xuất ra & Lộ thông tin liên hệ đối tác & Thấp & Chỉ Quản lý, Thủ kho được xem; dữ liệu cá nhân xử lý theo \cite{nd356} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Phân biệt riêng tư ở tầng ứng dụng} Người dùng không đăng nhập trực tiếp vào cơ sở dữ liệu; quyền được kiểm tra tại REST API theo vai trò (Bảng~\ref{tab:quyen}). Chức năng quản lý người dùng thuộc HT1, xử lý phát hiện số 1 của ma trận CRUD (Mục~\ref{sec:crud}).
+
+\begin{table}[H]
+\centering
+\caption{Quyền theo vai trò}
+\label{tab:quyen}
+\small
+\begin{tabularx}{\textwidth}{l Y Y Y Y Y Y}
+\toprule
+\textbf{Vai trò} & \textbf{Danh mục} & \textbf{Nhập kho} & \textbf{Xuất kho} & \textbf{Điều phối} & \textbf{Kiểm kê} & \textbf{Báo cáo} \\
+\midrule
+Quản trị & Ghi & -- & -- & Xem & -- & -- \\
+Thủ kho & Ghi mặt hàng, đối tác & Ghi & Ghi & Ghi ngoại lệ (TC4) & Ghi & Xem \\
+NV kho & Xem & Khai báo kiện (TC1) & -- & Xem của mình & Quét (TC5) & -- \\
+Quản lý & Xem & Xem & Xem & Xem & Phê duyệt (TC6) & Xem \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Giao quyền và rút quyền ở tầng CSDL} Áp dụng lệnh GRANT/REVOKE như \cite[Ch.~8]{tung_qlhttt} cho tài khoản dịch vụ, theo nguyên tắc quyền tối thiểu và quy tắc “không xóa chứng từ” của ma trận CRUD:
+
+\begin{lstlisting}[language=SQL]
+CREATE ROLE r_ung_dung;
+GRANT SELECT, INSERT, UPDATE ON SCHEMA::kho TO r_ung_dung;
+GRANT DELETE ON kho.MAT_HANG TO r_ung_dung;    -- chi danh muc duoc xoa
+DENY  DELETE ON kho.PHIEU_NHAP TO r_ung_dung;  -- chung tu khong bao gio xoa
+DENY  DELETE ON kho.PHIEU_XUAT TO r_ung_dung;
+CREATE ROLE r_bao_cao;
+GRANT SELECT ON SCHEMA::bao_cao TO r_bao_cao;  -- chi doc cac view bao cao
+REVOKE SELECT ON SCHEMA::bao_cao FROM r_bao_cao CASCADE; -- rut quyen day chuyen
+\end{lstlisting}
+
+\paragraph{Gián đoạn chương trình và phục hồi} Sao lưu toàn bộ hằng ngày, sao lưu nhật ký giao tác mỗi giờ. Mỗi bản tin thiết bị được ghi vào \code{BAN\_TIN\_THIET\_BI} với trạng thái “chờ xử lý” trước khi xử lý nghiệp vụ; khi máy chủ khởi động lại, các bản tin còn chờ được xử lý tiếp. Đây là nguyên tắc ghi “biến mốc” của \cite[Ch.~8]{tung_qlhttt} áp dụng cho xử lý trực tuyến. Thiết bị đệm bản tin khi mất kết nối; trạng thái ngoại tuyến hiện ngay trên bảng điều khiển nhờ cơ chế Last Will.
+
+% ------------------------------------------------------------
+\section{Thiết kế cơ sở dữ liệu}
+\label{sec:csdl}
+
+Hai mươi quan hệ logic được cài thành 23 bảng trên SQL Server theo các bước của \cite[Ch.~9]{tung_qlhttt}: thêm thuộc tính tình huống, lặp thuộc tính, nghiên cứu đường truy nhập, lập tệp chỉ dẫn. Script đầy đủ ở Phụ lục~\ref{app:csdl}.
+
+\subsection{Thuộc tính tình huống, lặp thuộc tính và bảng bổ sung}
+
+\begin{table}[H]
+\centering
+\caption{Thay đổi so với mô hình logic}
+\label{tab:thaydoi}
+\small
+\begin{tabularx}{\textwidth}{L{2.6cm} Y L{4.6cm}}
+\toprule
+\textbf{Thay đổi} & \textbf{Nội dung} & \textbf{Lý do} \\
+\midrule
+Thêm bảng & BAN\_TIN\_THIET\_BI(\underline{MaBanTin}, MaTB, ChuDe, NoiDung, ThoiDiemNhan, TrangThaiXuLy) & Chống ghi trùng, nhật ký sự kiện, phục hồi \\
+Thêm bảng & NHAT\_KY\_KIEM\_TOAN(\underline{MaNK}, ThoiDiem, MaNV, Bang, KhoaBanGhi, ThaoTac, GiaTriCu, GiaTriMoi) & Truy vết thay đổi dữ liệu \\
+Mở rộng bảng & NHAN\_VIEN thêm TenDangNhap, MatKhauBam, TrangThai & Quản lý người dùng \\
+Thêm bảng & SAI\_LECH(\underline{MaSL}, LoaiChungTu, SoChungTu, MaEPC, KetQua, ThoiDiem, MaBanTin) & Lưu từng sai lệch Q1--Q3 làm căn cứ biên bản (2.5) \\
+Mở rộng tập giá trị & PHIEU\_NHAP thêm TrangThai (\code{DANG\_NHAN}, \code{DA\_LAP}); KIEN\_HANG thêm trạng thái \code{THAT\_LAC} & Gắn lượt đọc cổng vào phiếu đang nhận; xử lý chênh lệch kiểm kê \\
+Lặp thuộc tính & DONG\_PHIEU\_XUAT thêm MaMH, SoLuong sao từ KIEN\_HANG & Chứng từ giữ nguyên giá trị tại thời điểm lập \\
+Thuộc tính tình huống & View có chỉ dẫn \code{bao\_cao.TON\_KHO}: tồn theo mặt hàng & Tồn là thuộc tính tích lũy; SQL Server tự cập nhật view, dữ liệu gốc giữ 3NF \\
+Tập giá trị & Trạng thái, loại, kết quả cài bằng ràng buộc CHECK & Tập nhỏ, ổn định \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Nghiên cứu đường truy nhập}
+
+Tần suất ở Bảng~\ref{tab:duongtruy} tính theo số liệu giả định ở Bảng~\ref{tab:thongso}: khoảng 200 kiện nhập và 175 kiện xuất mỗi ngày.
+
+\begin{table}[H]
+\centering
+\caption{Đường truy nhập}
+\label{tab:duongtruy}
+\footnotesize
+\begin{tabularx}{\textwidth}{L{2.7cm} l L{3.25cm} L{2.6cm} Y r}
+\toprule
+\textbf{Yêu cầu} & \textbf{Bước} & \textbf{Bảng} & \textbf{Khóa truy nhập} & \textbf{Tra cứu} & \textbf{Lần/ngày} \\
+\midrule
+A. Tiếp nhận bản tin & A/1 & BAN\_TIN\_THIET\_BI & MaBanTin & Đã xử lý chưa & 1\,500 \\
+B. Đối chiếu kiện (2.3) & B/1 & KIEN\_HANG & MaEPC & MaKien, MaMH, SoLuong & 200 \\
+ & B/2 & DONG\_DDH & SoDDH, MaMH & SoLuongDat & 200 \\
+C. Phân bổ vị trí (2.4) & C/1 & KHU & NhomHangUuTien & MaKhu & 200 \\
+ & C/2 & VI\_TRI & MaKhu, TrangThai & Ô trống mã nhỏ nhất & 200 \\
+D. Chọn kiện xuất (3.2) & D/1 & KIEN\_HANG & MaMH, TrangThai & Kiện theo ngày nhập & 175 \\
+E. Tra cứu vị trí (6.2) & E/1 & KIEN\_HANG & MaMH & MaViTri, SoLuong & 100 \\
+F. Kiểm kê một khu (5.3) & F/1 & VI\_TRI & MaKhu & MaViTri & vài/tuần \\
+ & F/2 & KIEN\_HANG & MaViTri & MaKien, MaEPC & vài/tuần \\
+G. Theo dõi nhiệm vụ (4.2) & G/1 & NHIEM\_VU\_VC & TrangThai, MaTB & Nhiệm vụ đang chạy & 400 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Lập tệp chỉ dẫn}
+
+\begin{lstlisting}[language=SQL]
+CREATE UNIQUE INDEX UX_KIEN_EPC  ON kho.KIEN_HANG (MaEPC)                -- B/1
+       WHERE TrangThai IN ('KHAI_BAO','TRONG_KHO');  -- the duoc tai su dung
+CREATE INDEX IX_KIEN_MH_TT       ON kho.KIEN_HANG (MaMH, TrangThai, NgayNhap)
+                                 INCLUDE (MaViTri, SoLuong);           -- D/1, E/1
+CREATE INDEX IX_KIEN_VITRI       ON kho.KIEN_HANG (MaViTri);             -- F/2
+CREATE INDEX IX_VITRI_KHU_TT     ON kho.VI_TRI (MaKhu, TrangThai);       -- C/2, F/1
+CREATE INDEX IX_NVU_TT_TB        ON kho.NHIEM_VU_VC (TrangThai, MaTB);   -- G/1
+-- A/1, B/2: dung khoa chinh san co
+\end{lstlisting}
+
+Chỉ dẫn \code{UX\_KIEN\_EPC} có lọc: mã EPC chỉ phải duy nhất trong số kiện đang khai báo hoặc đang trong kho, vì thẻ được tái sử dụng sau khi kiện xuất. \code{KIEN\_HANG} mang ba chỉ dẫn vì là bảng bị truy nhập nhiều nhất (Mục~\ref{sec:crud}). Cái giá là mỗi lần ghi kiện phải cập nhật thêm ba chỉ dẫn và view tồn kho; với khoảng 400 lần ghi mỗi ngày, chi phí này nhỏ so với lợi ích khi đọc.
+
+% ------------------------------------------------------------
+\section{Thiết kế chương trình}
+\label{sec:chuongtrinh}
+
+BLD của từng hệ thống con được chuyển thành lược đồ cấu trúc theo hai phương thức của \cite[Ch.~10]{tung_qlhttt}: HT2, HT3 phân tích theo giao tác; HT4 phân tích theo biến đổi; HT5 phân rã theo chức năng lá. Các module lá truy cập dữ liệu qua một module có sẵn dùng chung.
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-lct-ht2}
+\caption{LCT hệ con Nhập kho (HT2), phân tích theo giao tác}
+\label{fig:lctht2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-lct-ht3}
+\caption{LCT hệ con Xuất kho (HT3), phân tích theo giao tác}
+\label{fig:lctht3}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-lct-ht4}
+\caption{LCT hệ con Điều phối và thiết bị (HT4), phân tích theo biến đổi}
+\label{fig:lctht4}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\vehinh{fig-lct-ht5}
+\caption{LCT hệ con Kiểm kê (HT5)}
+\label{fig:lctht5}
+\end{figure}
+
+\paragraph{Chất lượng lược đồ} Theo các tiêu chí của \cite[Ch.~10]{tung_qlhttt}, \cite{yourdon1979}:
+\begin{itemize}
+  \item Tương tác dữ liệu là chủ yếu: module “Đối chiếu kiện” chỉ nhận danh sách kiện đã đọc, không nhận cả bản tin MQTT.
+  \item Một tương tác điều khiển duy nhất ở HT2: “kết quả đối chiếu” đi lên module gọi để chọn nhánh; đây là cờ mô tả kết quả, không phải cờ ra lệnh xuống dưới, nên không vi phạm nguyên tắc che giấu.
+  \item Không có tương tác chung: không module nào dùng biến toàn cục; mọi truy cập dữ liệu đi qua module “Truy cập CSDL”.
+  \item Cố kết cao: mỗi module lá ứng với đúng một chức năng lá trong BPC.
+  \item Hình thái trên xòe, dưới chụm: mỗi điểm xòe không quá 7 nhánh, trong giới hạn $7 \pm 2$.
+\end{itemize}
+
+\paragraph{Đóng gói và truy vết} Mỗi hệ con là một gói Python; tên file theo số hiệu chức năng (Bảng~\ref{tab:truyvet}).
+
+\begin{table}[H]
+\centering
+\caption{Truy vết module sang mã nguồn và mẫu thử}
+\label{tab:truyvet}
+\small
+\begin{tabularx}{\textwidth}{L{4.2cm} Y L{3.0cm}}
+\toprule
+\textbf{Module} & \textbf{File mã nguồn} & \textbf{Mẫu thử} \\
+\midrule
+Điều khiển nhập kho & \code{server/ht2\_nhap\_kho/dieu\_khien.py} & KB1 -- KB3 \\
+Đối chiếu kiện (2.3) & \code{server/ht2\_nhap\_kho/doi\_chieu.py} & MT-01 -- MT-04 \\
+Phân bổ vị trí (2.4) & \code{server/ht2\_nhap\_kho/phan\_bo\_vi\_tri.py} & MT-05, MT-06 \\
+Chọn kiện FIFO (3.2) & \code{server/ht3\_xuat\_kho/chon\_kien.py} & MT-09, KB6 \\
+Kiểm tra bản tin trùng & \code{server/ht4\_thiet\_bi/tiep\_nhan.py} & MT-07, MT-08, KB4 \\
+Đối chiếu tồn (5.3) & \code{server/ht5\_kiem\_ke/doi\_chieu\_ton.py} & KB5 \\
+Kiểm tra quyền & \code{server/ht1\_danh\_muc/phan\_quyen.py} & MT-10 \\
+Truy cập CSDL & \code{server/db/} & mọi mẫu thử \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Thiết kế mẫu thử}
+\label{sec:mauthu}
+
+Người thiết kế lập mẫu thử trước khi lập trình để bảo đảm tính khách quan \cite[Ch.~10]{tung_qlhttt}; trình bày theo \cite{iso29119-3}. Hệ thống có hai lớp mẫu thử: 6 kịch bản xuyên ba tầng (Bảng~\ref{tab:kichban}), mỗi kịch bản là một nút trên bảng điều khiển của tầng Device với dữ liệu mẫu nạp sẵn; và 10 mẫu thử module cho logic quyết định (Bảng~\ref{tab:mtmodule}). Kết quả thu được được ghi ở Chương~\ref{ch:caidat}.
+
+\begin{table}[H]
+\centering
+\caption{Kịch bản kiểm thử xuyên ba tầng}
+\label{tab:kichban}
+\small
+\begin{tabularx}{\textwidth}{l L{3.2cm} L{4.0cm} Y}
+\toprule
+\textbf{Mã} & \textbf{Tiền điều kiện} & \textbf{Thao tác trên Device} & \textbf{Kết quả mong đợi trên Web app} \\
+\midrule
+KB1 & Đơn mẫu có 3 kiện đã khai báo & Cổng nhập đọc 3 thẻ đúng đơn & 3 kiện Chấp nhận (Q4); lập được phiếu nhập; 3 nhiệm vụ cất được giao và hoàn thành; tồn tăng \\
+KB2 & Như KB1 & Cổng nhập đọc thêm 1 thẻ chưa khai báo & Sai lệch Thẻ chưa đăng ký (Q1); thông báo gửi Phòng Mua hàng \\
+KB3 & Như KB1 & Cổng đọc 1 kiện ngoài đơn, 1 kiện vượt số lượng & Sai lệch Ngoài đơn (Q2) và Vượt số lượng (Q3) \\
+KB4 & Có nhiệm vụ cất đang chạy & AGV ngắt kết nối, gửi lại “Hoàn thành” 2 lần & Thiết bị ngoại tuyến rồi trực tuyến lại; nhiệm vụ hoàn thành đúng 1 lần \\
+KB5 & Khu A có 10 kiện trong sổ & Đầu đọc cầm tay quét khu A, đọc 9 thẻ & Phiên kiểm kê báo 1 kiện Thiếu; chờ phê duyệt \\
+KB6 & Có tồn đủ cho yêu cầu mẫu & Cổng xuất đọc đúng các kiện đã chọn & Phiếu xuất xác nhận; thẻ giải phóng; tồn giảm đúng \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Mẫu thử module}
+\label{tab:mtmodule}
+\small
+\begin{tabularx}{\textwidth}{l L{3.0cm} Y L{4.4cm}}
+\toprule
+\textbf{Mã} & \textbf{Module} & \textbf{Dữ liệu vào} & \textbf{Kết quả mong đợi} \\
+\midrule
+MT-01 & Đối chiếu kiện & Thẻ chưa khai báo & Thẻ chưa đăng ký \\
+MT-02 & Đối chiếu kiện & Thẻ hợp lệ, mặt hàng không có trong đơn & Ngoài đơn \\
+MT-03 & Đối chiếu kiện & Số lượng kiện lớn hơn số còn phải nhận & Vượt số lượng \\
+MT-04 & Đối chiếu kiện & Số lượng kiện bằng đúng số còn phải nhận (biên) & Chấp nhận, số còn lại về 0 \\
+MT-05 & Phân bổ vị trí & Khu ưu tiên hết ô trống & Chọn ô của khu dự phòng \\
+MT-06 & Phân bổ vị trí & Cả khu ưu tiên và dự phòng đều hết & Khu chờ W, sinh cảnh báo \\
+MT-07 & Tiếp nhận bản tin & Cùng \code{maBanTin} gửi 2 lần & Lần 2 bị bỏ qua, không lỗi \\
+MT-08 & Tiếp nhận bản tin & JSON sai hợp đồng (thiếu \code{maEPC}) & Từ chối, ghi lỗi \\
+MT-09 & Chọn kiện xuất & Hai kiện cùng mặt hàng, ngày nhập khác nhau & Chọn kiện nhập trước \\
+MT-10 & Phân quyền & NV kho gọi \code{/kiem-ke/\{ma\}/xu-ly} & Mã lỗi 403 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Mẫu thử chỉ chứng minh sự có mặt của lỗi chứ không chứng minh sự vắng mặt của lỗi \cite[Ch.~10]{tung_qlhttt}.
+
+% ------------------------------------------------------------
+\section{Quyết định chốt trước khi cài đặt}
+\label{sec:moc3}
+
+Các quyết định sau được chốt tại mốc G3:
+\begin{enumerate}
+  \item Cả ba tầng viết bằng Python; Web app và bảng điều khiển Device dùng Streamlit.
+  \item Đóng gói bằng Docker Compose 5 dịch vụ; chạy thử trên Windows và macOS trước khi nộp.
+  \item TLS cho MQTT để sang giai đoạn phần cứng; bài này dùng tài khoản và ACL trên mạng nội bộ của Docker.
+  \item Thiết bị giả lập: GT-01 cổng nhập, GT-02 cổng xuất, HH-01 đầu đọc cầm tay, AGV-01, AGV-02.
+  \item Dữ liệu mẫu: khu A, B, C và khu đặc biệt N, X, W; khoảng 60 ô; 20 mặt hàng; 2 nhà cung cấp; 2 khách hàng; 4 tài khoản theo 4 vai trò.
+\end{enumerate}
